@@ -1,10 +1,11 @@
- <div class="divPrincipal">
-<h2>Bienvenido, {{ usuario?.nombres }}</h2>  </div>
+<div class="divPrincipal">
+  <h2>Bienvenido, {{ usuario?.nombres }}</h2>  
+</div>
 
   <div class="album py-5 bg-body-tertiary">
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
+        <!--GESTION DE PACIENTES /SUPER ADMIN Y DENTISTA-->
         <div class="col">
           <div class="card shadow-sm">
             <img src="calendar.png" 
@@ -29,55 +30,10 @@
             </div>
           </div>
         </div>
-
-        <!--Repite la misma estructura para cada "col" -->
-        <div class="col">
-          <div class="card shadow-sm">
-            <img src="citas.png" 
-            class="card-img-top bd-placeholder-img " 
-            alt="Pacientes" 
-            width="100%" 
-            height="225">
-            <div class="card-body">
-              <h2>Tratamientos</h2>
-              <p class="card-text">
-                Nuevos tratamientos .
-              </p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Ver</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-       <!---... y así sucesivamente para las demás tarjetas-->
-        <div class="col">
-          <div class="card shadow-sm">
-            <img src="material.png" 
-            class="card-img-top bd-placeholder-img " 
-            alt="Pacientes" 
-            width="100%" 
-            height="225">
-            <div class="card-body">
-              <h2>Inventario de materiales</h2>
-              <p class="card-text">
-                Inventariado de insumos 
-              </p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Ver</button>
-                </div>
-                <small class="text-body-secondary">9 mins</small>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      
-<!--ADMINISTRACION SOLO SI ES SUPER ADMI-->
+       
+        <!--ADMINISTRACION SOLO SI ES SUPER ADMI-->
         @if(esSuperAdmin){
+
           <div class="col">
             <div class="card shadow-sm">
               <img src="adminPersonal.png" 
@@ -99,6 +55,50 @@
             </div>
             
           </div>
+
+          <!--TRATAMIENTOS-->
+          <div class="col">
+            <div class="card shadow-sm">
+              <img src="citas.png" 
+              class="card-img-top bd-placeholder-img " 
+              alt="Pacientes" 
+              width="100%" 
+              height="225">
+              <div class="card-body">
+                <h2>Tratamientos</h2>
+                <p class="card-text">
+                  Nuevos tratamientos .
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="irTratamientos()">Ver</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--INVETARIO DE MATERIALES-->
+          <div class="col">
+            <div class="card shadow-sm">
+              <img src="material.png" 
+              class="card-img-top bd-placeholder-img " 
+              alt="Pacientes" 
+              width="100%" 
+              height="225">
+              <div class="card-body">
+                <h2>Inventario de materiales</h2>
+                <p class="card-text">
+                  Inventariado de insumos 
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Ver</button>
+                  </div>
+                  <small class="text-body-secondary">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>      
         }
       </div>
     </div>

@@ -1,0 +1,119 @@
+.row{
+    padding: 10px;
+    margin: 5px;
+
+}
+
+
+.colorSep{
+    color: #bfcdcc;
+}
+
+.separador-reporte {
+    /* Fuerza el bloque a ocupar toda la celda */
+    display: block; 
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* Aplica una línea divisoria (borde superior) a todos los elementos, excepto al primero */
+.separador-reporte + .separador-reporte {
+    border-top: 1px dashed #141313; /* Línea gris punteada */
+    margin-top: 5px;
+}
+
+div{
+    font-family: "Raleway", sans-serif;
+    font-weight: 400;
+
+}
+
+.txt{
+    font-size: 50px;
+    text-align: center;
+    margin: 5px;
+    color: #2b9895;     
+    font-weight: 500px;
+
+}
+
+.cuad{
+    padding: 20px;
+    margin: 20ps;
+}
+
+button{
+    background-color: #2b9895;
+    color: white;
+}
+
+button:hover{
+    background-color:#c0e7e6;
+    color: #165856;
+
+}
+
+.volver{
+    background-color: #818685;
+    color: white;
+}
+
+.volver:hover{
+    background-color:#444949;
+    color: white;
+
+}
+
+
+/* Hover */
+.estilo_s:hover {
+  background-color: #95d3da !important;  /* Aqua */
+  color: #000 !important;
+}
+
+/* Seleccionada por click */
+.fila-seleccionada {
+  background-color: #a7bec2 !important; /* Un aqua más oscuro */
+  color: #000 !important;
+}
+
+.warning{
+    background-color: #e3cea1;
+    color: #855f0d;
+}
+
+.warning:hover{
+    background-color: #b17f15;
+    color: white;
+}
+
+h2{
+    font-weight:bold;
+}
+
+.btn-editar{
+    background-color: #95d3da;
+    color:#165856;
+
+}
+
+.txt-2{
+    font-size: 30px;
+    text-align: center;
+}
+
+.bg{
+    background-color: #76a6a5;
+}
+
+.claseBody{
+    padding: 10px;
+}
+
+.contendor{
+    margin: 20px;
+}
+
+p{
+    text-align: center;
+}

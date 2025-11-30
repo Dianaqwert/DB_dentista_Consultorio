@@ -49,8 +49,8 @@ export class MenuDentistaComponent {
     this.router.navigate(['/gestion-pacientes'], { state: { usuario: this.usuario } });
   }
 
-  irACitas() {
-    this.router.navigate(['/tratamientos'], { state: { usuario: this.usuario } });
+  irTratamientos() {
+    this.router.navigate(['/tratamientos-gestion'], { state: { usuario: this.usuario } });
   }
 
   irAMateriales() {

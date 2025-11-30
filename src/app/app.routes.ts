@@ -7,37 +7,19 @@ import { TratamientosDComponent } from './componentes/tratamientos-d/tratamiento
 import { InventarioDComponent } from './componentes/inventario-d/inventario-d.component';
 import { GestionarPacientesDComponent } from './componentes/gestionar-pacientes-d/gestionar-pacientes-d.component';
 import { AdministrarPersonalDComponent } from './componentes/administrar-personal-d/administrar-personal-d.component';
+import { TratamientosGestionDComponent } from './componentes/tratamientos-gestion-d/tratamientos-gestion-d.component';
 
 export const routes: Routes = [
     {path:'',redirectTo:'/login',pathMatch:'full'},
     {path:'login',component:LoginComponent},
-    {
-    path: 'menu-dentista',
-    component: MenuDentistaComponent
-    },
-    {
-    path: 'menu-ayudante',
-    component: MenuAyudanteComponent
-    },
-    {
-    path: 'menu-recepcionista',
-    component: MenuRecepcionistaComponent
-    },
-    {
-    path: 'gestion-pacientes',
-    component: GestionarPacientesDComponent
-    },
-    {
-    path: 'tratamientos',
-    component: TratamientosDComponent
-    },
-    {
-    path: 'gestion-materiales',
-    component: InventarioDComponent
-    },
-    {
-        path:'admin-personal',component:AdministrarPersonalDComponent
-    }
+    {path: 'menu-dentista',component: MenuDentistaComponent},
+    {path: 'menu-ayudante',component: MenuAyudanteComponent},
+    {path: 'menu-recepcionista',component: MenuRecepcionistaComponent},
+    {path: 'gestion-pacientes',component: GestionarPacientesDComponent},
+    {path: 'tratamientos',component: TratamientosDComponent},
+    {path: 'gestion-materiales',component: InventarioDComponent},
+    {path:'admin-personal',component:AdministrarPersonalDComponent},
+    {path:'tratamientos-gestion',component:TratamientosGestionDComponent}
 
 
     ];
