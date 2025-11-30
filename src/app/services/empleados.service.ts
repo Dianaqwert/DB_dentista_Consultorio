@@ -2,6 +2,8 @@ import { HttpClient,HttpParams} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Usuario } from '../interfaces/usuarioEmpleado';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -42,6 +44,31 @@ export class EmpleadosService {
   getUsuario() {
     return this.usuarioLogeado;
   }
+
+  //______________ALTAS Y BAJAS DE USUARIOS_____________
+  crearUsuarioEmpleado(usuario: any) {
+    return this.http.post(`${this.API_URL}/usuarios`, usuario);
+  }
+
+  // Agrega estos métodos a tu clase EmpleadosService
+  getEmpleadosActivos() {
+    return this.http.get<any[]>(`${this.API_URL}/activos`);
+  }
+
+  filtrarPorTipo(tipo: string) {
+    return this.http.get<any[]>(`${this.API_URL}/filtro/${tipo}`);
+  }
+
+  buscarPorNombre(termino: string) {
+    return this.http.get<any[]>(`${this.API_URL}/busqueda/${termino}`);
+  }
+
+  eliminarEmpleado(id: number) {
+    return this.http.delete(`${this.API_URL}/eliminar/${id}`);
+  }
+
+
+
 
 
 

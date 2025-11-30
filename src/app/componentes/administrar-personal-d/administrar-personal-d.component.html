@@ -1,0 +1,138 @@
+<div class="mb-3 cuad">
+  <h1 class="txt">Alta y bajas de personal</h1>
+</div>
+
+<div class="container mt-4">
+  <div class="row g-4">
+    <!-- Columna 1: Registrar nuevo personal -->
+    <div class="col-12 col-md-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Registrar Nuevo Personal</h4>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="searchForm" (ngSubmit)="ngOnsearch()">
+
+            <div class="mb-3">
+              <label class="form-label">Nombre de Usuario</label>
+              <input type="text" 
+                     class="form-control" 
+                     formControlName="nombreUser"
+                     [class.is-invalid]="searchForm.get('nombreUser')?.invalid && searchForm.get('nombreUser')?.touched">
+              
+              @if(searchForm.get('nombreUser')?.hasError('required') && searchForm.get('nombreUser')?.touched){
+                <div class="text-danger small">El nombre de usuario es obligatorio.</div>
+              }
+              @if(searchForm.get('nombreUser')?.hasError('pattern') && searchForm.get('nombreUser')?.touched){
+                <div class="text-danger small">Solo se permiten letras (sin números).</div>
+              }
+              @if(searchForm.get('nombreUser')?.hasError('maxlength') && searchForm.get('nombreUser')?.touched) {
+                <div class="text-danger small">Máximo 10 caracteres permitidos.</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Nombres</label>
+              <input type="text" 
+                     class="form-control" 
+                     formControlName="nombres"
+                     [class.is-invalid]="searchForm.get('nombres')?.invalid && searchForm.get('nombres')?.touched">
+              
+              @if(searchForm.get('nombres')?.hasError('required') && searchForm.get('nombres')?.touched){
+                <div class="text-danger small">El nombre es obligatorio.</div>
+              }
+              @if(searchForm.get('nombres')?.hasError('pattern') && searchForm.get('nombres')?.touched){
+                <div class="text-danger small">Solo se permiten letras (sin números).</div>
+              }
+               @if(searchForm.get('nombres')?.hasError('maxlength') && searchForm.get('nombres')?.touched) {
+                <div class="text-danger small">Máximo 255 caracteres permitidos.</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Apellido Paterno</label>
+              <input type="text" 
+                     class="form-control" 
+                     formControlName="apellidopat"
+                     [class.is-invalid]="searchForm.get('apellidopat')?.invalid && searchForm.get('apellidopat')?.touched">
+              
+              @if(searchForm.get('apellidopat')?.hasError('required') && searchForm.get('apellidopat')?.touched){
+                <div class="text-danger small">El apellido es obligatorio.</div>
+              }
+              @if(searchForm.get('apellidopat')?.hasError('pattern') && searchForm.get('apellidopat')?.touched){
+                <div class="text-danger small">Solo se permiten letras.</div>
+              }
+              @if(searchForm.get('apellidopat')?.hasError('maxlength') && searchForm.get('apellidopat')?.touched) {
+                <div class="text-danger small">Máximo 255 caracteres permitidos.</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Apellido Materno</label>
+              <input type="text" 
+                     class="form-control" 
+                     formControlName="apellidomat"
+                     [class.is-invalid]="searchForm.get('apellidomat')?.invalid && searchForm.get('apellidomat')?.touched">
+              
+              @if(searchForm.get('apellidomat')?.hasError('required') && searchForm.get('apellidomat')?.touched){
+                <div class="text-danger small">El apellido es obligatorio.</div>
+              }
+              @if(searchForm.get('apellidomat')?.hasError('pattern') && searchForm.get('apellidomat')?.touched){
+                <div class="text-danger small">Solo se permiten letras.</div>
+              }
+              @if(searchForm.get('apellidomat')?.hasError('maxlength') && searchForm.get('apellidomat')?.touched) {
+                <div class="text-danger small">Máximo 255 caracteres permitidos.</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Tipo de Empleado</label>
+              <select class="form-control" 
+                      formControlName="tipoEmpleado"
+                      [class.is-invalid]="searchForm.get('tipoEmpleado')?.invalid && searchForm.get('tipoEmpleado')?.touched">
+                <option value="Recepcion">Recepción</option>
+                <option value="Ayudante">Ayudante</option>
+                <option value="Dentista">Dentista</option>
+              </select>
+              
+              @if(searchForm.get('tipoEmpleado')?.invalid && searchForm.get('tipoEmpleado')?.touched){
+                <div class="text-danger small">Selecciona un rol de empleado.</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Contraseña</label>
+              <input type="password" 
+                     class="form-control" 
+                     formControlName="contrasenaue"
+                     [class.is-invalid]="searchForm.get('contrasenaue')?.invalid && searchForm.get('contrasenaue')?.touched">
+              
+              @if(searchForm.get('contrasenaue')?.hasError('required') && searchForm.get('contrasenaue')?.touched){
+                <div class="text-danger small">Introduce una contraseña.</div>
+              }       
+              @if(searchForm.get('contrasenaue')?.hasError('maxlength') && searchForm.get('contrasenaue')?.touched) {
+                <div class="text-danger small">Máximo 8 caracteres permitidos.</div>
+              }
+            </div>
+
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" formControlName="superadmin" id="superAdminCheck">
+              <label class="form-check-label" for="superAdminCheck">¿Es Super Admin?</label>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100" [disabled]="searchForm.invalid">
+              Registrar Personal
+            </button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna 2: Bajar personal -->
+    <div class="col-12 col-md-6">
+      <app-bajar-personal-d></app-bajar-personal-d>
+    </div>
+  </div>
+</div>

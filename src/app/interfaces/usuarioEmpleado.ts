@@ -1,10 +1,11 @@
 export interface Usuario {
   id_usuario: number;
-  nombreusuario: string;
+  nombreusUario: string;
   nombres: string;
-  apellidopat: string;
-  apellidomat: string;
+  apellidoPat: string;
+  apellidoMat: string;
   tipoempleado: string;
   contrasenaue: string;
   superadmin: boolean;
+  nombre_completo?: string;
 }

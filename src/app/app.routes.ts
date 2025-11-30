@@ -6,6 +6,7 @@ import { LoginComponent } from './componentes/login/login.component';
 import { TratamientosDComponent } from './componentes/tratamientos-d/tratamientos-d.component';
 import { InventarioDComponent } from './componentes/inventario-d/inventario-d.component';
 import { GestionarPacientesDComponent } from './componentes/gestionar-pacientes-d/gestionar-pacientes-d.component';
+import { AdministrarPersonalDComponent } from './componentes/administrar-personal-d/administrar-personal-d.component';
 
 export const routes: Routes = [
     {path:'',redirectTo:'/login',pathMatch:'full'},
@@ -33,6 +34,9 @@ export const routes: Routes = [
     {
     path: 'gestion-materiales',
     component: InventarioDComponent
+    },
+    {
+        path:'admin-personal',component:AdministrarPersonalDComponent
     }
 
 

@@ -1,0 +1,97 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-danger text-white">
+      <h4>Directorio y Bajas</h4>
+    </div>
+    
+    <div class="card-body">
+      
+      <div class="row g-3 mb-4">
+        
+        <div class="col-md-3">
+          <label class="form-label fw-bold">Nombre(s):</label>
+          <input type="text" class="form-control" 
+                 placeholder="Ej. Juan" 
+                 [(ngModel)]="busqNombre" 
+                 (input)="filtrarLocalmente()"> 
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-bold">Apellido Paterno:</label>
+          <input type="text" class="form-control" 
+                 placeholder="Ej. Lopez" 
+                 [(ngModel)]="busqPaterno" 
+                 (input)="filtrarLocalmente()">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-bold">Apellido Materno:</label>
+          <input type="text" class="form-control" 
+                 placeholder="Ej. Perez" 
+                 [(ngModel)]="busqMaterno" 
+                 (input)="filtrarLocalmente()">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-bold">Filtrar por Rol:</label>
+          <select class="form-select" [(ngModel)]="filtroTipo" (change)="cambiarFiltro()">
+            <option value="Todos">Todos</option>
+            <option value="Recepcion">Recepción</option>
+            <option value="Dentista">Dentista</option>
+            <option value="Ayudante">Ayudante</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Nombre Completo</th>
+              <th>Usuario (Login)</th> <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (emp of listaEmpleados; track emp.id_usuario) {
+              <tr>
+                <td>
+                    {{ emp.nombre_completo || (emp.nombres + ' ' + emp.apellidoPat + ' ' + emp.apellidoMat) }}
+                </td>
+                
+                <td>{{ emp.nombreusUario || 'N/A' }}</td>
+
+                <td>
+                   <span class="badge"
+                      [class.text-bg-primary]="(emp.tipoempleado ) === 'Dentista'"
+                      [class.text-bg-success]="(emp.tipoempleado) === 'Recepcion'"
+                      [class.text-bg-warning]="(emp.tipoempleado) === 'Ayudante'">
+                      {{ emp.tipoempleado }}
+                   </span>
+                </td>
+
+                <td>
+                  <button class="btn btn-outline-danger btn-sm" 
+                          (click)="eliminar(
+                              emp.id_usuario, 
+                              emp.nombres
+                          )">
+                    🗑 Baja
+                  </button>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="4" class="text-center text-muted py-4">
+                    No se encontraron coincidencias.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
