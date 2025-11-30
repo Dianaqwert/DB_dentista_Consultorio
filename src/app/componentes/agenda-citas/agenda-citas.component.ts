@@ -14,7 +14,7 @@ declare var bootstrap: any;
 @Component({
   standalone:true,
   selector: 'app-agenda-citas',
-  imports: [FormsModule,ReactiveFormsModule],
+  imports: [FormsModule,ReactiveFormsModule,AtencionCitaComponent],
   templateUrl: './agenda-citas.component.html',
   styleUrl: './agenda-citas.component.css'
 })

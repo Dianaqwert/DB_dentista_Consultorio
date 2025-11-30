@@ -1,1 +1,255 @@
-<h2>HOLA-cita.-.</h2>
+<div class="modal fade" id="modalAtencion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      
+      <div class="modal-header bg-primary text-white">
+        <div>
+          <h5 class="modal-title mb-0" id="modalLabel">
+            <i class="bi bi-clipboard-pulse"></i> Atención Clínica
+          </h5>
+          <small class="opacity-75">
+            Paciente: <strong>{{ citaSeleccionada?.paciente_nombre_completo }}</strong> | 
+            Fecha: {{ citaSeleccionada?.fecha_hora | date:'medium' }}
+          </small>
+        </div>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body bg-light">
+        <form [formGroup]="atencionForm">
+          
+          <div class="card mb-3 shadow-sm border-warning">
+            <div class="card-body py-2 d-flex justify-content-between align-items-center">
+              <div>
+                <strong class="text-muted">Motivo Original:</strong> {{ citaSeleccionada?.motivo_principal_cita }}
+              </div>
+              <span class="badge bg-success">
+                <i class="bi bi-check-circle"></i> Se guardará como "Atendida"
+              </span>
+            </div>
+          </div>
+
+          <ul class="nav nav-tabs nav-fill mb-3" id="tabsAtencion" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active fw-bold" id="tab-tratamientos-tab" data-bs-toggle="tab" data-bs-target="#tab-tratamientos" type="button">
+                <i class="bi bi-tools"></i> 1. Procedimientos y Materiales
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link fw-bold" id="tab-historial-tab" data-bs-toggle="tab" data-bs-target="#tab-historial" type="button">
+                <i class="bi bi-journal-medical"></i> 2. Nota Clínica
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link fw-bold" id="tab-extras-tab" data-bs-toggle="tab" data-bs-target="#tab-extras" type="button">
+                <i class="bi bi-arrow-right-circle"></i> 3. Derivaciones y Estudios
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+
+            <div class="tab-pane fade show active" id="tab-tratamientos" role="tabpanel">
+              <div class="card p-3 shadow-sm border-0">
+                <div class="d-flex justify-content-between mb-2">
+                  <h6 class="text-primary">Registrar procedimientos realizados hoy</h6>
+                  <button type="button" class="btn btn-sm btn-primary" (click)="agregarTratamiento()">
+                    <i class="bi bi-plus-lg"></i> Agregar Item
+                  </button>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light">
+                      <tr>
+                        <th style="width: 35%">Tratamiento (*)</th>
+                        <th style="width: 35%">Material Usado</th>
+                        <th style="width: 10%">Cant.</th>
+                        <th style="width: 15%">Costo Est.</th>
+                        <th style="width: 5%"></th>
+                      </tr>
+                    </thead>
+                    <tbody formArrayName="tratamientos">
+                      @for (trat of tratamientosArray.controls; track $index) {
+                        <tr [formGroupName]="$index">
+                          <td>
+                            <select class="form-select form-select-sm" formControlName="id_tipo_tratamiento" (change)="actualizarCosto($index)">
+                              <option [ngValue]="null">Seleccione...</option>
+                              @for (t of catalogoTratamientos; track t.id_tipo_tratamiento) {
+                                <option [value]="t.id_tipo_tratamiento">
+                                  {{ t.nombre }} - {{ t.costo | currency }}
+                                </option>
+                              }
+                            </select>
+                            @if (trat.get('id_tipo_tratamiento')?.invalid && trat.get('id_tipo_tratamiento')?.touched) {
+                                <div class="text-danger small">Requerido</div>
+                            }
+                          </td>
+                          <td>
+                             <select class="form-select form-select-sm" formControlName="id_tipo_material">
+                                <option [ngValue]="null">Ninguno</option>
+                                @for (m of catalogoMateriales; track m.id_tipo_material) {
+                                    <option [value]="m.id_tipo_material">
+                                        {{ m.nombre_material }} (Stock: {{ m.stock }})
+                                    </option>
+                                }
+                             </select>
+                          </td>
+                          <td>
+                            <input type="number" class="form-control form-control-sm" formControlName="cantidad" min="1" (change)="actualizarCosto($index)">
+                          </td>
+                          <td class="text-end text-muted fw-bold">
+                            {{ obtenerCostoEstimado($index) | currency }}
+                          </td>
+                          <td class="text-center">
+                            <button type="button" class="btn btn-outline-danger btn-sm border-0" (click)="eliminarTratamiento($index)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      }
+                      <tr class="table-group-divider fw-bold bg-light">
+                        <td colspan="3" class="text-end">Total a Generar en Deuda:</td>
+                        <td class="text-end text-success">{{ totalDeudaEstimada | currency }}</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                @if (tratamientosArray.length === 0) {
+                    <div class="alert alert-warning mt-2 py-2 small">
+                        <i class="bi bi-exclamation-circle"></i> No has agregado ningún tratamiento. No se generará cobro.
+                    </div>
+                }
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-historial" role="tabpanel">
+              <div class="card p-3 shadow-sm border-0">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Alergias Detectadas:</label>
+                    <input type="text" class="form-control" formControlName="alergias" placeholder="Ej: Penicilina...">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Enfermedades / Antecedentes:</label>
+                    <input type="text" class="form-control" formControlName="enfermedades" placeholder="Ej: Diabetes...">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label fw-bold text-success">Nota de Evolución / Avance (*):</label>
+                    <textarea class="form-control" formControlName="avanceTratamiento" rows="5" 
+                              placeholder="Describe el procedimiento realizado, la evolución del paciente, etc."></textarea>
+                    
+                    @if (atencionForm.get('avanceTratamiento')?.invalid && atencionForm.get('avanceTratamiento')?.touched) {
+                      <div class="text-danger small mt-1">Este campo es obligatorio para cerrar la cita.</div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-extras" role="tabpanel">
+              <div class="row g-3">
+                
+                <div class="col-md-6">
+                  <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between py-2">
+                      <strong>Derivaciones</strong>
+                      <button type="button" class="btn btn-outline-primary btn-sm py-0" (click)="agregarDerivacion()">+</button>
+                    </div>
+                    <div class="card-body bg-light p-2" formArrayName="derivaciones">
+                      @for (der of derivacionesArray.controls; track $index) {
+                        <div [formGroupName]="$index" class="card mb-2">
+                            <div class="card-body p-2 position-relative">
+                                <button type="button" class="btn-close position-absolute top-0 end-0 m-1 small" (click)="eliminarDerivacion($index)"></button>
+                                <div class="row g-2">
+                                  <div class="col-6">
+                                      <input type="text" 
+                                            class="form-control form-control-sm" 
+                                            formControlName="nombreDentista" 
+                                            placeholder="Dr. Destino"
+                                            [class.is-invalid]="der.get('nombreDentista')?.invalid && der.get('nombreDentista')?.touched">
+                                      
+                                      @if (der.get('nombreDentista')?.hasError('pattern')) {
+                                          <div class="text-danger small" style="font-size: 0.75rem;">
+                                              No se permiten números.
+                                          </div>
+                                      }
+                                  </div>
+
+                                  <div class="col-6">
+                                      <input type="text" 
+                                            class="form-control form-control-sm" 
+                                            formControlName="especialidadDentista" 
+                                            placeholder="Especialidad"
+                                            [class.is-invalid]="der.get('especialidadDentista')?.invalid && der.get('especialidadDentista')?.touched">
+
+                                      @if (der.get('especialidadDentista')?.hasError('pattern')) {
+                                          <div class="text-danger small" style="font-size: 0.75rem;">
+                                              No se permiten números.
+                                          </div>
+                                      }
+                                  </div>
+
+                                  <div class="col-12">
+                                      <input type="text" class="form-control form-control-sm" formControlName="motivo" placeholder="Motivo">
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                      }
+                      @if (derivacionesArray.length === 0) {
+                        <p class="text-center text-muted small my-3">Sin derivaciones.</p>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between py-2">
+                      <strong>Estudios</strong>
+                      <button type="button" class="btn btn-outline-info btn-sm py-0" (click)="agregarEstudio()">+</button>
+                    </div>
+                    <div class="card-body bg-light p-2" formArrayName="estudios">
+                      @for (est of estudiosArray.controls; track $index) {
+                        <div [formGroupName]="$index" class="card mb-2">
+                            <div class="card-body p-2 position-relative">
+                                <button type="button" class="btn-close position-absolute top-0 end-0 m-1 small" (click)="eliminarEstudio($index)"></button>
+                                <div class="col-12 mb-1">
+                                    <input type="text" class="form-control form-control-sm fw-bold" formControlName="nombre" placeholder="Nombre Estudio">
+                                </div>
+                                <div class="col-12">
+                                    <textarea class="form-control form-control-sm" formControlName="descripcion" rows="1" placeholder="Detalles..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                      }
+                      @if (estudiosArray.length === 0) {
+                        <p class="text-center text-muted small my-3">Sin estudios solicitados.</p>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div> </form>
+      </div>
+
+      <div class="modal-footer bg-light">
+        <div class="me-auto small text-muted">
+            <i class="bi bi-info-circle"></i> Verifica los datos antes de finalizar.
+        </div>
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+        <button type="button" class="btn btn-success px-4" (click)="guardarAtencion()" 
+                [disabled]="atencionForm.invalid">
+            <i class="bi bi-save"></i> Finalizar Consulta
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

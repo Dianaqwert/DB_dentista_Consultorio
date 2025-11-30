@@ -1,0 +1,34 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-sm table-striped">
+    <thead>
+      <tr>
+        <!--th>Fecha Registro</th--> 
+        <th>Fecha Cita</th>
+        <th>Motivo Cita</th>
+        <th>Avance Tratamiento</th>
+        <th>Enfermedades/Antecedentes</th>
+        <th>Alergias</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (registro of historial; track $index) {
+        <tr>
+          <!--td class="fw-bold">{{ registro.fecha_historial | date: 'mediumDate' }}</td-->
+          <td>{{ registro.fecha_cita | date: 'mediumDate' }}</td>
+          <td>{{ registro.motivo_cita }}</td>
+          <td>{{ registro.avancetratamiento }}</td>
+          <td>{{ registro.enfermedades }}</td>
+          <td class="bg-warning- alegias-res">{{ registro.alergias }}</td>
+        </tr>
+      }
+      
+      @if (historial.length === 0) {
+        <tr>
+          <td colspan="6" class="text-center text-muted"> 
+             No hay historial registrado del paciente
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

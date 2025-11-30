@@ -1,1 +1,183 @@
-<p>reporte-clinico works!</p>
+
+<div class="row">
+
+  <div class="col-md-20">
+    <h2 class="p-3 mb-3">Reportes de pacientes</h2>
+  </div>
+
+  <div class="card p-3 shadow-sm mb-3">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="formulario">
+
+      <h4 class="mb-3">Buscar pacientes:</h4>
+
+      <!-- Fila con 3 columnas -->
+      <div class="row">
+
+        <div class="col-md-4">
+          <label for="inputNombres" class="form-label">Nombres:</label>
+          <input
+            type="text"
+            id="inputNombres"
+            formControlName="nombres"
+            placeholder="Ej: Juan"
+            class="form-control"
+          />
+          <!--validacion-->
+          @if(searchForm.get('nombres')?.invalid && searchForm.get('nombres')?.touched){
+            <div class="text-danger" >
+                Solo se permiten letras.
+            </div>
+          }
+        </div>
+
+        <div class="col-md-4">
+          <label for="inputPat" class="form-label">Apellido Paterno:</label>
+          <input
+            type="text"
+            id="inputPat"
+            formControlName="apellidoPat"
+            placeholder="Ej: Perez"
+            class="form-control"
+          />
+
+          <!--validacion-->
+          @if(searchForm.get('apellidoPat')?.invalid && searchForm.get('apellidoPat')?.touched){
+            <div class="text-danger" >
+                Solo se permiten letras.
+            </div>
+          }
+        </div>
+
+        <div class="col-md-4">
+          <label for="inputMat" class="form-label">Apellido Materno:</label>
+          <input
+            type="text"
+            id="inputMat"
+            formControlName="apellidoMat"
+            placeholder="Ej: Garcia"
+            class="form-control"
+          />
+
+          <!--validacion-->
+          @if(searchForm.get('apellidoMat')?.invalid && searchForm.get('apellidoMat')?.touched){
+            <div class="text-danger" >
+                Solo se permiten letras.
+            </div>
+          }
+        </div>
+
+      </div>
+      
+      <div class="row">
+        <!-- Botón que ocupa las 3 columnas -->
+        <div class="col-md-4">
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+          </div>
+        </div>
+
+        <!--Boton de reset de busqueda-->
+        <div class="col-md-4">
+          <button (click)="resetBusqueda()" class="btn btn-warning w-100 warning">
+            Borrar busqueda
+          </button>
+        </div>
+
+        <!--boton de regreso-->
+        <div class="col-md-4">
+          <button (click)="volverAlMenu()" class="btn btn-secondary w-100 volver">
+            Volver a opciones
+          </button>
+
+        </div>
+
+
+      </div>
+      
+
+    </form>
+  </div>
+
+  <!-- Columna derecha: tabla -->
+  <div class="col-md-20">
+    <div class="bg-light p-3 border rounded">
+
+      <h4 class="mb-3">Reporte Clínico Consolidado</h4>
+
+      <div class="table-responsive">
+        <table class=" table-striped table-hover table-sm table-bordered">
+
+          <thead>
+            <tr>
+              <th>Nombre Completo</th>
+              <th>Fecha y Hora</th>
+              <th>Motivo Cita</th>
+              <th>Dentistas</th>
+              <th>Tratamiento y Cantidad</th>
+              <th>Avance Historial</th>
+              <th>Derivaciones</th>
+              <th>Estudios</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (reporte of pacientes; track reporte.id_cita) {
+              <tr  
+                (click)="seleccionarPacienteFila(reporte)"
+                style="cursor: pointer;" 
+                class="estilo_s hover-aqua"
+                [class.fila-seleccionada]="reporte.id_paciente === pacienteSeleccionadoId"
+              >
+
+
+                <td>{{ reporte.paciente_nombre_completo }}</td>
+                <td>{{ reporte.fecha_hora | date: 'mediumDate' }}</td>
+                <td>{{ reporte.motivo_principal_cita }}</td>
+                <td>{{ reporte.dentistas_involucrados }}</td>
+
+                <td>
+                  @for (item of (reporte.tratamientos_y_cantidad || '').split('|'); track $index) {
+                    <div class="separador-reporte">
+                      {{ item.trim() }}
+                    </div>
+                  }
+                </td>
+
+                <td>{{ reporte.historial_avance }}</td>
+
+                <td>
+                  @for (item of (reporte.derivaciones_registradas || '').split('|'); track $index) {
+                    <div class="separador-reporte">
+                      {{ item.trim() }}
+                    </div>
+                  }
+                </td>
+
+                <td>
+                  @for (item of (reporte.estudios_realizados_o_solicitados || '').split('|'); track $index) {
+                    <div class="separador-reporte">
+                      {{ item.trim() }}
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+
+            @if (pacientes.length === 0) {
+              <tr>
+                <td colspan="10" class="text-center text-muted">
+                  No se encontraron citas o pacientes con esos criterios.
+                </td>
+              </tr>
+            }
+
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>

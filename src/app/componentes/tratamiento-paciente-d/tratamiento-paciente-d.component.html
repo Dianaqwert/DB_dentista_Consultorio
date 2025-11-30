@@ -1,0 +1,25 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-sm table-striped">
+    <thead>
+      <tr>
+        <th>Nombre tratamiento</th> 
+        <th>Fecha</th>
+        <th>Unidades de tratamiento</th>
+        <th>Costo</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+  @for (registro of tratamientos; track $index) {
+    <tr>
+      <td class="fw-bold">{{ registro.nombre_tratamiento }}</td>
+      
+      <td>{{ registro.fecha_tratamiento | date: 'mediumDate' }}</td>
+      
+      <td>{{ registro.unidades_tratamiento }}</td>
+      <td>{{ registro.costo | currency }}</td> <td>{{ registro.subtotal | currency }}</td>
+    </tr>
+  }
+  </tbody>
+  </table>
+</div>

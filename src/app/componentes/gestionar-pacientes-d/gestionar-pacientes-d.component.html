@@ -7,3 +7,34 @@
   [dentista]="usuarioLogueado"
   (citaSeleccionada)="abrirModalAtencion($event)">
 </app-agenda-citas>
+
+<app-reporte-clinico
+  [pacientes]="pacientes"
+  (seleccionarPaciente)="seleccionarPaciente($event)">
+</app-reporte-clinico>
+
+<app-tratamientos-d
+  *ngIf="pacienteSeleccionado"
+  [pacienteSeleccionadoId]="pacienteSeleccionado.id_paciente">
+</app-tratamientos-d>
+
+
+<!--
+<app-agenda-citas
+  [dentista]="usuarioLogueado"
+  (abrirAtencion)="abrirModalAtencion($event)">
+</app-agenda-citas>
+
+<app-atencion-cita
+  [citaSeleccionada]="citaParaAtender"
+  (atencionGuardada)="recargarDatos()">
+</app-atencion-cita>
+
+<app-reporte-clinico
+  [pacientes]="pacientes"
+  (seleccionarPaciente)="seleccionarPaciente($event)">
+</app-reporte-clinico>
+
+<app-tabs-seguimiento
+  [idPaciente]="pacienteSeleccionadoId">
+</app-tabs-seguimiento>-->
