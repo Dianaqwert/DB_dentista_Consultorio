@@ -1,6 +1,7 @@
 import { HttpClient,HttpParams} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Usuario } from './interfaces/usuarioEmpleado';
 
 @Injectable({
   providedIn: 'root'
@@ -25,18 +26,18 @@ export class EmpleadosService {
   }
 
   //funcion para buscar empleados por campo
-  buscarEmpleado(nombreUser:string,contrasena:string):Observable<any>{
+  buscarEmpleado(nombreUser:string,contrasena:string){
     const body={
       nombre:nombreUser,
       contrasena:contrasena
     };
 
     //solicitud post
-    return this.http.post<any>(`${this.API_URL}/buscar`,body);
+    return this.http.post<Usuario>(`${this.API_URL}/buscar`,body);
   }
 
   getListarEmpleados(){
-    return this.http.get<any>(`${this.API_URL}/listar`);
+    return this.http.get<Usuario>(`${this.API_URL}/listar`);
   }
 
 

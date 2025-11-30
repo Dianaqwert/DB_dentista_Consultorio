@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EmpleadosService } from '../../services/empleados.service';
 import { Router } from '@angular/router';
+import { Usuario } from '../../services/interfaces/usuarioEmpleado';
 
 
 @Component({
@@ -24,53 +25,53 @@ export class LoginComponent {
     private router:Router) 
   {}
 
-  //1-buscar usuario
   buscarUE() {
-    // Resetear mensajes
-    this.usuarioEncontrado = null;
-    this.msjError = '';
-    this.msjExito = '';
+  // Resetear mensajes
+  this.usuarioEncontrado = null;
+  this.msjError = '';
+  this.msjExito = '';
 
-    this.empleadosService.buscarEmpleado(this.empleadoBuscado, this.contraEB)
-      .subscribe({
-        next: (empleado) => {
+  this.empleadosService.buscarEmpleado(this.empleadoBuscado, this.contraEB)
+    .subscribe({
+      next: (data: Usuario) => {
+        
+        console.log("Usuario recibido:", data);
 
-          // Si llega aquí, el backend ya encontró al usuario
-          this.usuarioEncontrado = empleado;
-          this.msjExito = 'Inicio de sesión exitoso.';
+        this.usuarioEncontrado = data;
+        this.msjExito = 'Inicio de sesión exitoso.';
 
-          const rol = empleado.tipoempleado?.toLowerCase();
+        const rol = data.tipoempleado?.toLowerCase();
 
-          // Redirección según el rol
-          switch (rol) {
-            case 'dentista':
-              this.router.navigate(['/menu-dentista']);
-              break;
+        switch (rol) {
+          case 'dentista':
+            this.router.navigate(['/menu-dentista'], { state: { usuario: data } });
+            break;
 
-            case 'ayudante':
-              this.router.navigate(['/menu-ayudante']);
-              break;
+          case 'ayudante':
+            this.router.navigate(['/menu-ayudante'], { state: { usuario: data } });
+            break;
 
-            case 'recepcionista':
-              this.router.navigate(['/menu-recepcionista']);
-              break;
+          case 'recepcionista':
+            this.router.navigate(['/menu-recepcionista'], { state: { usuario: data } });
+            break;
 
-            default:
-              this.msjError = 'El tipo de empleado no está configurado.';
-              break;
-          }
-        },
-
-        error: (err) => {
-          console.error(err);
-
-          if (err.status === 404) {
-            this.msjError = 'Usuario o contraseña incorrectos.';
-          } else {
-            this.msjError = 'Error al conectar con el servidor.';
-          }
+          default:
+            this.msjError = 'El tipo de empleado no está configurado.';
+            break;
         }
-      });
-  }
+      },
+
+      error: (err) => {
+        console.error(err);
+
+        if (err.status === 404) {
+          this.msjError = 'Usuario o contraseña incorrectos.';
+        } else {
+          this.msjError = 'Error al conectar con el servidor.';
+        }
+      }
+    });
+}
+
 
 }
