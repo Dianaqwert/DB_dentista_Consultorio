@@ -1,0 +1,19 @@
+.colorFondo{
+    background-color: #61C5C1;
+    color:black;
+}
+
+button{
+    background-color: #2b9895;
+    color: white;
+}
+
+button:hover{
+    background-color:#c0e7e6;
+}
+
+div{
+    font-family: "Raleway", sans-serif;
+    font-weight: 200;
+
+}

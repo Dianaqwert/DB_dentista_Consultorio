@@ -1,0 +1,51 @@
+<div class="container-fluid vh-100">
+  <div class="row h-100">
+
+    <!-- Columna Izquierda: LOGIN -->
+    <div class="col-md-6 d-flex align-items-center justify-content-center colorFondo">
+      <main class="form-signin w-75">
+        <form (ngSubmit)="buscarUE()">
+          <h1 class="h3 mb-4 fw-normal text-center">Iniciar Sesión</h1>
+
+          <div class="form-floating mb-3">
+            <input class="form-control"
+            name="nombreUsuario"   
+            [(ngModel)]="empleadoBuscado" 
+            id="floatingInput" 
+            placeholder="Diana">
+            <label for="floatingInput">Nombre de Usuario</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input 
+            name="contrasena"
+            [(ngModel)]="contraEB"
+            type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">Contraseña</label>
+          </div>
+
+          <button class="btn w-100 py-2" type="submit">Entrar</button>
+        </form>
+      </main>
+    </div>
+
+    <!-- Columna Derecha: HERO -->
+     <div class="col-md-6 d-flex align-items-center justify-content-center">
+      <div class="text-center px-4">
+        <h1 class="display-5 fw-bold">Bienvenido al Sistema</h1>
+        <p class="lead mt-3 text-muted">
+          Accede para gestionar empleados, servicios, clientes y el inventario.
+        </p>
+        <img src="icono2.png" class="img-fluid w-50 mt-4 border rounded-3" alt="Icono del Sistema">
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="alert alert-danger text-center">
+@if (msjError) {
+  {{msjError}}
+}
+</div>
+
