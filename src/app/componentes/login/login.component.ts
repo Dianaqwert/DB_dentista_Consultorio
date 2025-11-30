@@ -3,8 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EmpleadosService } from '../../services/empleados.service';
 import { Router } from '@angular/router';
-import { Usuario } from '../../services/interfaces/usuarioEmpleado';
-
+import { Usuario } from '../../interfaces/usuarioEmpleado';
 
 @Component({
   selector: 'app-login',

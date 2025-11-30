@@ -1,8 +1,7 @@
 import { HttpClient,HttpParams} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Usuario } from './interfaces/usuarioEmpleado';
-
+import { Usuario } from '../interfaces/usuarioEmpleado';
 @Injectable({
   providedIn: 'root'
 })
@@ -40,6 +39,9 @@ export class EmpleadosService {
     return this.http.get<Usuario>(`${this.API_URL}/listar`);
   }
 
+  getUsuario() {
+    return this.usuarioLogeado;
+  }
 
 
 

@@ -1,0 +1,9 @@
+<div class="mb-3 cuad">
+  <h1 class="txt">Gestión de pacientes</h1>
+  <h4 class="txt-2">Dr.{{ usuario.nombres}}</h4>
+</div>
+
+<app-agenda-citas
+  [dentista]="usuarioLogueado"
+  (citaSeleccionada)="abrirModalAtencion($event)">
+</app-agenda-citas>
