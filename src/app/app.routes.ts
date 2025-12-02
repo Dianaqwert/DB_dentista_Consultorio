@@ -8,6 +8,9 @@ import { InventarioDComponent } from './componentes/inventario-d/inventario-d.co
 import { GestionarPacientesDComponent } from './componentes/gestionar-pacientes-d/gestionar-pacientes-d.component';
 import { AdministrarPersonalDComponent } from './componentes/administrar-personal-d/administrar-personal-d.component';
 import { TratamientosGestionDComponent } from './componentes/tratamientos-gestion-d/tratamientos-gestion-d.component';
+import { AltaPacienteRComponent } from './componentes/alta-paciente-r/alta-paciente-r.component';
+import { CobrosEingresosRComponent } from './componentes/cobros-eingresos-r/cobros-eingresos-r.component';
+import { CitasPacienteRComponent } from './componentes/citas-paciente-r/citas-paciente-r.component';
 
 export const routes: Routes = [
     {path:'',redirectTo:'/login',pathMatch:'full'},
@@ -19,7 +22,8 @@ export const routes: Routes = [
     {path: 'tratamientos',component: TratamientosDComponent},
     {path: 'gestion-materiales',component: InventarioDComponent},
     {path:'admin-personal',component:AdministrarPersonalDComponent},
-    {path:'tratamientos-gestion',component:TratamientosGestionDComponent}
-
-
+    {path:'tratamientos-gestion',component:TratamientosGestionDComponent},
+    {path:'alta-pacientes',component:AltaPacienteRComponent},
+    {path:'citas-pacientes',component:CitasPacienteRComponent},
+    {path:'cobros-ingresos',component:CobrosEingresosRComponent},
     ];

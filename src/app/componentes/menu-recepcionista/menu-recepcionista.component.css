@@ -1,0 +1,28 @@
+.divPrincipal{
+    text-align: center;
+    margin: 2%;
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 225px; /* igual que tu atributo height */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+
+}
+
+div{
+    font-family: "Raleway", sans-serif;
+    font-weight: 200;
+
+}
+
+h2{
+    font-family: "Raleway", sans-serif;
+    font-weight: 500;
+}
+
+.titulo{
+    font-weight: 700;
+    font-size: 50px;
+}

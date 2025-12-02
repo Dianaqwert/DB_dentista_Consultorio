@@ -25,52 +25,52 @@ export class LoginComponent {
   {}
 
   buscarUE() {
-  // Resetear mensajes
-  this.usuarioEncontrado = null;
-  this.msjError = '';
-  this.msjExito = '';
+    // Resetear mensajes
+    this.usuarioEncontrado = null;
+    this.msjError = '';
+    this.msjExito = '';
 
-  this.empleadosService.buscarEmpleado(this.empleadoBuscado, this.contraEB)
-    .subscribe({
-      next: (data: Usuario) => {
-        
-        console.log("Usuario recibido:", data);
+    this.empleadosService.buscarEmpleado(this.empleadoBuscado, this.contraEB)
+      .subscribe({
+        next: (data: Usuario) => {
+          
+          console.log("Usuario recibido:", data);
 
-        this.usuarioEncontrado = data;
-        this.msjExito = 'Inicio de sesión exitoso.';
+          this.usuarioEncontrado = data;
+          this.msjExito = 'Inicio de sesión exitoso.';
 
-        const rol = data.tipoempleado?.toLowerCase();
+          const rol = data.tipoempleado?.toLowerCase();
 
-        switch (rol) {
-          case 'dentista':
-            this.router.navigate(['/menu-dentista'], { state: { usuario: data } });
-            break;
+          switch (rol) {
+            case 'dentista':
+              this.router.navigate(['/menu-dentista'], { state: { usuario: data } });
+              break;
 
-          case 'ayudante':
-            this.router.navigate(['/menu-ayudante'], { state: { usuario: data } });
-            break;
+            case 'ayudante':
+              this.router.navigate(['/menu-ayudante'], { state: { usuario: data } });
+              break;
 
-          case 'recepcionista':
-            this.router.navigate(['/menu-recepcionista'], { state: { usuario: data } });
-            break;
+            case 'recepcion':
+              this.router.navigate(['/menu-recepcionista'], { state: { usuario: data } });
+              break;
 
-          default:
-            this.msjError = 'El tipo de empleado no está configurado.';
-            break;
+            default:
+              this.msjError = 'El tipo de empleado no está configurado.';
+              break;
+          }
+        },
+
+        error: (err) => {
+          console.error(err);
+
+          if (err.status === 404) {
+            this.msjError = 'Usuario o contraseña incorrectos.';
+          } else {
+            this.msjError = 'Error al conectar con el servidor.';
+          }
         }
-      },
-
-      error: (err) => {
-        console.error(err);
-
-        if (err.status === 404) {
-          this.msjError = 'Usuario o contraseña incorrectos.';
-        } else {
-          this.msjError = 'Error al conectar con el servidor.';
-        }
-      }
-    });
-}
+      });
+  }
 
 
 }

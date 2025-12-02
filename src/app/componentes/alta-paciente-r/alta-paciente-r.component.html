@@ -1,0 +1,58 @@
+ <div class="col-md-3 col-lg-3">
+      <h4 class="mb-3">Agregar tratamiento</h4>
+      
+      <form [formGroup]="searchForm">
+
+        <div class="row g-3">
+          <!-- Nombre paciente-->
+          <div class="col-12">
+            <label for="nombre" class="form-label">Nombre de tratamiento</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombresPaciente"
+                   [class.is-invalid]="searchForm.get('nombresPaciente')?.invalid && searchForm.get('nombresPaciente')?.touched">
+            
+            @if (searchForm.get('nombresPaciente')?.touched && searchForm.get('nombresPaciente')?.invalid) {
+              <div class="text-danger small mt-1">
+                  @if (searchForm.get('nombresPaciente')?.hasError('required')) { <div>El nombre es obligatorio.</div> }
+                  @if (searchForm.get('nombresPaciente')?.hasError('pattern')) { <div>Solo letras y espacios.</div> }
+              </div>
+            }
+          </div>
+
+          <!-- Descripción -->
+          <div class="col-12">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" formControlName="descripcion"
+                   [class.is-invalid]="searchForm.get('descripcion')?.invalid && searchForm.get('descripcion')?.touched"></textarea>
+
+            @if (searchForm.get('descripcion')?.touched && searchForm.get('descripcion')?.invalid) {
+              <div class="text-danger small mt-1">
+                  @if (searchForm.get('descripcion')?.hasError('required')) { <div>La descripción es obligatoria.</div> }
+              </div>
+            }
+          </div>
+
+          <!-- Costo -->
+          <div class="col-6">
+            <label for="costo" class="form-label">Costo</label>
+            <div class="input-group has-validation">
+              
+              <input type="number" class="form-control text-center fw-bold" id="costo" formControlName="costo"
+                     [class.is-invalid]="searchForm.get('costo')?.invalid && searchForm.get('costo')?.touched">
+              
+
+              @if (searchForm.get('costo')?.touched && searchForm.get('costo')?.invalid) {
+                <div class="invalid-feedback d-block">
+                   @if (searchForm.get('costo')?.hasError('required')) { <div>Obligatorio.</div> }
+                   @if (searchForm.get('costo')?.hasError('pattern')) { <div>Solo enteros.</div> }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4">
+        <button class="w-100 btn btn-primary btn-lg" type="submit" [disabled]="searchForm.invalid">
+          Guardar Tratamiento
+        </button>
+      </form>
+    </div>
