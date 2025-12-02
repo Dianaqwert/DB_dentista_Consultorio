@@ -1,93 +1,141 @@
-<div class="mb-3 cuad">
-  <h1 class="txt">Gestión de pacientes</h1>
-  <p>Actualizacion, altas y bajas de tratamientos dentales</p>
-</div>
-
-<div class="row g-5">
-  <div class="col-md-5 col-lg-4 order-md-last">
-    <h4 class="d-flex justify-content-between align-items-center mb-3">
-      <span class="text-primary">Your cart</span>
-      <span class="badge bg-primary rounded-pill">3</span>
-    </h4>
-    <ul class="list-group mb-3">
-      <li class="list-group-item d-flex justify-content-between lh-sm">
-        <div>
-          <h6 class="my-0">Product name</h6>
-          <small class="text-body-secondary">Brief description</small>
-        </div>
-        <span class="text-body-secondary">$12</span>
-      </li>
-      <li class="list-group-item d-flex justify-content-between lh-sm">
-        <div>
-          <h6 class="my-0">Second product</h6>
-          <small class="text-body-secondary">Brief description</small>
-        </div>
-        <span class="text-body-secondary">$8</span>
-      </li>
-      <li class="list-group-item d-flex justify-content-between lh-sm">
-        <div>
-          <h6 class="my-0">Third item</h6>
-          <small class="text-body-secondary">Brief description</small>
-        </div>
-        <span class="text-body-secondary">$5</span>
-      </li>
-      <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
-        <div class="text-success">
-          <h6 class="my-0">Promo code</h6>
-          <small>EXAMPLECODE</small>
-        </div>
-        <span class="text-success">−$5</span>
-      </li>
-      <li class="list-group-item d-flex justify-content-between">
-        <span>Total (USD)</span>
-        <strong>$20</strong>
-      </li>
-    </ul>
-
-    <form class="card p-2">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Promo code">
-        <button type="submit" class="btn btn-secondary">Redeem</button>
-      </div>
-    </form>
+<div class="container py-4">
+  <div class="mb-3 cuad">
+    <h1 class="txt">Gestión de pacientes</h1>
+    <p>Actualización, altas y bajas de tratamientos dentales</p>
   </div>
 
-    <!--FORMULARIO-->
-    <div class="col-md-7 col-lg-8">
-        <h4 class="mb-3">Agregar tratamiento</h4>
-        <form class="needs-validation">
-
-            <div class="row g-3">
-
-                <div class="col-12">
-                    <label for="firstName" class="form-label">Nombre de tratamiento</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-                    <div class="invalid-feedback">
-                        Valid first name is required.
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label for="firstName" class="form-label">Descripción</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-                    <div class="invalid-feedback">
-                        Valid first name is required.
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label for="firstName" class="form-label">Costo</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-                    <div class="invalid-feedback">
-                        Valid first name is required.
-                    </div>
-                </div>
-
+  <div class="row g-5">
+    
+    <!-- COLUMNA IZQUIERDA: LISTAS -->
+    <div class="col-md-3 col-lg-3 order-md-last">
+      
+      <!-- 1. LISTA DE ACTIVOS -->
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-primary">Tratamientos Activos</span>
+        <span class="badge bg-primary rounded-pill">{{ listaTratamientos.length }}</span>
+      </h4>
+      
+      <ul class="list-group mb-3 scroll-lista">
+        <!-- Usando @for para activos -->
+        @for (t of listaTratamientos; track t.id_tipo_tratamiento) {
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">{{ t.nombre }}</h6>
+              <small class="text-body-secondary">{{ t.descripcion }}</small>
             </div>
+            <div class="text-end">
+              <span class="text-body-secondary d-block fw-bold text-success">${{ t.costo }}</span>
+              <button class="btn btn-sm btn-outline-danger mt-1" (click)="eliminar(t.id_tipo_tratamiento)">
+                  <i class="bi bi-trash"></i> X
+              </button>
+            </div>
+          </li>
+        }
+        @empty {
+          <li class="list-group-item text-center">No hay tratamientos activos.</li>
+        }
+      </ul>
 
-            <hr class="my-4">
-            <button class="w-100 btn btn-primary btn-lg" type="submit">Agregar</button>
-        </form>
+      <!-- ============================================== -->
+      <!-- 2. NUEVA SECCIÓN: TRATAMIENTOS ARCHIVADOS      -->
+      <!-- ============================================== -->
+      <h4 class="d-flex justify-content-between align-items-center mb-3 mt-5">
+        <span class="text-secondary">Histórico (No vigentes)</span>
+        <span class="badge bg-secondary rounded-pill">{{ listaInactivos.length }}</span>
+      </h4>
+
+      @if (listaInactivos.length === 0) {
+          <div class="alert alert-light text-center border">
+             <small>No hay tratamientos archivados.</small>
+          </div>
+      } @else {
+          <ul class="list-group mb-3 scroll-lista opacity-75">
+            <!-- Usando @for para inactivos -->
+            @for (t of listaInactivos; track t.id_tipo_tratamiento) {
+              <li class="list-group-item d-flex justify-content-between lh-sm bg-light">
+                <div>
+                  <h6 class="my-0 text-decoration-line-through text-muted">{{ t.nombre }}</h6>
+                  <small class="text-muted fst-italic">Archivado</small>
+                </div>
+                <div class="text-end">
+                  <span class="text-muted d-block small">${{ t.costo }}</span>
+                  <i class="bi bi-archive-fill text-secondary"></i>
+                </div>
+              </li>
+            }
+          </ul>
+      }
+
     </div>
 
+    <!--COLUMNA DEL MEDIO CON AUMENTO DE TRATAMIENTOS-->
+    <div class="col-md-3 col-lg-6 order-md-last">
+      <app-estadisticas-tratamientos-d></app-estadisticas-tratamientos-d>
+    </div>
+
+    <!-- COLUMNA DERECHA: FORMULARIO REACTIVO -->
+    <div class="col-md-3 col-lg-3">
+      <h4 class="mb-3">Agregar tratamiento</h4>
+      
+      <form [formGroup]="searchForm" (ngSubmit)="guardarTratamiento()">
+
+        <div class="row g-3">
+          <!-- Nombre -->
+          <div class="col-12">
+            <label for="nombre" class="form-label">Nombre de tratamiento</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre"
+                   [class.is-invalid]="searchForm.get('nombre')?.invalid && searchForm.get('nombre')?.touched">
+            
+            @if (searchForm.get('nombre')?.touched && searchForm.get('nombre')?.invalid) {
+              <div class="text-danger small mt-1">
+                  @if (searchForm.get('nombre')?.hasError('required')) { <div>El nombre es obligatorio.</div> }
+                  @if (searchForm.get('nombre')?.hasError('pattern')) { <div>Solo letras y espacios.</div> }
+              </div>
+            }
+          </div>
+
+          <!-- Descripción -->
+          <div class="col-12">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" formControlName="descripcion"
+                   [class.is-invalid]="searchForm.get('descripcion')?.invalid && searchForm.get('descripcion')?.touched"></textarea>
+
+            @if (searchForm.get('descripcion')?.touched && searchForm.get('descripcion')?.invalid) {
+              <div class="text-danger small mt-1">
+                  @if (searchForm.get('descripcion')?.hasError('required')) { <div>La descripción es obligatoria.</div> }
+              </div>
+            }
+          </div>
+
+          <!-- Costo -->
+          <div class="col-6">
+            <label for="costo" class="form-label">Costo</label>
+            <div class="input-group has-validation">
+              
+              <input type="number" class="form-control text-center fw-bold" id="costo" formControlName="costo"
+                     [class.is-invalid]="searchForm.get('costo')?.invalid && searchForm.get('costo')?.touched">
+              
+
+              @if (searchForm.get('costo')?.touched && searchForm.get('costo')?.invalid) {
+                <div class="invalid-feedback d-block">
+                   @if (searchForm.get('costo')?.hasError('required')) { <div>Obligatorio.</div> }
+                   @if (searchForm.get('costo')?.hasError('pattern')) { <div>Solo enteros.</div> }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4">
+        <button class="w-100 btn btn-primary btn-lg" type="submit" [disabled]="searchForm.invalid">
+          Guardar Tratamiento
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <app-pacientes-tratamientos-inactivos-d>
+  </app-pacientes-tratamientos-inactivos-d>
 </div>

@@ -1,0 +1,111 @@
+<div class="container py-4">
+  
+  <div class="row mb-4">
+    <div class="col-12">
+      <!-- TARJETA DE PROMEDIO (KPI) -->
+      <div class="card bg-primary text-white shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-0">Costo Promedio del Catálogo</h5>
+            <small>Basado en tratamientos activos</small>
+          </div>
+          <h2 class="display-6 fw-bold mb-0">${{ promedioPrecios | number:'1.2-2' }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    
+    <!-- COLUMNA IZQUIERDA: BUSCADOR Y LISTA -->
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-3">Seleccionar Tratamiento</h5>
+          
+          <!-- BUSCADOR -->
+          <div class="input-group">
+            <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" 
+                   placeholder="Buscar tratamiento..." 
+                   [(ngModel)]="filtroBusqueda">
+          </div>
+        </div>
+
+        <div class="list-group list-group-flush overflow-auto" style="max-height: 400px;">
+          @for (t of listaFiltrada; track t.id_tipo_tratamiento) {
+            <button type="button" 
+                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                    [class.active]="t.id_tipo_tratamiento === tratamientoSeleccionado?.id_tipo_tratamiento"
+                    (click)="seleccionar(t)">
+              <div>
+                <div class="fw-bold">{{ t.nombre }}</div>
+                <small [class.text-white-50]="t.id_tipo_tratamiento === tratamientoSeleccionado?.id_tipo_tratamiento" 
+                       class="text-muted">{{ t.descripcion }}</small>
+              </div>
+              <span class="badge rounded-pill bg-light text-dark border">
+                ${{ t.costo }}
+              </span>
+            </button>
+          }
+          @empty {
+            <div class="p-3 text-center text-muted">No se encontraron tratamientos.</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: PANEL DE EDICIÓN -->
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm border-0 bg-light">
+        <div class="card-body d-flex flex-column justify-content-center">
+          
+          @if (tratamientoSeleccionado) {
+            <!-- VISTA CUANDO HAY UN TRATAMIENTO SELECCIONADO -->
+            <div class="text-center">
+              <div class="display-1 text-primary mb-3">
+                <i class="bi bi-tags-fill"></i>
+              </div>
+              <h4>Ajustar Precio:</h4>
+              <h3 class="text-primary fw-bold mb-4">{{ tratamientoSeleccionado.nombre }}</h3>
+              
+              <div class="card p-4 mx-auto shadow-sm" style="max-width: 350px;">
+                <label class="form-label text-start w-100 fw-bold">Porcentaje de Aumento (%)</label>
+                
+                <div class="input-group mb-3">
+                  <input type="number" class="form-control form-control-lg text-center fw-bold" 
+                         [(ngModel)]="porcentajeAumento" 
+                         placeholder="Ej. 10">
+                  <span class="input-group-text">%</span>
+                </div>
+                
+                <!-- Cálculo previo visual -->
+                @if (porcentajeAumento > 0) {
+                  <div class="alert alert-info py-2 mb-3 small">
+                    Nuevo precio estimado: 
+                    <strong>${{ tratamientoSeleccionado.costo + (tratamientoSeleccionado.costo * porcentajeAumento / 100) | number:'1.0-0' }}</strong>
+                  </div>
+                }
+
+                <button class="btn btn-primary w-100" 
+                        [disabled]="porcentajeAumento === 0"
+                        (click)="aplicarAumento()">
+                  <i class="bi bi-check-circle"></i> Aplicar Ajuste
+                </button>
+              </div>
+            </div>
+
+          } @else {
+            <!-- VISTA VACÍA (Default) -->
+            <div class="text-center text-muted opacity-50">
+              <i class="bi bi-arrow-left-circle display-4"></i>
+              <h5 class="mt-3">Selecciona un tratamiento de la lista<br>para ajustar su precio.</h5>
+            </div>
+          }
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

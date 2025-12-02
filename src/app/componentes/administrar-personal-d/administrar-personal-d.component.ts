@@ -15,7 +15,6 @@ export class AdministrarPersonalDComponent {
 
   maxlengthNombres="255";
   searchForm:FormGroup;
-
   maxlengthContraseña="8";
   soloLetras = /^[a-zA-ZÁÉÍÓÚáéíóúñÑ ]+$/;
 

@@ -1,0 +1,82 @@
+<div class="card-header bg-light text-dark div_dia">
+    <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Pacientes con tratamientos inactivos</span>
+        <span class="badge bg-secondary rounded-pill">{{ listaPacientesInactivos.length }}</span>
+    </h4>
+</div>
+
+@if (mostrarReporte) {
+    <div class="card-body div_dia">
+        <!-- 1. CAMPO DE BÚSQUEDA (NUEVO)                  -->
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" 
+                       class="form-control border-start-0" 
+                       placeholder="Buscar por tratamiento inactivo o nombre del paciente..." 
+                       [(ngModel)]="filtroBusqueda">
+                
+                <!-- Botón para limpiar búsqueda si hay texto -->
+                @if (filtroBusqueda) {
+                    <button class="btn btn-outline-secondary" (click)="filtroBusqueda = ''">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                }
+            </div>
+        </div>
+
+        <!-- 2. TABLA CON DATOS FILTRADOS                  -->
+
+        @if (listaFiltrada.length === 0) {
+            
+            <div class="alert alert-info text-center m-0">
+                @if (listaPacientesInactivos.length === 0) {
+                    <!-- Caso: No hay deudores en absoluto -->
+                    <i class="bi bi-check-circle"></i> ¡Excelente! No hay deudas pendientes.
+                } @else {
+                    <!-- Caso: Hay deudores, pero el filtro no encontró nada -->
+                    <i class="bi bi-search"></i> No se encontraron resultados para "{{ filtroBusqueda }}".
+                }
+            </div>
+
+        } @else {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Tratamiento</th>
+                            <th>Fecha</th>
+                            <th>Adeudo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- CAMBIO IMPORTANTE: Iteramos sobre listaFiltrada -->
+                        @for (p of listaFiltrada; track $index) {
+                            <tr>
+                                <td>{{ p.nombre_paciente }}</td>
+                                <td>
+                                    {{ p.nombre_tratamiento }}
+                                    <span class="badge bg-secondary ms-1" style="font-size: 0.7em;">Inactivo</span>
+                                </td>
+                                <td>{{ p.fecha_cita | date:'shortDate' }}</td>
+                                <td class="text-danger fw-bold">
+                                    ${{ p.saldo_pendiente }} 
+                                    <small class="text-muted fw-normal">
+                                        (de ${{ p.precio_original }})
+                                    </small>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+}
+
+@if(listaPacientesInactivos.length===0){
+    <i class="bi bi-search"></i> No hay pacientes con tratamientos inactivos por el momento.
+}
