@@ -1,0 +1,102 @@
+<div class="card shadow border-0">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0"><i class="bi bi-calendar-plus"></i> Nueva Cita</h5>
+  </div>
+  
+  <div class="card-body">
+    <form [formGroup]="formCita" (ngSubmit)="guardar()">
+
+      <!-- SELECCIÓN DE PACIENTE -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Paciente:</label>
+        <select class="form-select" formControlName="id_paciente" 
+                [class.is-invalid]="formCita.get('id_paciente')?.invalid && formCita.get('id_paciente')?.touched">
+          <option value="">-- Seleccione un paciente --</option>
+          @for (p of listaPacientes; track p.id_paciente) {
+            <option [value]="p.id_paciente">
+              {{ p.nombrespaciente }} {{ p.apellidopat }} {{ p.apellidomat || '' }}
+            </option>
+          }
+        </select>
+        @if (formCita.get('id_paciente')?.invalid && formCita.get('id_paciente')?.touched) {
+          <div class="invalid-feedback">Debe seleccionar un paciente.</div>
+        }
+      </div>
+
+      <!-- SELECCIÓN DE DENTISTA -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Dentista:</label>
+        <select class="form-select" formControlName="id_dentista" (change)="verificarDisponibilidad()"
+                [class.is-invalid]="formCita.get('id_dentista')?.invalid && formCita.get('id_dentista')?.touched">
+          <option value="">-- Seleccione un dentista --</option>
+          @for (d of listaDentistas; track d.id_empleado) {
+            <option [value]="d.id_empleado">
+               Dr. {{ d.nombre_completo }}
+            </option>
+          }
+        </select>
+        @if (formCita.get('id_dentista')?.invalid && formCita.get('id_dentista')?.touched) {
+          <div class="invalid-feedback">Debe seleccionar un dentista.</div>
+        }
+      </div>
+
+      <div class="row">
+        <!-- FECHA (Validación: Diferente de hoy y no antes) -->
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Fecha:</label>
+          <input type="date" class="form-control" formControlName="fecha" 
+                 [min]="fechaMinima" (change)="verificarDisponibilidad()"
+                 [class.is-invalid]="formCita.get('fecha')?.invalid && formCita.get('fecha')?.touched">
+          @if (formCita.get('fecha')?.invalid && formCita.get('fecha')?.touched) {
+            <div class="invalid-feedback">Fecha requerida (a partir de mañana).</div>
+          }
+        </div>
+
+        <!-- HORA -->
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Hora:</label>
+          <input type="time" class="form-control" formControlName="hora" (change)="verificarDisponibilidad()"
+                 [class.is-invalid]="formCita.get('hora')?.invalid && formCita.get('hora')?.touched">
+          @if (formCita.get('hora')?.invalid && formCita.get('hora')?.touched) {
+            <div class="invalid-feedback">Hora requerida.</div>
+          }
+        </div>
+      </div>
+
+      <!-- ALERTA DE DISPONIBILIDAD -->
+      @if (mensajeDisponibilidad) {
+        <div class="alert p-2 mb-3 text-center" 
+             [ngClass]="esHorarioValido ? 'alert-success' : 'alert-danger'">
+          <strong>{{ mensajeDisponibilidad }}</strong>
+        </div>
+      }
+
+      <!-- DESCRIPCIÓN (Validación de caracteres) -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">Motivo / Descripción:</label>
+        <textarea class="form-control" rows="3" formControlName="descripcion"
+                  placeholder="Ej: Revisión de dolor en muela..."
+                  [class.is-invalid]="formCita.get('descripcion')?.invalid && formCita.get('descripcion')?.touched"></textarea>
+        
+        @if (formCita.get('descripcion')?.hasError('required') && formCita.get('descripcion')?.touched) {
+          <div class="invalid-feedback">La descripción es obligatoria.</div>
+        }
+        @if (formCita.get('descripcion')?.hasError('pattern')) {
+          <div class="invalid-feedback">No uses caracteres especiales raros (solo letras, números y puntuación).</div>
+        }
+        @if (formCita.get('descripcion')?.hasError('minlength')) {
+          <div class="invalid-feedback">Describe un poco más (mínimo 5 letras).</div>
+        }
+      </div>
+
+      <!-- BOTÓN DE GUARDAR -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg" 
+                [disabled]="formCita.invalid || !esHorarioValido || cargandoDisponibilidad">
+          <i class="bi bi-check-circle-fill"></i> Agendar Cita
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

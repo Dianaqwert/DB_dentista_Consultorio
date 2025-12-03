@@ -1,0 +1,127 @@
+<div class="container-fluid p-4">
+  
+  <!-- FILTROS -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body d-flex gap-3 align-items-end bg-light rounded">
+      <div>
+        <label class="form-label fw-bold">Fecha Inicio:</label>
+        <input type="date" class="form-control" [(ngModel)]="fechaInicio">
+      </div>
+      <div>
+        <label class="form-label fw-bold">Fecha Fin:</label>
+        <input type="date" class="form-control" [(ngModel)]="fechaFin">
+      </div>
+      <button class="btn btn-primary px-4" (click)="generarReporte()">
+        <i class="bi bi-bar-chart-fill"></i> Generar Reporte
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    
+    <!-- COLUMNA IZQUIERDA: RESUMEN FINANCIERO -->
+    <div class="col-md-8">
+      <div class="card shadow border-0">
+        <div class="card-header bg-success text-white d-flex justify-content-between">
+          <h5 class="mb-0">Ingresos Desglosados</h5>
+          <span>Del {{fechaInicio}} al {{fechaFin}}</span>
+        </div>
+        <div class="card-body">
+          
+          <!-- TARJETAS DE TOTALES -->
+          <div class="row mb-4 text-center">
+            <div class="col-md-4">
+              <div class="p-3 bg-light rounded border">
+                <small class="text-muted">Total Ingresos</small>
+                <h3 class="text-success fw-bold">${{ totalGeneral | number:'1.0-0' }}</h3>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 bg-light rounded border">
+                <small class="text-muted">IVA Estimado (16%)</small>
+                <h3 class="text-secondary">${{ totalIVA | number:'1.0-0' }}</h3>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 bg-danger bg-opacity-10 rounded border border-danger">
+                <small class="text-danger fw-bold">Dinero Pendiente (Deuda)</small>
+                <h3 class="text-danger">${{ totalDeudaPeriodo | number:'1.0-0' }}</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABLA CON TFOOT -->
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Método de Pago</th>
+                  <th>Tratamiento / Concepto</th>
+                  <th class="text-end">Monto Recaudado</th>
+                </tr>
+              </thead>
+              
+              <!-- CUERPO DE DATOS (Sin el Total General) -->
+              <tbody>
+                @for (fila of datosIngresos; track $index) {
+                  <tr [ngClass]="{'table-secondary fw-bold': esFilaSubtotal(fila)}">
+                    <td>{{ fila.metodo_pago }}</td>
+                    <td>
+                        {{ fila.tratamiento === 'SUBTOTAL PAGO' ? 'SUBTOTAL ' + fila.metodo_pago : fila.tratamiento }}
+                    </td>
+                    <td class="text-end">
+                        ${{ fila.ingresos_totales | number }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+
+              <!-- PIE DE TABLA (Total General Fijo al final) -->
+              <tfoot class="table-success border-top border-3 border-success">
+                <tr class="fw-bold fs-5">
+                  <td colspan="2" class="text-end text-uppercase">Total General Ingresos:</td>
+                  <td class="text-end">${{ totalGeneral | number }}</td>
+                </tr>
+              </tfoot>
+
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: LISTA DE MOROSOS -->
+    <div class="col-md-4">
+      <div class="card shadow border-0 h-100">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0"><i class="bi bi-exclamation-circle"></i> Deudores del Periodo</h5>
+        </div>
+        <div class="card-body p-0">
+          <ul class="list-group list-group-flush">
+            @for (deudor of datosDeudores; track deudor.id_paciente) {
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">{{ deudor.nombre_paciente }}</div>
+                  <small class="text-muted">
+                    <i class="bi bi-telephone"></i> {{ deudor.telefono }}
+                  </small>
+                </div>
+                <span class="badge bg-danger rounded-pill">
+                  -${{ deudor.total_deuda }}
+                </span>
+              </li>
+            }
+            @if (datosDeudores.length === 0) {
+              <div class="p-4 text-center text-muted">
+                <i class="bi bi-check-circle fs-1 text-success"></i>
+                <p>¡Excelente! No hay deudas registradas en estas fechas.</p>
+              </div>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

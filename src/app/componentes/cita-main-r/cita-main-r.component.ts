@@ -3,6 +3,7 @@ import { CitasGestionarRComponent } from "../citas-gestionar-r/citas-gestionar-r
 import { CitasGenerarComponent } from "../citas-generar/citas-generar.component";
 import { CitasPorFechaComponent } from "../citas-por-fecha/citas-por-fecha.component";
 import { CitasCobroRComponent } from "../citas-cobro-r/citas-cobro-r.component";
+import { CitaNuevaPacienteRComponent } from "../cita-nueva-paciente-r/cita-nueva-paciente-r.component";
 
 //tipo personalizadp
 type VistaCitas = 'agenda' | 'nueva' | 'cobrar';
@@ -10,7 +11,7 @@ type VistaCitas = 'agenda' | 'nueva' | 'cobrar';
 @Component({
   standalone:true,
   selector: 'app-cita-main-r',
-  imports: [CitasGestionarRComponent, CitasGenerarComponent, CitasPorFechaComponent, CitasCobroRComponent],
+  imports: [CitasGestionarRComponent, CitasGenerarComponent, CitasPorFechaComponent, CitasCobroRComponent, CitaNuevaPacienteRComponent],
   templateUrl: './cita-main-r.component.html',
   styleUrl: './cita-main-r.component.css'
 })
