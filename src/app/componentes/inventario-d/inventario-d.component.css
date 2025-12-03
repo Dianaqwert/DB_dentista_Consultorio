@@ -1,48 +1,44 @@
-.row{
-    padding: 10px;
-    margin: 5px;
-
+.row {
+    padding: 10px;
+    margin: 5px;
 }
 
-
-.colorSep{
-    color: #bfcdcc;
+.colorSep {
+    color: #bfcdcc;
 }
 
 .separador-reporte {
-    /* Fuerza el bloque a ocupar toda la celda */
-    display: block; 
-    padding-top: 5px;
-    padding-bottom: 5px;
+    /* Fuerza el bloque a ocupar toda la celda */
+    display: block;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 /* Aplica una línea divisoria (borde superior) a todos los elementos, excepto al primero */
 .separador-reporte + .separador-reporte {
-    border-top: 1px dashed #141313; /* Línea gris punteada */
-    margin-top: 5px;
+    border-top: 1px dashed #141313; /* Línea gris punteada */
+    margin-top: 5px;
 }
 
-div{
-    font-family: "Raleway", sans-serif;
-    font-weight: 400;
-
+div {
+    font-family: "Raleway", sans-serif;
+    font-weight: 400;
 }
 
-.txt{
-    font-size: 50px;
-    text-align: center;
-    margin: 5px;
-    color: #2b9895;     
-    font-weight: 500px;
-
+.txt {
+    font-size: 50px;
+    text-align: center;
+    margin: 5px;
+    color: #2b9895;    
+    font-weight: 500; /* Corregido: se eliminó 'px' */
 }
 
-.cuad{
-    padding: 20px;
-    margin: 20ps;
+.cuad {
+    padding: 20px;
+    margin: 20px; /* Corregido: '20ps' a '20px' */
 }
 
 
-p{
-    text-align: center;
+p {
+    text-align: center;
 }
