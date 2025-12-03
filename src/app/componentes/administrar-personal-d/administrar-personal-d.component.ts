@@ -1,8 +1,47 @@
 import { Component } from '@angular/core';
 import { EmpleadosService } from '../../services/empleados.service';
 import { Usuario } from '../../interfaces/usuarioEmpleado';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl,ValidatorFn, FormGroup, FormsModule, ReactiveFormsModule, Validators ,ValidationErrors} from '@angular/forms';
 import { BajarPersonalDComponent } from "../bajar-personal-d/bajar-personal-d.component";
+
+export function noRepetitiveCharacters(control: AbstractControl): ValidationErrors | null {
+  const value = control.value as string;
+  if (!value) return null;
+  
+  // Regex: Busca cualquier caracter (.) capturado en el grupo 1, 
+  // seguido por el mismo caracter (\1) dos o más veces ({2,}).
+  const hasRepetition = /(.)\1{2,}/.test(value);
+  
+  return hasRepetition ? { repetitive: true } : null;
+}
+
+export const namesNotEqualValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  
+  // Antes buscabas 'nombresPaciente', pero en este form se llama 'nombres'
+  const nombre = control.get('nombres')?.value;
+  
+  // Antes buscabas 'apellidoPat', pero en este form se llama 'apellidopat' (minúsculas)
+  const pat = control.get('apellidopat')?.value;
+  
+  // Antes buscabas 'apellidoMat', pero en este form se llama 'apellidomat' (minúsculas)
+  const mat = control.get('apellidomat')?.value;
+
+  // Si falta alguno, no validamos aún
+  if (!nombre || !pat || !mat) return null;
+
+  const n = nombre.trim().toLowerCase();
+  const p = pat.trim().toLowerCase();
+  const m = mat.trim().toLowerCase();
+
+  // REGLA 1: El Nombre no puede ser igual al Paterno
+  if (n === p) return { nameEqualsPat: true };
+  
+  // REGLA 2: El Nombre no puede ser igual al Materno
+  if (n === m) return { nameEqualsMat: true };
+
+  return null;
+};
+
 
 @Component({
   standalone:true,
@@ -30,17 +69,59 @@ export class AdministrarPersonalDComponent {
   };
 
 
-  constructor(private usuariosService: EmpleadosService, private fb: FormBuilder) {
-    //Validadores agrupados en un array [] dentro del array del control
+   constructor(
+    private fb: FormBuilder,
+    private usuariosService: EmpleadosService
+  ) {
     this.searchForm = this.fb.group({
-      nombreUser: ['', [Validators.required, Validators.maxLength(10)]], // Quitamos pattern solo letras aqui por si el usuario lleva numeros
-      nombres: ['', [Validators.required, Validators.pattern(this.soloLetras), Validators.maxLength(255)]],
-      apellidopat: ['', [Validators.required, Validators.pattern(this.soloLetras), Validators.maxLength(255)]],
-      apellidomat: ['', [Validators.required, Validators.pattern(this.soloLetras), Validators.maxLength(255)]],
+      // 1. Nombre de Usuario
+      nombreUser: ['', [
+        Validators.required, 
+        Validators.maxLength(10)
+      ]],
+
+      // 2. Nombres (Agregamos noRepetitiveCharacters)
+      nombres: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(this.soloLetras), 
+        Validators.maxLength(255),
+        noRepetitiveCharacters // <--- NUEVA VALIDACIÓN
+      ]],
+
+      // 3. Apellido Paterno (Agregamos noRepetitiveCharacters)
+      apellidopat: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(this.soloLetras),
+        Validators.maxLength(255),
+        noRepetitiveCharacters // <--- NUEVA VALIDACIÓN
+      ]],
+
+      // 4. Apellido Materno (Agregamos noRepetitiveCharacters)
+      apellidomat: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(this.soloLetras),
+        Validators.maxLength(255),
+        noRepetitiveCharacters, // <--- NUEVA VALIDACIÓN
+      ]],
+
+      // 5. Tipo de Empleado (Asegurado aquí para corregir tu error)
       tipoEmpleado: ['Recepcion', Validators.required],
-      contrasenaue: ['', [Validators.required, Validators.maxLength(8)]],
-      superadmin: [false] // Inicializar como booleano false, no string 'false'
-    });
+
+      // 6. Contraseña
+      contrasenaue: ['', [
+        Validators.required, 
+        Validators.minLength(5), 
+        Validators.maxLength(8),
+      ]],
+
+      // 7. Super Admin
+      superadmin: [false]
+    }, { 
+          validators: namesNotEqualValidator 
+        });
   }
 
   ngOnsearch() {
@@ -50,6 +131,10 @@ export class AdministrarPersonalDComponent {
   registrarPersonal() {
     if (this.searchForm.invalid) {
       this.searchForm.markAllAsTouched();
+      if (this.searchForm.errors?.['nameEqualsPat'] || this.searchForm.errors?.['nameEqualsMat']) {
+        alert("⚠️ Error: El nombre no puede ser igual a los apellidos.");
+      }
+      
       alert("Por favor corrige los errores en el formulario");
       return;
     }

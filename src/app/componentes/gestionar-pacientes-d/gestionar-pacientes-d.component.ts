@@ -39,7 +39,7 @@ export class GestionarPacientesDComponent {
 
   seleccionarPaciente(paciente: PacienteReporte) {
     console.log("Paciente seleccionado:", paciente);
-    this.pacienteSeleccionado = paciente;  // <-- AQUÍ ESTABA EL ERROR
+    this.pacienteSeleccionado = paciente;  
   }
 
 

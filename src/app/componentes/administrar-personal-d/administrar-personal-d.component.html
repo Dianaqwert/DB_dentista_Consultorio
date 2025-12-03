@@ -14,105 +14,122 @@
         <div class="card-body">
           <form [formGroup]="searchForm" (ngSubmit)="ngOnsearch()">
 
+            <!-- NOMBRE DE USUARIO -->
             <div class="mb-3">
               <label class="form-label">Nombre de Usuario</label>
               <input type="text" 
                      class="form-control" 
                      formControlName="nombreUser"
-                     [class.is-invalid]="searchForm.get('nombreUser')?.invalid && searchForm.get('nombreUser')?.touched">
+                     maxlength="10"
+                     [class.is-invalid]="(searchForm.get('nombreUser')?.dirty || searchForm.get('nombreUser')?.touched) && searchForm.get('nombreUser')?.invalid">
               
-              @if(searchForm.get('nombreUser')?.hasError('required') && searchForm.get('nombreUser')?.touched){
+              @if(searchForm.get('nombreUser')?.hasError('required') && (searchForm.get('nombreUser')?.dirty || searchForm.get('nombreUser')?.touched)){
                 <div class="text-danger small">El nombre de usuario es obligatorio.</div>
               }
-              @if(searchForm.get('nombreUser')?.hasError('pattern') && searchForm.get('nombreUser')?.touched){
-                <div class="text-danger small">Solo se permiten letras (sin números).</div>
-              }
-              @if(searchForm.get('nombreUser')?.hasError('maxlength') && searchForm.get('nombreUser')?.touched) {
+              @if(searchForm.get('nombreUser')?.hasError('maxlength') && (searchForm.get('nombreUser')?.dirty || searchForm.get('nombreUser')?.touched)) {
                 <div class="text-danger small">Máximo 10 caracteres permitidos.</div>
               }
             </div>
 
+            <!-- NOMBRES -->
             <div class="mb-3">
               <label class="form-label">Nombres</label>
               <input type="text" 
                      class="form-control" 
                      formControlName="nombres"
-                     [class.is-invalid]="searchForm.get('nombres')?.invalid && searchForm.get('nombres')?.touched">
+                     [class.is-invalid]="(searchForm.get('nombres')?.dirty || searchForm.get('nombres')?.touched) && searchForm.get('nombres')?.invalid">
               
-              @if(searchForm.get('nombres')?.hasError('required') && searchForm.get('nombres')?.touched){
+              @if(searchForm.get('nombres')?.hasError('required') && (searchForm.get('nombres')?.dirty || searchForm.get('nombres')?.touched)){
                 <div class="text-danger small">El nombre es obligatorio.</div>
               }
-              @if(searchForm.get('nombres')?.hasError('pattern') && searchForm.get('nombres')?.touched){
+              @if(searchForm.get('nombres')?.hasError('pattern') && (searchForm.get('nombres')?.dirty || searchForm.get('nombres')?.touched)){
                 <div class="text-danger small">Solo se permiten letras (sin números).</div>
               }
-               @if(searchForm.get('nombres')?.hasError('maxlength') && searchForm.get('nombres')?.touched) {
-                <div class="text-danger small">Máximo 255 caracteres permitidos.</div>
+              @if(searchForm.get('nombres')?.hasError('minlength') && (searchForm.get('nombres')?.dirty || searchForm.get('nombres')?.touched)) {
+                <div class="text-danger small">Mínimo 3 caracteres.</div>
+              }
+              <!-- ERROR DE REPETICIÓN -->
+              @if(searchForm.get('nombres')?.hasError('repetitive') && (searchForm.get('nombres')?.dirty || searchForm.get('nombres')?.touched)) {
+                <div class="text-danger small fw-bold">⚠️ No repitas caracteres consecutivamente (ej: 'aaa').</div>
               }
             </div>
 
+            <!-- APELLIDO PATERNO -->
             <div class="mb-3">
               <label class="form-label">Apellido Paterno</label>
               <input type="text" 
                      class="form-control" 
                      formControlName="apellidopat"
-                     [class.is-invalid]="searchForm.get('apellidopat')?.invalid && searchForm.get('apellidopat')?.touched">
+                     [class.is-invalid]="(searchForm.get('apellidopat')?.dirty || searchForm.get('apellidopat')?.touched) && searchForm.get('apellidopat')?.invalid">
               
-              @if(searchForm.get('apellidopat')?.hasError('required') && searchForm.get('apellidopat')?.touched){
+              @if(searchForm.get('apellidopat')?.hasError('required') && (searchForm.get('apellidopat')?.dirty || searchForm.get('apellidopat')?.touched)){
                 <div class="text-danger small">El apellido es obligatorio.</div>
               }
-              @if(searchForm.get('apellidopat')?.hasError('pattern') && searchForm.get('apellidopat')?.touched){
+              @if(searchForm.get('apellidopat')?.hasError('pattern') && (searchForm.get('apellidopat')?.dirty || searchForm.get('apellidopat')?.touched)){
                 <div class="text-danger small">Solo se permiten letras.</div>
               }
-              @if(searchForm.get('apellidopat')?.hasError('maxlength') && searchForm.get('apellidopat')?.touched) {
-                <div class="text-danger small">Máximo 255 caracteres permitidos.</div>
+              @if(searchForm.get('apellidopat')?.hasError('minlength') && (searchForm.get('apellidopat')?.dirty || searchForm.get('apellidopat')?.touched)) {
+                <div class="text-danger small">Mínimo 3 caracteres.</div>
+              }
+              @if(searchForm.get('apellidopat')?.hasError('repetitive') && (searchForm.get('apellidopat')?.dirty || searchForm.get('apellidopat')?.touched)) {
+                <div class="text-danger small fw-bold">⚠️ No repitas caracteres consecutivamente.</div>
               }
             </div>
 
+            <!-- APELLIDO MATERNO -->
             <div class="mb-3">
               <label class="form-label">Apellido Materno</label>
               <input type="text" 
                      class="form-control" 
                      formControlName="apellidomat"
-                     [class.is-invalid]="searchForm.get('apellidomat')?.invalid && searchForm.get('apellidomat')?.touched">
+                     [class.is-invalid]="(searchForm.get('apellidomat')?.dirty || searchForm.get('apellidomat')?.touched) && searchForm.get('apellidomat')?.invalid">
               
-              @if(searchForm.get('apellidomat')?.hasError('required') && searchForm.get('apellidomat')?.touched){
+              @if(searchForm.get('apellidomat')?.hasError('required') && (searchForm.get('apellidomat')?.dirty || searchForm.get('apellidomat')?.touched)){
                 <div class="text-danger small">El apellido es obligatorio.</div>
               }
-              @if(searchForm.get('apellidomat')?.hasError('pattern') && searchForm.get('apellidomat')?.touched){
+              @if(searchForm.get('apellidomat')?.hasError('pattern') && (searchForm.get('apellidomat')?.dirty || searchForm.get('apellidomat')?.touched)){
                 <div class="text-danger small">Solo se permiten letras.</div>
               }
-              @if(searchForm.get('apellidomat')?.hasError('maxlength') && searchForm.get('apellidomat')?.touched) {
-                <div class="text-danger small">Máximo 255 caracteres permitidos.</div>
+              @if(searchForm.get('apellidomat')?.hasError('minlength') && (searchForm.get('apellidomat')?.dirty || searchForm.get('apellidomat')?.touched)) {
+                <div class="text-danger small">Mínimo 3 caracteres.</div>
+              }
+              @if(searchForm.get('apellidomat')?.hasError('repetitive') && (searchForm.get('apellidomat')?.dirty || searchForm.get('apellidomat')?.touched)) {
+                <div class="text-danger small fw-bold">⚠️ No repitas caracteres consecutivamente.</div>
               }
             </div>
 
+            <!-- TIPO EMPLEADO -->
             <div class="mb-3">
               <label class="form-label">Tipo de Empleado</label>
               <select class="form-control" 
                       formControlName="tipoEmpleado"
-                      [class.is-invalid]="searchForm.get('tipoEmpleado')?.invalid && searchForm.get('tipoEmpleado')?.touched">
+                      [class.is-invalid]="(searchForm.get('tipoEmpleado')?.dirty || searchForm.get('tipoEmpleado')?.touched) && searchForm.get('tipoEmpleado')?.invalid">
                 <option value="Recepcion">Recepción</option>
                 <option value="Ayudante">Ayudante</option>
                 <option value="Dentista">Dentista</option>
               </select>
               
-              @if(searchForm.get('tipoEmpleado')?.invalid && searchForm.get('tipoEmpleado')?.touched){
+              @if(searchForm.get('tipoEmpleado')?.invalid && (searchForm.get('tipoEmpleado')?.dirty || searchForm.get('tipoEmpleado')?.touched)){
                 <div class="text-danger small">Selecciona un rol de empleado.</div>
               }
             </div>
 
+            <!-- CONTRASEÑA -->
             <div class="mb-3">
               <label class="form-label">Contraseña</label>
               <input type="password" 
                      class="form-control" 
                      formControlName="contrasenaue"
-                     [class.is-invalid]="searchForm.get('contrasenaue')?.invalid && searchForm.get('contrasenaue')?.touched">
+                     [class.is-invalid]="(searchForm.get('contrasenaue')?.dirty || searchForm.get('contrasenaue')?.touched) && searchForm.get('contrasenaue')?.invalid">
               
-              @if(searchForm.get('contrasenaue')?.hasError('required') && searchForm.get('contrasenaue')?.touched){
+              @if(searchForm.get('contrasenaue')?.hasError('required') && (searchForm.get('contrasenaue')?.dirty || searchForm.get('contrasenaue')?.touched)){
                 <div class="text-danger small">Introduce una contraseña.</div>
               }       
-              @if(searchForm.get('contrasenaue')?.hasError('maxlength') && searchForm.get('contrasenaue')?.touched) {
+              @if(searchForm.get('contrasenaue')?.hasError('maxlength') && (searchForm.get('contrasenaue')?.dirty || searchForm.get('contrasenaue')?.touched)) {
                 <div class="text-danger small">Máximo 8 caracteres permitidos.</div>
+              }
+               @if(searchForm.get('contrasenaue')?.hasError('minlength') && (searchForm.get('contrasenaue')?.dirty || searchForm.get('contrasenaue')?.touched)) {
+                <div class="text-danger small">Mínimo 5 caracteres.</div>
               }
             </div>
 

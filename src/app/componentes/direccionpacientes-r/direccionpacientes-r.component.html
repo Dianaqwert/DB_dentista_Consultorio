@@ -1,84 +1,127 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow border-0">
-        
-        <div class="card-header bg-info text-white">
-          <h4 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Registrar Dirección del Paciente</h4>
-        </div>
+<div class="card shadow border-0 mt-3">
+  
+  <div class="card-header bg-info text-white">
+    <h5 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Domicilio del Paciente</h5>
+  </div>
 
-        <div class="card-body p-4">
-          
-          @if (!idPaciente) {
-            <div class="alert alert-warning">
-              <i class="bi bi-exclamation-triangle"></i> No se ha detectado el ID del paciente. Por favor regresa al listado.
-            </div>
-          }
-
-          <form [formGroup]="direccionForm" (ngSubmit)="guardarDireccion()">
-
-            <!-- FILA 1: CP y Municipio -->
-            <div class="row g-3 mb-3">
-              <div class="col-md-4">
-                <label class="form-label">Código Postal</label>
-                <input type="text" class="form-control" formControlName="cp" placeholder="20000" maxlength="5"
-                       [class.is-invalid]="direccionForm.get('cp')?.invalid && direccionForm.get('cp')?.touched">
-                @if (direccionForm.get('cp')?.invalid && direccionForm.get('cp')?.touched) {
-                  <div class="invalid-feedback">Requerido (5 dígitos).</div>
-                }
-              </div>
-              
-              <div class="col-md-8">
-                <label class="form-label">Municipio</label>
-                <input type="text" class="form-control" formControlName="municipio" placeholder="Municipio"
-                       [class.is-invalid]="direccionForm.get('municipio')?.invalid && direccionForm.get('municipio')?.touched">
-              </div>
-            </div>
-
-            <!-- FILA 2: Colonia y Calle -->
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <label class="form-label">Colonia / Fraccionamiento</label>
-                <input type="text" class="form-control" formControlName="colonia" placeholder="Ej. Centro"
-                       [class.is-invalid]="direccionForm.get('colonia')?.invalid && direccionForm.get('colonia')?.touched">
-                @if (direccionForm.get('colonia')?.hasError('required') && direccionForm.get('colonia')?.touched) {
-                    <div class="invalid-feedback">Campo obligatorio.</div>
-                }
-              </div>
-              
-              <div class="col-md-6">
-                <label class="form-label">Calle</label>
-                <input type="text" class="form-control" formControlName="calle" placeholder="Ej. Av. Madero"
-                       [class.is-invalid]="direccionForm.get('calle')?.invalid && direccionForm.get('calle')?.touched">
-                @if (direccionForm.get('calle')?.hasError('required') && direccionForm.get('calle')?.touched) {
-                    <div class="invalid-feedback">Campo obligatorio.</div>
-                }
-              </div>
-            </div>
-
-            <!-- FILA 3: Números -->
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <label class="form-label">Número Exterior</label>
-                <input type="number" class="form-control" formControlName="numeroExt" placeholder="Ej. 123">
-              </div>
-              
-              <div class="col-md-6">
-                <label class="form-label">Número Interior (Opcional)</label>
-                <input type="number" class="form-control" formControlName="numeroInt" placeholder="Ej. 2B">
-              </div>
-            </div>
-
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary btn-lg" 
-                      [disabled]="direccionForm.invalid || !idPaciente">
-                <i class="bi bi-save"></i> Guardar Dirección
-              </button>
-            </div>
-
-          </form>
-        </div>
+  <div class="card-body p-4">
+    
+    <!-- Alerta de seguridad: Si no hay ID, no mostramos el form -->
+    @if (!idPaciente) {
+      <div class="alert alert-warning text-center">
+        <div class="spinner-border spinner-border-sm text-warning" role="status"></div>
+        Esperando registro del paciente...
       </div>
-    </div>
+    } @else {
+
+      <form [formGroup]="direccionForm" (ngSubmit)="guardarDireccion()">
+
+        <!-- FILA 1: CP y Municipio -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Código Postal</label>
+            <input type="text" class="form-control" formControlName="cp" placeholder="20000" maxlength="5"
+                   [class.is-invalid]="direccionForm.get('cp')?.invalid && (direccionForm.get('cp')?.dirty || direccionForm.get('cp')?.touched)">
+            
+            @if (direccionForm.get('cp')?.invalid && (direccionForm.get('cp')?.dirty || direccionForm.get('cp')?.touched)) {
+              <div class="invalid-feedback d-block">
+                @if (direccionForm.get('cp')?.hasError('required')) { <div>Requerido.</div> }
+                @if (direccionForm.get('cp')?.hasError('pattern')) { <div>Deben ser 5 números exactos.</div> }
+              </div>
+            }
+          </div>
+          
+          <div class="col-md-8">
+            <label class="form-label fw-bold">Municipio</label>
+            <input type="text" class="form-control" formControlName="municipio" placeholder="Municipio" maxlength="50"
+                   [class.is-invalid]="direccionForm.get('municipio')?.invalid && (direccionForm.get('municipio')?.dirty || direccionForm.get('municipio')?.touched)">
+            
+            @if (direccionForm.get('municipio')?.invalid && (direccionForm.get('municipio')?.dirty || direccionForm.get('municipio')?.touched)) {
+              <div class="invalid-feedback d-block">
+                @if (direccionForm.get('municipio')?.hasError('required')) { <div>Requerido.</div> }
+                 @if (direccionForm.get('municipio')?.hasError('minlength')) { <div>Minimo 3 caracteres.</div> }
+
+                @if (direccionForm.get('municipio')?.hasError('maxlength')) { <div>Máximo 50 caracteres.</div> }
+                @if (direccionForm.get('municipio')?.hasError('repetitive')) { <div class="fw-bold">⚠️ No repitas letras.</div> }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- FILA 2: Colonia y Calle -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Colonia / Fraccionamiento</label>
+            <input type="text" class="form-control" formControlName="colonia" placeholder="Ej. Centro" maxlength="60"
+                   [class.is-invalid]="direccionForm.get('colonia')?.invalid && (direccionForm.get('colonia')?.dirty || direccionForm.get('colonia')?.touched)">
+            
+            @if (direccionForm.get('colonia')?.invalid && (direccionForm.get('colonia')?.dirty || direccionForm.get('colonia')?.touched)) {
+               <div class="invalid-feedback d-block">
+                 @if (direccionForm.get('colonia')?.hasError('required')) { <div>Campo obligatorio.</div> }
+                 @if (direccionForm.get('colonia')?.hasError('maxlength')) { <div>Máximo 60 caracteres.</div> }
+                 @if (direccionForm.get('colonia')?.hasError('minlength')) { <div>Minimo 3 caracteres.</div> }
+
+                 @if (direccionForm.get('colonia')?.hasError('repetitive')) { <div class="fw-bold">⚠️ Evita repetir caracteres (ej: aaaaa).</div> }
+               </div>
+            }
+          </div>
+          
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Calle</label>
+            <input type="text" class="form-control" formControlName="calle" placeholder="Ej. Av. Madero" maxlength="80"
+                   [class.is-invalid]="direccionForm.get('calle')?.invalid && (direccionForm.get('calle')?.dirty || direccionForm.get('calle')?.touched)">
+            
+            @if (direccionForm.get('calle')?.invalid && (direccionForm.get('calle')?.dirty || direccionForm.get('calle')?.touched)) {
+               <div class="invalid-feedback d-block">
+                 @if (direccionForm.get('calle')?.hasError('required')) { <div>Campo obligatorio.</div> }
+                  @if (direccionForm.get('calle')?.hasError('minlength')) { <div>Minimo 3 caracteres.</div> }
+
+                 @if (direccionForm.get('calle')?.hasError('maxlength')) { <div>Máximo 80 caracteres.</div> }
+                 @if (direccionForm.get('calle')?.hasError('repetitive')) { <div class="fw-bold">⚠️ Evita repetir caracteres.</div> }
+               </div>
+            }
+          </div>
+        </div>
+
+        <!-- FILA 3: Números -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Número Exterior</label>
+            <input type="text" class="form-control" formControlName="numeroExt" placeholder="Ej. 123" maxlength="5"
+                   [class.is-invalid]="direccionForm.get('numeroExt')?.invalid && (direccionForm.get('numeroExt')?.dirty || direccionForm.get('numeroExt')?.touched)">
+            
+            @if (direccionForm.get('numeroExt')?.invalid && (direccionForm.get('numeroExt')?.dirty || direccionForm.get('numeroExt')?.touched)) {
+              <div class="invalid-feedback d-block">
+                @if (direccionForm.get('numeroExt')?.hasError('required')) { <div>Requerido.</div> }
+                @if (direccionForm.get('numeroExt')?.hasError('pattern')) { <div>Solo números.</div> }
+              </div>
+            }
+          </div>
+          
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Número Interior (Opcional)</label>
+            <!-- Validamos que sea corto (max 10) y sin repeticiones -->
+            <input type="text" class="form-control" formControlName="numeroInt" placeholder="Ej. 2-B" maxlength="10"
+                   [class.is-invalid]="direccionForm.get('numeroInt')?.invalid && (direccionForm.get('numeroInt')?.dirty || direccionForm.get('numeroInt')?.touched)">
+            
+            @if (direccionForm.get('numeroInt')?.invalid && (direccionForm.get('numeroInt')?.dirty || direccionForm.get('numeroInt')?.touched)) {
+              <div class="invalid-feedback d-block">
+                @if (direccionForm.get('numeroInt')?.hasError('maxlength')) { <div>Máximo 5 caracteres.</div> }
+                @if (direccionForm.get('numeroInt')?.hasError('repetitive')) { <div class="fw-bold">⚠️ Caracteres inválidos.</div> }
+              </div>
+            }
+            <div class="form-text text-muted">Admite letras (Ej: 4-A).</div>
+          </div>
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-info text-white btn-lg" 
+                  [disabled]="direccionForm.invalid">
+            <i class="bi bi-check-lg"></i> Guardar y Finalizar
+          </button>
+        </div>
+
+      </form>
+    }
   </div>
 </div>

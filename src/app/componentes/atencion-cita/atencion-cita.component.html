@@ -50,11 +50,13 @@
           <div class="tab-content">
 
             <div class="tab-pane fade show active" id="tab-tratamientos" role="tabpanel">
-              <div class="card p-3 shadow-sm border-0">
-                <div class="d-flex justify-content-between mb-2">
-                  <h6 class="text-primary">Registrar procedimientos realizados hoy</h6>
+              
+              <!-- SECCIÓN 1: TRATAMIENTOS FORMALES -->
+              <div class="card p-3 shadow-sm border-0 mb-3">
+                <div class="d-flex justify-content-between mb-3">
+                  <h6 class="text-primary">Tratamientos Médicos Realizados</h6>
                   <button type="button" class="btn btn-sm btn-primary" (click)="agregarTratamiento()">
-                    <i class="bi bi-plus-lg"></i> Agregar Item
+                    <i class="bi bi-plus-lg"></i> Agregar Tratamiento
                   </button>
                 </div>
 
@@ -62,10 +64,10 @@
                   <table class="table table-bordered table-hover align-middle mb-0">
                     <thead class="table-light">
                       <tr>
-                        <th style="width: 35%">Tratamiento (*)</th>
-                        <th style="width: 35%">Material Usado</th>
+                        <th style="width: 45%">Tratamiento (*)</th>
+                        <th style="width: 20%">Material Principal</th>
                         <th style="width: 10%">Cant.</th>
-                        <th style="width: 15%">Costo Est.</th>
+                        <th style="width: 20%">Costo Total</th>
                         <th style="width: 5%"></th>
                       </tr>
                     </thead>
@@ -77,7 +79,7 @@
                               <option [ngValue]="null">Seleccione...</option>
                               @for (t of catalogoTratamientos; track t.id_tipo_tratamiento) {
                                 <option [value]="t.id_tipo_tratamiento">
-                                  {{ t.nombre }} - {{ t.costo | currency }}
+                                  {{ t.nombre }} - (Costo: {{ t.costo | currency }})
                                 </option>
                               }
                             </select>
@@ -90,16 +92,18 @@
                                 <option [ngValue]="null">Ninguno</option>
                                 @for (m of catalogoMateriales; track m.id_tipo_material) {
                                     <option [value]="m.id_tipo_material">
-                                        {{ m.nombre_material }} (Stock: {{ m.stock }})
+                                        <!-- ✅ CORREGIDO: Usamos m.nombre_material -->
+                                        {{ m.nombre_material }} (Stock: {{ m.stock || 0 }})
                                     </option>
                                 }
                              </select>
+                             <small class="text-muted small d-block">Material principal usado</small>
                           </td>
                           <td>
                             <input type="number" class="form-control form-control-sm" formControlName="cantidad" min="1" (change)="actualizarCosto($index)">
                           </td>
-                          <td class="text-end text-muted fw-bold">
-                            {{ obtenerCostoEstimado($index) | currency }}
+                          <td class="text-end fw-bold">
+                            {{ obtenerCostoEstimado($index, 'tratamientos') | currency }}
                           </td>
                           <td class="text-center">
                             <button type="button" class="btn btn-outline-danger btn-sm border-0" (click)="eliminarTratamiento($index)">
@@ -108,20 +112,90 @@
                           </td>
                         </tr>
                       }
-                      <tr class="table-group-divider fw-bold bg-light">
-                        <td colspan="3" class="text-end">Total a Generar en Deuda:</td>
-                        <td class="text-end text-success">{{ totalDeudaEstimada | currency }}</td>
-                        <td></td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>
+              </div>
+              
+              <!-- SECCIÓN 2: MATERIALES SUELTOS (Insumos extra) -->
+              <div class="card p-3 shadow-sm border-0">
+                <div class="d-flex justify-content-between mb-3">
+                  <h6 class="text-secondary">Materiales Extra o Insumos Sueltos</h6>
+                  <button type="button" class="btn btn-sm btn-secondary" (click)="agregarMaterialExtra()">
+                    <i class="bi bi-plus-lg"></i> Agregar Insumo
+                  </button>
+                </div>
                 
-                @if (tratamientosArray.length === 0) {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 60%">Material (Stock) (*)</th>
+                                <th style="width: 15%">Cant. Consumida</th>
+                                <th style="width: 20%">Costo (Inventario)</th>
+                                <th style="width: 5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="consumoMateriales">
+                             @for (mat of consumoMaterialesArray.controls; track $index) {
+                                <tr [formGroupName]="$index">
+                                    <td>
+                                        <select class="form-select form-select-sm" formControlName="id_tipo_material" (change)="actualizarCosto($index)">
+                                            <option [ngValue]="null">Seleccione Material...</option>
+                                            @for (m of catalogoMateriales; track m.id_tipo_material) {
+                                                <option [value]="m.id_tipo_material">
+                                                    <!-- ✅ CORREGIDO: Usamos m.nombre_material -->
+                                                    {{ m.nombre_material }} (Stock: {{ m.stock || 0 }}, Costo Unitario: {{ m.costoUnitario | currency }})
+                                                </option>
+                                            }
+                                        </select>
+                                        @if (mat.get('id_tipo_material')?.invalid && mat.get('id_tipo_material')?.touched) {
+                                            <div class="text-danger small">Material requerido</div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm" formControlName="cantidad" min="1" (change)="actualizarCosto($index)">
+                                    </td>
+                                    <td class="text-end fw-bold text-secondary">
+                                        {{ obtenerCostoEstimado($index, 'materiales') | currency }}
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-outline-danger btn-sm border-0" (click)="eliminarMaterialExtra($index)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                             }
+                        </tbody>
+                        <tfoot class="table-group-divider fw-bold bg-light">
+                            <tr>
+                                <td colspan="2" class="text-end">Subtotal Material Extra:</td>
+                                <td class="text-end text-secondary">{{ totalMaterialExtra | currency }}</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- TOTAL GENERAL -->
+                <div class="table-responsive mt-3">
+                  <table class="table table-sm table-group-divider fw-bold">
+                    <tfoot class="table-success">
+                        <tr>
+                            <td colspan="2" class="text-end">TOTAL DEUDA ESTIMADA (Tratamientos + Insumos):</td>
+                            <td class="text-end text-success">{{ totalDeudaEstimada | currency }}</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                
+                @if (tratamientosArray.length === 0 && consumoMaterialesArray.length === 0) {
                     <div class="alert alert-warning mt-2 py-2 small">
-                        <i class="bi bi-exclamation-circle"></i> No has agregado ningún tratamiento. No se generará cobro.
+                        <i class="bi bi-exclamation-circle"></i> No has agregado ningún procedimiento o insumo. No se generará cobro.
                     </div>
                 }
+
               </div>
             </div>
 
@@ -168,8 +242,7 @@
                                       <input type="text" 
                                             class="form-control form-control-sm" 
                                             formControlName="nombreDentista" 
-                                            placeholder="Dr. Destino"
-                                            [class.is-invalid]="der.get('nombreDentista')?.invalid && der.get('nombreDentista')?.touched">
+                                            placeholder="Dr. Destino">
                                       
                                       @if (der.get('nombreDentista')?.hasError('pattern')) {
                                           <div class="text-danger small" style="font-size: 0.75rem;">
@@ -182,8 +255,7 @@
                                       <input type="text" 
                                             class="form-control form-control-sm" 
                                             formControlName="especialidadDentista" 
-                                            placeholder="Especialidad"
-                                            [class.is-invalid]="der.get('especialidadDentista')?.invalid && der.get('especialidadDentista')?.touched">
+                                            placeholder="Especialidad">
 
                                       @if (der.get('especialidadDentista')?.hasError('pattern')) {
                                           <div class="text-danger small" style="font-size: 0.75rem;">
@@ -216,7 +288,7 @@
                       @for (est of estudiosArray.controls; track $index) {
                         <div [formGroupName]="$index" class="card mb-2">
                             <div class="card-body p-2 position-relative">
-                                <button type="button" class="btn-close position-absolute top-0 end-0 m-1 small" (click)="eliminarEstudio($index)"></button>
+                                <button type="button" class="btn-close position-absolute top-0 end-0 m-1 small" onClick="eliminarEstudio($index)"></button>
                                 <div class="col-12 mb-1">
                                     <input type="text" class="form-control form-control-sm fw-bold" formControlName="nombre" placeholder="Nombre Estudio">
                                 </div>

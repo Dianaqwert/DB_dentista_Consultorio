@@ -4,9 +4,17 @@ import { TratamientoNuevo } from '../../interfaces/nuevoTratamiento';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TratamientosService } from '../../services/tratamientos.service';
-import { Form, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Form, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators ,ValidationErrors,AbstractControl} from '@angular/forms';
 import { PacientesTratamientosInactivosDComponent } from "../pacientes-tratamientos-inactivos-d/pacientes-tratamientos-inactivos-d.component";
 import { EstadisticasTratamientosDComponent } from "../estadisticas-tratamientos-d/estadisticas-tratamientos-d.component";
+
+
+export function noRepetitiveCharacters(control: AbstractControl): ValidationErrors | null {
+  const value = control.value as string;
+  if (!value) return null;
+  const hasRepetition = /(.)\1{2,}/.test(value);
+  return hasRepetition ? { repetitive: true } : null;
+}
 
 @Component({
   standalone:true,
@@ -31,15 +39,19 @@ export class TratamientosGestionDComponent implements OnInit{
   listaInactivos: TratamientoNuevo[] = [];
 
   // Inyectamos el servicio en el constructor
-  constructor(private tratamientoService: TratamientosService,private fb:FormBuilder,
+  constructor(
+    private tratamientoService: TratamientosService,
+    private fb: FormBuilder
   ) {
     this.searchForm = this.fb.group({
       nombre: [
         '',
         [
-          Validators.required,                 // campo obligatorio
-          Validators.pattern(this.soloLetras), // solo letras y espacios
-          Validators.maxLength(255)            // máximo 255 caracteres
+          Validators.required,
+          Validators.pattern(this.soloLetras),
+          Validators.maxLength(255),
+          Validators.minLength(3),
+          noRepetitiveCharacters // <--- Validación anti "aaaaa"
         ]
       ],
       descripcion: [
@@ -47,17 +59,19 @@ export class TratamientosGestionDComponent implements OnInit{
         [
           Validators.required,
           Validators.pattern(this.soloLetras),
-          Validators.maxLength(255)
+          Validators.maxLength(255),
+          Validators.minLength(5),
+          noRepetitiveCharacters // <--- Validación anti "aaaaa"
         ]
       ],
       costo: [
         '',
         [
-          Validators.required,              // obligatorio
-          Validators.min(0),                // mínimo 0
-          Validators.max(99999999),         // máximo 8 dígitos
-          Validators.pattern(this.soloNumeros),   // solo números enteros
-          Validators.maxLength(8)           // máximo 8 caracteres
+          Validators.required,
+          Validators.min(500),      // <--- Mínimo 1000 como pediste
+          Validators.max(99999999), 
+          Validators.pattern(this.soloNumeros),
+          Validators.maxLength(8)
         ]
       ]
     });

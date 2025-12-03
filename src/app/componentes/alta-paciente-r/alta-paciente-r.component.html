@@ -10,122 +10,108 @@
         <div class="card-body p-4">
           <form [formGroup]="pacienteForm" (ngSubmit)="guardar()">
 
-            <!-- NOMBRES -->
-            <div class="mb-3">
-              <label class="form-label">Nombres</label>
-              <input type="text" class="form-control" formControlName="nombresPaciente" placeholder="Ej. Juan Pablo"
-                     [class.is-invalid]="pacienteForm.get('nombresPaciente')?.invalid && pacienteForm.get('nombresPaciente')?.touched">
-              
-              @if (pacienteForm.get('nombresPaciente')?.hasError('required') && pacienteForm.get('nombresPaciente')?.touched) {
-                <div class="text-danger small">El nombre es obligatorio.</div>
-              }
-              @if (pacienteForm.get('nombresPaciente')?.hasError('pattern') && pacienteForm.get('nombresPaciente')?.touched) {
-                <div class="text-danger small">Solo se permiten letras.</div>
-              }
-              @if (pacienteForm.get('nombresPaciente')?.hasError('minlength') && pacienteForm.get('nombresPaciente')?.touched) {
-                <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
-              }
-              @if (pacienteForm.get('nombresPaciente')?.hasError('maxlength') && pacienteForm.get('nombresPaciente')?.touched) {
-                <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
-              }
-
-              
+        <!-- NOMBRES -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Nombres</label>
+          <input type="text" class="form-control" formControlName="nombresPaciente" placeholder="Ej. Juan Pablo"
+                 [class.is-invalid]="pacienteForm.get('nombresPaciente')?.invalid && (pacienteForm.get('nombresPaciente')?.dirty || pacienteForm.get('nombresPaciente')?.touched)">
+          
+          @if (pacienteForm.get('nombresPaciente')?.invalid && (pacienteForm.get('nombresPaciente')?.dirty || pacienteForm.get('nombresPaciente')?.touched)) {
+            <div class="invalid-feedback d-block">
+                @if (pacienteForm.get('nombresPaciente')?.hasError('required')) { <div>El nombre es obligatorio.</div> }
+                @if (pacienteForm.get('nombresPaciente')?.hasError('pattern')) { <div>Solo se permiten letras.</div> }
+                @if (pacienteForm.get('nombresPaciente')?.hasError('minlength')) { <div>Debe tener al menos 3 carácteres.</div> }
+                @if (pacienteForm.get('nombresPaciente')?.hasError('maxlength')) { <div>Tiene un máximo de 100 carácteres!!</div> }
+                @if (pacienteForm.get('nombresPaciente')?.hasError('repetitive')) { <div class="fw-bold">⚠️ No repitas caracteres consecutivamente.</div> }
             </div>
+          }
+        </div>
 
-            <div class="row g-3">
-              <!-- APELLIDO PATERNO -->
-              <div class="col-md-6">
-                <label class="form-label">Apellido Paterno</label>
-                <input type="text" class="form-control" formControlName="apellidoPat" placeholder="Ej. Pérez"
-                       [class.is-invalid]="pacienteForm.get('apellidoPat')?.invalid && pacienteForm.get('apellidoPat')?.touched">
-                
-                @if (pacienteForm.get('apellidoPat')?.invalid && pacienteForm.get('apellidoPat')?.touched) {
-                  <div class="text-danger small">Campo obligatorio (solo letras).</div>
-                }
-                @if (pacienteForm.get('apellidoPat')?.hasError('minlength') && pacienteForm.get('apellidoPat')?.touched) {
-                  <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
-                }
-
-                @if (pacienteForm.get('apellidoPat')?.hasError('maxlength') && pacienteForm.get('apellidoPat')?.touched) {
-                  <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
-                }
-
-                @if (pacienteForm.get('apellidoPat')?.hasError('pattern') && pacienteForm.get('apellidoPat')?.touched) {
-                  <div class="text-danger small">Solo se permiten letras.</div>
-                }
-                
+        <div class="row g-3">
+          <!-- APELLIDO PATERNO -->
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Apellido Paterno</label>
+            <input type="text" class="form-control" formControlName="apellidoPat" placeholder="Ej. Pérez"
+                   [class.is-invalid]="pacienteForm.get('apellidoPat')?.invalid && (pacienteForm.get('apellidoPat')?.dirty || pacienteForm.get('apellidoPat')?.touched)">
+            
+            @if (pacienteForm.get('apellidoPat')?.invalid && (pacienteForm.get('apellidoPat')?.dirty || pacienteForm.get('apellidoPat')?.touched)) {
+              <div class="invalid-feedback d-block">
+                  @if (pacienteForm.get('apellidoPat')?.hasError('required')) { <div>Campo obligatorio (solo letras).</div> }
+                  @if (pacienteForm.get('apellidoPat')?.hasError('minlength')) { <div>Debe tener al menos 3 carácteres.</div> }
+                  @if (pacienteForm.get('apellidoPat')?.hasError('maxlength')) { <div>Tiene un máximo de 100 carácteres!!</div> }
+                  @if (pacienteForm.get('apellidoPat')?.hasError('pattern')) { <div>Solo se permiten letras.</div> }
+                  @if (pacienteForm.get('apellidoPat')?.hasError('repetitive')) { <div class="fw-bold">⚠️ No repitas caracteres consecutivamente.</div> }
               </div>
+            }
+          </div>
 
-              <!-- APELLIDO MATERNO -->
-              <div class="col-md-6">
-                <label class="form-label">Apellido Materno</label>
-                <input type="text" class="form-control" formControlName="apellidoMat" placeholder="Ej. López"
-                       [class.is-invalid]="pacienteForm.get('apellidoMat')?.invalid && pacienteForm.get('apellidoMat')?.touched">
-                
-                @if (pacienteForm.get('apellidoMat')?.invalid && pacienteForm.get('apellidoMat')?.touched) {
-                  <div class="text-danger small">Campo obligatorio (solo letras).</div>
-                }
-
-                @if (pacienteForm.get('apellidoMat')?.hasError('minlength') && pacienteForm.get('apellidoMat')?.touched) {
-                  <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
-                }
-
-                @if (pacienteForm.get('apellidoMat')?.hasError('maxlength') && pacienteForm.get('apellidoMat')?.touched) {
-                  <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
-                }
-
-                @if (pacienteForm.get('apellidoMat')?.hasError('pattern') && pacienteForm.get('apellidoMat')?.touched) {
-                  <div class="text-danger small">Solo se permiten letras.</div>
-                }
+          <!-- APELLIDO MATERNO -->
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Apellido Materno</label>
+            <input type="text" class="form-control" formControlName="apellidoMat" placeholder="Ej. López"
+                   [class.is-invalid]="pacienteForm.get('apellidoMat')?.invalid && (pacienteForm.get('apellidoMat')?.dirty || pacienteForm.get('apellidoMat')?.touched)">
+            
+            @if (pacienteForm.get('apellidoMat')?.invalid && (pacienteForm.get('apellidoMat')?.dirty || pacienteForm.get('apellidoMat')?.touched)) {
+              <div class="invalid-feedback d-block">
+                  @if (pacienteForm.get('apellidoMat')?.hasError('required')) { <div>Campo obligatorio (solo letras).</div> }
+                  @if (pacienteForm.get('apellidoMat')?.hasError('minlength')) { <div>Debe tener al menos 3 carácteres.</div> }
+                  @if (pacienteForm.get('apellidoMat')?.hasError('maxlength')) { <div>Tiene un máximo de 100 carácteres!!</div> }
+                  @if (pacienteForm.get('apellidoMat')?.hasError('pattern')) { <div>Solo se permiten letras.</div> }
+                  @if (pacienteForm.get('apellidoMat')?.hasError('repetitive')) { <div class="fw-bold">⚠️ No repitas caracteres consecutivamente.</div> }
               </div>
+            }
+          </div>
+        </div>
+
+        <!-- TELÉFONO -->
+        <div class="mb-3 mt-3">
+          <label class="form-label fw-bold">Teléfono</label>
+          <input type="text" class="form-control" formControlName="telefono" placeholder="Ej. 4491234567" maxlength="10"
+                 [class.is-invalid]="pacienteForm.get('telefono')?.invalid && (pacienteForm.get('telefono')?.dirty || pacienteForm.get('telefono')?.touched)">
+          
+          @if (pacienteForm.get('telefono')?.invalid && (pacienteForm.get('telefono')?.dirty || pacienteForm.get('telefono')?.touched)) {
+            <div class="invalid-feedback d-block">
+                @if (pacienteForm.get('telefono')?.hasError('required')) { <div>El teléfono es obligatorio.</div> }
+                @if (pacienteForm.get('telefono')?.hasError('pattern')) { <div>Solo números.</div> }
+                @if (pacienteForm.get('telefono')?.hasError('minlength')) { <div>Debe tener 10 dígitos.</div> }
             </div>
+          }
+        </div>
 
-            <!-- TELÉFONO -->
-            <div class="mb-3 mt-3">
-              <label class="form-label">Teléfono</label>
-              <input type="text" class="form-control" formControlName="telefono" placeholder="Ej. 4491234567" maxlength="10"
-                     [class.is-invalid]="pacienteForm.get('telefono')?.invalid && pacienteForm.get('telefono')?.touched">
-              
-              @if (pacienteForm.get('telefono')?.hasError('required') && pacienteForm.get('telefono')?.touched) {
-                <div class="text-danger small">El teléfono es obligatorio.</div>
-              }
-              @if (pacienteForm.get('telefono')?.hasError('pattern') && pacienteForm.get('telefono')?.touched) {
-                <div class="text-danger small">Solo números.</div>
-              }
-              @if (pacienteForm.get('telefono')?.hasError('minlength') && pacienteForm.get('telefono')?.touched) {
-                <div class="text-danger small">Debe tener 10 dígitos.</div>
-              }
+        <!-- EMAIL -->
+        <div class="mb-4">
+          <label class="form-label fw-bold">Correo Electrónico</label>
+          <input type="email" class="form-control" formControlName="email" placeholder="Ej. cliente@gmail.com"
+                 [class.is-invalid]="pacienteForm.get('email')?.invalid && (pacienteForm.get('email')?.dirty || pacienteForm.get('email')?.touched)">
+          
+          @if (pacienteForm.get('email')?.invalid && (pacienteForm.get('email')?.dirty || pacienteForm.get('email')?.touched)) {
+            <div class="invalid-feedback d-block">
+                @if (pacienteForm.get('email')?.hasError('required')) { <div>El correo es obligatorio.</div> }
+                @if (pacienteForm.get('email')?.hasError('pattern')) { <div>Formato inválido.</div> }
+                @if (pacienteForm.get('email')?.hasError('minlength')) { <div>Son mínimo 10 caracteres</div> }
+                @if (pacienteForm.get('email')?.hasError('maxlength')) { <div>Son máximo 255 caracteres</div> }
+                @if (pacienteForm.get('email')?.hasError('repetitive')) { <div class="fw-bold">⚠️ No repitas caracteres consecutivamente (ej: jjjj).</div> }
             </div>
+          }
+        </div>
 
-            <!-- EMAIL -->
-            <div class="mb-4">
-              <label class="form-label">Correo Electrónico</label>
-              <input type="email" class="form-control" formControlName="email" placeholder="Ej. cliente@gmail.com"
-                     [class.is-invalid]="pacienteForm.get('email')?.invalid && pacienteForm.get('email')?.touched">
-              
-              @if (pacienteForm.get('email')?.hasError('required') && pacienteForm.get('email')?.touched) {
-                <div class="text-danger small">El correo es obligatorio.</div>
-              }
-              @if (pacienteForm.get('email')?.hasError('email') && pacienteForm.get('email')?.touched) {
-                <div class="text-danger small">Formato de correo inválido.</div>
-              }
-
-              @if (pacienteForm.get('email')?.hasError('minlength') && pacienteForm.get('email')?.touched) {
-                <div class="text-danger small">Son minimo 3 caracteres</div>
-              }
-
-              @if (pacienteForm.get('email')?.hasError('maxlength') && pacienteForm.get('email')?.touched) {
-                <div class="text-danger small">Son maximo 255 caracteres</div>
-              }
+        <!-- ALERTA GLOBAL DE VALIDACIÓN DE NOMBRES -->
+        @if (pacienteForm.errors?.['namesEqual'] && (pacienteForm.touched || pacienteForm.dirty)) {
+          <div class="alert alert-danger mb-3 d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div>
+              <strong>Error de Validación:</strong> El Nombre, Apellido Paterno y Apellido Materno no pueden ser iguales entre sí. Por favor verifícalos.
             </div>
+          </div>
+        }
 
-            <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-primary btn-lg" [disabled]="pacienteForm.invalid">
-                <i class="bi bi-save"></i> Registrar Paciente
-              </button>
-            </div>
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-success btn-lg" [disabled]="pacienteForm.invalid">
+            <i class="bi bi-person-plus-fill"></i> Registrar Paciente
+          </button>
+        </div>
 
-          </form>
+      </form>
         </div>
       </div>
 

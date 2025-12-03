@@ -76,50 +76,56 @@
     <!-- COLUMNA DERECHA: FORMULARIO REACTIVO -->
     <div class="col-md-3 col-lg-3">
       <h4 class="mb-3">Agregar tratamiento</h4>
-      
       <form [formGroup]="searchForm" (ngSubmit)="guardarTratamiento()">
 
         <div class="row g-3">
           <!-- Nombre -->
           <div class="col-12">
-            <label for="nombre" class="form-label">Nombre de tratamiento</label>
+            <label for="nombre" class="form-label fw-bold">Nombre de tratamiento</label>
             <input type="text" class="form-control" id="nombre" formControlName="nombre"
-                   [class.is-invalid]="searchForm.get('nombre')?.invalid && searchForm.get('nombre')?.touched">
+                   [class.is-invalid]="searchForm.get('nombre')?.invalid && (searchForm.get('nombre')?.dirty || searchForm.get('nombre')?.touched)">
             
-            @if (searchForm.get('nombre')?.touched && searchForm.get('nombre')?.invalid) {
-              <div class="text-danger small mt-1">
+            @if (searchForm.get('nombre')?.invalid && (searchForm.get('nombre')?.dirty || searchForm.get('nombre')?.touched)) {
+              <div class="invalid-feedback d-block">
                   @if (searchForm.get('nombre')?.hasError('required')) { <div>El nombre es obligatorio.</div> }
                   @if (searchForm.get('nombre')?.hasError('pattern')) { <div>Solo letras y espacios.</div> }
+                  @if (searchForm.get('nombre')?.hasError('minlength')) { <div>Mínimo 3 caracteres.</div> }
+                  @if (searchForm.get('nombre')?.hasError('repetitive')) { <div class="fw-bold">⚠️ Evita caracteres repetidos consecutivamente.</div> }
               </div>
             }
           </div>
 
           <!-- Descripción -->
           <div class="col-12">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="descripcion" formControlName="descripcion"
-                   [class.is-invalid]="searchForm.get('descripcion')?.invalid && searchForm.get('descripcion')?.touched"></textarea>
+            <label for="descripcion" class="form-label fw-bold">Descripción</label>
+            <textarea class="form-control" id="descripcion" formControlName="descripcion" rows="3"
+                      [class.is-invalid]="searchForm.get('descripcion')?.invalid && (searchForm.get('descripcion')?.dirty || searchForm.get('descripcion')?.touched)"></textarea>
 
-            @if (searchForm.get('descripcion')?.touched && searchForm.get('descripcion')?.invalid) {
-              <div class="text-danger small mt-1">
+            @if (searchForm.get('descripcion')?.invalid && (searchForm.get('descripcion')?.dirty || searchForm.get('descripcion')?.touched)) {
+              <div class="invalid-feedback d-block">
                   @if (searchForm.get('descripcion')?.hasError('required')) { <div>La descripción es obligatoria.</div> }
+                  @if (searchForm.get('descripcion')?.hasError('pattern')) { <div>Solo letras y espacios.</div> }
+                  @if (searchForm.get('descripcion')?.hasError('minlength')) { <div>Mínimo 5 caracteres.</div> }
+                  @if (searchForm.get('descripcion')?.hasError('repetitive')) { <div class="fw-bold">⚠️ Evita caracteres repetidos consecutivamente.</div> }
               </div>
             }
           </div>
 
           <!-- Costo -->
-          <div class="col-6">
-            <label for="costo" class="form-label">Costo</label>
+          <div class="col-md-8">
+            <label for="costo" class="form-label fw-bold">Costo ($)</label>
             <div class="input-group has-validation">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control fw-bold" id="costo" formControlName="costo"
+                     [class.is-invalid]="searchForm.get('costo')?.invalid && (searchForm.get('costo')?.dirty || searchForm.get('costo')?.touched)">
               
-              <input type="number" class="form-control text-center fw-bold" id="costo" formControlName="costo"
-                     [class.is-invalid]="searchForm.get('costo')?.invalid && searchForm.get('costo')?.touched">
-              
-
-              @if (searchForm.get('costo')?.touched && searchForm.get('costo')?.invalid) {
+              @if (searchForm.get('costo')?.invalid && (searchForm.get('costo')?.dirty || searchForm.get('costo')?.touched)) {
                 <div class="invalid-feedback d-block">
-                   @if (searchForm.get('costo')?.hasError('required')) { <div>Obligatorio.</div> }
-                   @if (searchForm.get('costo')?.hasError('pattern')) { <div>Solo enteros.</div> }
+                   @if (searchForm.get('costo')?.hasError('required')) { <div>El costo es obligatorio.</div> }
+                   @if (searchForm.get('costo')?.hasError('pattern')) { <div>Solo números enteros.</div> }
+                   @if (searchForm.get('costo')?.hasError('min')) { 
+                     <div class="fw-bold">⚠️ El costo debe ser mayor o igual a $500.</div> 
+                   }
                 </div>
               }
             </div>
@@ -127,10 +133,11 @@
         </div>
 
         <hr class="my-4">
-        <button class="w-100 btn btn-primary btn-lg" type="submit" [disabled]="searchForm.invalid">
-          Guardar Tratamiento
+        <button class="w-100 btn btn-success btn-lg" type="submit" [disabled]="searchForm.invalid">
+          <i class="bi bi-save"></i> Guardar Tratamiento
         </button>
       </form>
+      
     </div>
   </div>
 </div>
