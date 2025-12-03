@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { EmpleadosService } from '../../services/empleados.service';
 import { Router } from '@angular/router';
 import { Usuario } from '../../interfaces/usuarioEmpleado';
+import { AuthserviceService } from '../../services/authservice.service';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent {
   msjExito:string=''
 
   constructor(private empleadosService: EmpleadosService,
+    private authService: AuthserviceService, 
     private router:Router) 
   {}
 
@@ -35,6 +37,8 @@ export class LoginComponent {
         next: (data: Usuario) => {
           
           console.log("Usuario recibido:", data);
+          this.authService.login(data);
+
 
           this.usuarioEncontrado = data;
           this.msjExito = 'Inicio de sesión exitoso.';

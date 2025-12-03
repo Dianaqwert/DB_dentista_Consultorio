@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CitasService } from '../../services/citas.service';
 import { Cita } from '../../interfaces/Cita';
 import { EmpleadosService } from '../../services/empleados.service';
+import { AuthserviceService } from '../../services/authservice.service';
 
 @Component({
   standalone:true,
@@ -28,12 +29,13 @@ export class CitasGestionarRComponent {
   mostrarModalReprogramacion: boolean = false;
   formReprogramar: FormGroup;
   citaEnEdicion: Cita | null = null;
-  idRecepcionistaActual: number = 1;
+  idRecepcionistaActual: number | null = null;
 
   constructor(
       private citasService: CitasService,
       private empleadosService: EmpleadosService,
-      private fb: FormBuilder
+      private fb: FormBuilder,
+      private authService: AuthserviceService
   ) {
       // Formulario para el modal
       this.formReprogramar = this.fb.group({
@@ -44,6 +46,16 @@ export class CitasGestionarRComponent {
   }
 
   ngOnInit(): void {
+    //usuario logeado:
+    const usuarioLogueado = this.authService.getUsuario();
+
+    if (usuarioLogueado) {
+      this.idRecepcionistaActual = usuarioLogueado.id_usuario;
+      console.log('Usuario detectado:', usuarioLogueado.nombres); // Para depurar
+    } else {
+        console.warn('No hay usuario logueado en el sistema.');
+    }
+
     // 1. Al iniciar, establecemos la fecha de HOY por defecto
     const hoy = new Date();
     // Formato YYYY-MM-DD para que el input type="date" lo lea bien
@@ -130,6 +142,11 @@ export class CitasGestionarRComponent {
           return;
       }
 
+      // 4. VALIDACIÓN DE SEGURIDAD (Por si se perdió la sesión)
+      if (!this.idRecepcionistaActual) {
+          alert("Error: No se ha identificado al usuario. Por favor inicia sesión nuevamente.");
+          return;
+      }
       const datos = {
           ...this.formReprogramar.value,
           id_recepcionista: this.idRecepcionistaActual // Se envía quién hizo el cambio
