@@ -1,0 +1,202 @@
+<div class="container py-4">
+  
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row align-items-center">
+        
+        <div class="col-md-3">
+          <h4 class="mb-0 text-primary">Pacientes</h4>
+        </div>
+
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="bi bi-search text-muted"></i>
+            </span>
+            <input type="text" class="form-control border-start-0 ps-0" 
+                   placeholder="Buscar por nombre..." 
+                   [(ngModel)]="terminoBusqueda" 
+                   (keyup.enter)="buscar()"
+                   (input)="buscar()"> </div>
+        </div>
+
+        <div class="col-md-3 text-end">
+          <button class="btn btn-success w-100" (click)="irANuevoPaciente()">
+            <i class="bi bi-person-plus-fill"></i> Nuevo Paciente
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  @if (!pacienteEnEdicion) {
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white">
+        <small class="text-muted">Mostrando {{ resultados.length }} registros</small>
+      </div>
+      
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Nombre Completo</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of resultados; track p.id_paciente) {
+                <tr>
+                  <td>
+                    {{ p.nombrespaciente }} {{ p.apellidopat }} {{ p.apellidomat }}
+                  </td>
+                  <td>{{ p.telefono }}</td>
+                  <td>{{ p.email }}</td>
+                  <td class="text-end">
+                    <button class="btn btn-outline-primary btn-sm" (click)="iniciarEdicion(p)">
+                      <i class="bi bi-pencil-square"></i> Editar
+                    </button>
+                  </td>
+                </tr>
+              }
+              @empty {
+                <tr>
+                  <td colspan="4" class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                    No se encontraron pacientes.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- FORMULARIO DE EDICIÓN (Aparece solo al dar clic en Editar) -->
+  @if (pacienteEnEdicion) {
+    <div class="card border-primary shadow">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Editando a: {{ pacienteEnEdicion.nombrespaciente }}</h5>
+        <button class="btn btn-sm btn-light" (click)="cancelarEdicion()">X</button>
+      </div>
+      <div class="card-body">
+
+        <form [formGroup]="formEdicion" (ngSubmit)="guardarCambios()">
+          
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control" formControlName="nombresPaciente">
+              
+                @if (formEdicion.get('nombresPaciente')?.hasError('required') && formEdicion.get('nombresPaciente')?.touched) {
+                  <div class="text-danger small">El nombre es obligatorio.</div>
+                }
+                @if (formEdicion.get('nombresPaciente')?.hasError('pattern') && formEdicion.get('nombresPaciente')?.touched) {
+                  <div class="text-danger small">Solo se permiten letras.</div>
+                }
+                @if (formEdicion.get('nombresPaciente')?.hasError('minlength') && formEdicion.get('nombresPaciente')?.touched) {
+                  <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
+                }
+                @if (formEdicion.get('nombresPaciente')?.hasError('maxlength') && formEdicion.get('nombresPaciente')?.touched) {
+                  <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
+                }
+              
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Apellido Pat.</label>
+              <input type="text" class="form-control" formControlName="apellidoPat">
+                @if (formEdicion.get('apellidoPat')?.invalid && formEdicion.get('apellidoPat')?.touched) {
+                  <div class="text-danger small">Campo obligatorio (solo letras).</div>
+                }
+                @if (formEdicion.get('apellidoPat')?.hasError('minlength') && formEdicion.get('apellidoPat')?.touched) {
+                  <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
+                }
+
+                @if (formEdicion.get('apellidoPat')?.hasError('maxlength') && formEdicion.get('apellidoPat')?.touched) {
+                  <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
+                }
+
+                @if (formEdicion.get('apellidoPat')?.hasError('pattern') && formEdicion.get('apellidoPat')?.touched) {
+                  <div class="text-danger small">Solo se permiten letras.</div>
+                }
+
+            
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Apellido Mat.</label>
+              <input type="text" class="form-control" formControlName="apellidoMat">
+              
+                @if (formEdicion.get('apellidoMat')?.invalid && formEdicion.get('apellidoMat')?.touched) {
+                  <div class="text-danger small">Campo obligatorio (solo letras).</div>
+                }
+
+                @if (formEdicion.get('apellidoMat')?.hasError('minlength') && formEdicion.get('apellidoMat')?.touched) {
+                  <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
+                }
+
+                @if (formEdicion.get('apellidoMat')?.hasError('maxlength') && formEdicion.get('apellidoMat')?.touched) {
+                  <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
+                }
+
+                @if (formEdicion.get('apellidoMat')?.hasError('pattern') && formEdicion.get('apellidoMat')?.touched) {
+                  <div class="text-danger small">Solo se permiten letras.</div>
+                }
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Teléfono</label>
+              <input type="text" class="form-control" formControlName="telefono">
+              
+              @if (formEdicion.get('telefono')?.hasError('required') && formEdicion.get('telefono')?.touched) {
+                <div class="text-danger small">El teléfono es obligatorio.</div>
+              }
+              @if (formEdicion.get('telefono')?.hasError('pattern') && formEdicion.get('telefono')?.touched) {
+                <div class="text-danger small">Solo números.</div>
+              }
+              @if (formEdicion.get('telefono')?.hasError('minlength') && formEdicion.get('telefono')?.touched) {
+                <div class="text-danger small">Debe tener 10 dígitos.</div>
+              }
+
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" formControlName="email">
+              
+              @if (formEdicion.get('email')?.hasError('required') && formEdicion.get('email')?.touched) {
+                <div class="text-danger small">El correo es obligatorio.</div>
+              }
+              @if (formEdicion.get('email')?.hasError('email') && formEdicion.get('email')?.touched) {
+                <div class="text-danger small">Formato de correo inválido.</div>
+              }
+
+              @if (formEdicion.get('email')?.hasError('minlength') && formEdicion.get('email')?.touched) {
+                <div class="text-danger small">Son minimo 3 caracteres</div>
+              }
+
+              @if (formEdicion.get('email')?.hasError('maxlength') && formEdicion.get('email')?.touched) {
+                <div class="text-danger small">Son maximo 255 caracteres</div>
+              }
+
+            </div>
+
+          </div>
+
+          <div class="mt-4 text-end">
+            <button type="button" class="btn btn-secondary me-2" (click)="cancelarEdicion()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="formEdicion.invalid">Guardar Cambios</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  }
+
+</div>

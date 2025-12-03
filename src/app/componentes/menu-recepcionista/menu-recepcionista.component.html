@@ -6,6 +6,7 @@
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <!--GESTION DE PACIENTES /SUPER ADMIN Y DENTISTA-->
+
         <div class="col">
           <div class="card shadow-sm">
             <img src="calendar.png" 
@@ -30,8 +31,34 @@
             </div>
           </div>
         </div>
+
+          <div class="col">
+          <div class="card shadow-sm">
+            <img src="calendar.png" 
+            class="card-img-top bd-placeholder-img " 
+            alt="Pacientes" 
+            width="100%" 
+            height="225">
+            <div class="card-body">
+              <h2>Manejo y asignaciones de citas</h2>
+              <p class="card-text">
+                Cambiar estado de citas y generar citas.
+              </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary"
+                  (click)="irACitasPaciente()">
+                    Ver
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
        
         
       </div>
     </div>
+
+    
   </div>

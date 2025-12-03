@@ -1,0 +1,15 @@
+<div class="container-fluid fade-in">
+  
+  @if (vistaActual === 'buscar') {
+    <app-busquedapacientes-r 
+      (nuevoPacienteClick)="cambiarVista('alta')">
+    </app-busquedapacientes-r>
+  }
+
+  @if (vistaActual === 'alta') {
+    <app-alta-paciente-r 
+      (cancelarOFinalizar)="cambiarVista('buscar')">
+    </app-alta-paciente-r>
+  }
+
+</div>

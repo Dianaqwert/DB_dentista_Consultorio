@@ -32,7 +32,7 @@ export class MenuRecepcionistaComponent {
   }
 
   irACitasPaciente(){
-    this.router.navigate(['/citas-pacientes'], { state: { usuario: this.usuario } });
+    this.router.navigate(['/citas-pacientes-agendar'], { state: { usuario: this.usuario } });
   }
 
   irCobrosEIngresos(){

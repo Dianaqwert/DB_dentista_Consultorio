@@ -1,0 +1,84 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0">
+        
+        <div class="card-header bg-info text-white">
+          <h4 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Registrar Dirección del Paciente</h4>
+        </div>
+
+        <div class="card-body p-4">
+          
+          @if (!idPaciente) {
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle"></i> No se ha detectado el ID del paciente. Por favor regresa al listado.
+            </div>
+          }
+
+          <form [formGroup]="direccionForm" (ngSubmit)="guardarDireccion()">
+
+            <!-- FILA 1: CP y Municipio -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-4">
+                <label class="form-label">Código Postal</label>
+                <input type="text" class="form-control" formControlName="cp" placeholder="20000" maxlength="5"
+                       [class.is-invalid]="direccionForm.get('cp')?.invalid && direccionForm.get('cp')?.touched">
+                @if (direccionForm.get('cp')?.invalid && direccionForm.get('cp')?.touched) {
+                  <div class="invalid-feedback">Requerido (5 dígitos).</div>
+                }
+              </div>
+              
+              <div class="col-md-8">
+                <label class="form-label">Municipio</label>
+                <input type="text" class="form-control" formControlName="municipio" placeholder="Municipio"
+                       [class.is-invalid]="direccionForm.get('municipio')?.invalid && direccionForm.get('municipio')?.touched">
+              </div>
+            </div>
+
+            <!-- FILA 2: Colonia y Calle -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Colonia / Fraccionamiento</label>
+                <input type="text" class="form-control" formControlName="colonia" placeholder="Ej. Centro"
+                       [class.is-invalid]="direccionForm.get('colonia')?.invalid && direccionForm.get('colonia')?.touched">
+                @if (direccionForm.get('colonia')?.hasError('required') && direccionForm.get('colonia')?.touched) {
+                    <div class="invalid-feedback">Campo obligatorio.</div>
+                }
+              </div>
+              
+              <div class="col-md-6">
+                <label class="form-label">Calle</label>
+                <input type="text" class="form-control" formControlName="calle" placeholder="Ej. Av. Madero"
+                       [class.is-invalid]="direccionForm.get('calle')?.invalid && direccionForm.get('calle')?.touched">
+                @if (direccionForm.get('calle')?.hasError('required') && direccionForm.get('calle')?.touched) {
+                    <div class="invalid-feedback">Campo obligatorio.</div>
+                }
+              </div>
+            </div>
+
+            <!-- FILA 3: Números -->
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label">Número Exterior</label>
+                <input type="number" class="form-control" formControlName="numeroExt" placeholder="Ej. 123">
+              </div>
+              
+              <div class="col-md-6">
+                <label class="form-label">Número Interior (Opcional)</label>
+                <input type="number" class="form-control" formControlName="numeroInt" placeholder="Ej. 2B">
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg" 
+                      [disabled]="direccionForm.invalid || !idPaciente">
+                <i class="bi bi-save"></i> Guardar Dirección
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,8 @@ import { AdministrarPersonalDComponent } from './componentes/administrar-persona
 import { TratamientosGestionDComponent } from './componentes/tratamientos-gestion-d/tratamientos-gestion-d.component';
 import { AltaPacienteRComponent } from './componentes/alta-paciente-r/alta-paciente-r.component';
 import { CobrosEingresosRComponent } from './componentes/cobros-eingresos-r/cobros-eingresos-r.component';
-import { CitasPacienteRComponent } from './componentes/citas-paciente-r/citas-paciente-r.component';
+import { PacientesMainComponentComponent } from './componentes/pacientes-main-component/pacientes-main-component.component';
+import { CitaMainRComponent } from './componentes/cita-main-r/cita-main-r.component';
 
 export const routes: Routes = [
     {path:'',redirectTo:'/login',pathMatch:'full'},
@@ -23,7 +24,7 @@ export const routes: Routes = [
     {path: 'gestion-materiales',component: InventarioDComponent},
     {path:'admin-personal',component:AdministrarPersonalDComponent},
     {path:'tratamientos-gestion',component:TratamientosGestionDComponent},
-    {path:'alta-pacientes',component:AltaPacienteRComponent},
-    {path:'citas-pacientes',component:CitasPacienteRComponent},
+    {path:'alta-pacientes',component:PacientesMainComponentComponent},
     {path:'cobros-ingresos',component:CobrosEingresosRComponent},
+    {path:'citas-pacientes-agendar',component:CitaMainRComponent}
     ];

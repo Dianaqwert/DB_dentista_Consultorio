@@ -1,13 +1,16 @@
 import { HttpClient,HttpParams} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Paciente } from '../interfaces/Paciente';
+import { NuevaDireccion } from '../interfaces/DireccionPaciente';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PacientesService {
-  API_PACIENTES_URL="http://localhost:3000/api/pacientes"
+  API_PACIENTES_URL="http://localhost:3000/api/pacientes";
+  API_PACIENTES_REP_URL="http://localhost:3000/api/pacientesRep"
 
   constructor(private http:HttpClient) { }
   //paciente
@@ -88,5 +91,38 @@ export class PacientesService {
   getUltimoHistorial(idPaciente: number): Observable<any> {
     return this.http.get<any>(`${this.API_PACIENTES_URL}/paciente/${idPaciente}/ultimo-historial`);
   }
+
+  //______________________PARA ALTAS Y BAJAS DE PACIENTES____________________
+   // MÉTODO PARA CREAR PACIENTE
+  // MÉTODO PARA CREAR PACIENTE (Se queda igual, apunta a la raiz)
+  crearPaciente(paciente: any): Observable<any> {
+    return this.http.post<any>(this.API_PACIENTES_REP_URL, paciente);
+  }
+  
+  // MÉTODO PARA CREAR DIRECCIÓN (CORREGIDO)
+  crearDireccion(direccion: NuevaDireccion): Observable<NuevaDireccion> {
+    // Agregamos '/direccion' a la URL base
+    return this.http.post<NuevaDireccion>(`${this.API_PACIENTES_REP_URL}/direccion`, direccion);
+  }
+
+  // 2. BUSCAR (GET) - Para GestionPacientesComponent
+  // 3. EDITAR/ACTUALIZAR (PUT) - Para GestionPacientesComponent
+  // Llama a: /api/pacientes/15
+  actualizarPaciente(id: number, paciente: any): Observable<any> {
+    return this.http.put<any>(`${this.API_PACIENTES_REP_URL}/${id}`, paciente);
+  }
+
+
+  buscarPacientes2(terminoGeneral: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.API_PACIENTES_REP_URL}/buscar`, {
+        params: { 
+            // Enviamos todo el texto en el campo 'nombre'.
+            // Tu backend concatenará: "Juan Perez" + "" + "" = "Juan Perez"
+            nombre: terminoGeneral, 
+            apellidoPat: '', 
+            apellidoMat: '' 
+        }
+    });
+}
 
 }

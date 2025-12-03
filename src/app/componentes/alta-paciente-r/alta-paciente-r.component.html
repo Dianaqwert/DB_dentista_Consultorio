@@ -1,58 +1,157 @@
- <div class="col-md-3 col-lg-3">
-      <h4 class="mb-3">Agregar tratamiento</h4>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
       
-      <form [formGroup]="searchForm">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white text-center py-3">
+          <h4 class="mb-0"><i class="bi bi-person-plus-fill"></i> Registrar Nuevo Paciente</h4>
+        </div>
+        
+        <div class="card-body p-4">
+          <form [formGroup]="pacienteForm" (ngSubmit)="guardar()">
 
-        <div class="row g-3">
-          <!-- Nombre paciente-->
-          <div class="col-12">
-            <label for="nombre" class="form-label">Nombre de tratamiento</label>
-            <input type="text" class="form-control" id="nombre" formControlName="nombresPaciente"
-                   [class.is-invalid]="searchForm.get('nombresPaciente')?.invalid && searchForm.get('nombresPaciente')?.touched">
-            
-            @if (searchForm.get('nombresPaciente')?.touched && searchForm.get('nombresPaciente')?.invalid) {
-              <div class="text-danger small mt-1">
-                  @if (searchForm.get('nombresPaciente')?.hasError('required')) { <div>El nombre es obligatorio.</div> }
-                  @if (searchForm.get('nombresPaciente')?.hasError('pattern')) { <div>Solo letras y espacios.</div> }
-              </div>
-            }
-          </div>
-
-          <!-- Descripción -->
-          <div class="col-12">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="descripcion" formControlName="descripcion"
-                   [class.is-invalid]="searchForm.get('descripcion')?.invalid && searchForm.get('descripcion')?.touched"></textarea>
-
-            @if (searchForm.get('descripcion')?.touched && searchForm.get('descripcion')?.invalid) {
-              <div class="text-danger small mt-1">
-                  @if (searchForm.get('descripcion')?.hasError('required')) { <div>La descripción es obligatoria.</div> }
-              </div>
-            }
-          </div>
-
-          <!-- Costo -->
-          <div class="col-6">
-            <label for="costo" class="form-label">Costo</label>
-            <div class="input-group has-validation">
+            <!-- NOMBRES -->
+            <div class="mb-3">
+              <label class="form-label">Nombres</label>
+              <input type="text" class="form-control" formControlName="nombresPaciente" placeholder="Ej. Juan Pablo"
+                     [class.is-invalid]="pacienteForm.get('nombresPaciente')?.invalid && pacienteForm.get('nombresPaciente')?.touched">
               
-              <input type="number" class="form-control text-center fw-bold" id="costo" formControlName="costo"
-                     [class.is-invalid]="searchForm.get('costo')?.invalid && searchForm.get('costo')?.touched">
-              
+              @if (pacienteForm.get('nombresPaciente')?.hasError('required') && pacienteForm.get('nombresPaciente')?.touched) {
+                <div class="text-danger small">El nombre es obligatorio.</div>
+              }
+              @if (pacienteForm.get('nombresPaciente')?.hasError('pattern') && pacienteForm.get('nombresPaciente')?.touched) {
+                <div class="text-danger small">Solo se permiten letras.</div>
+              }
+              @if (pacienteForm.get('nombresPaciente')?.hasError('minlength') && pacienteForm.get('nombresPaciente')?.touched) {
+                <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
+              }
+              @if (pacienteForm.get('nombresPaciente')?.hasError('maxlength') && pacienteForm.get('nombresPaciente')?.touched) {
+                <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
+              }
 
-              @if (searchForm.get('costo')?.touched && searchForm.get('costo')?.invalid) {
-                <div class="invalid-feedback d-block">
-                   @if (searchForm.get('costo')?.hasError('required')) { <div>Obligatorio.</div> }
-                   @if (searchForm.get('costo')?.hasError('pattern')) { <div>Solo enteros.</div> }
-                </div>
+              
+            </div>
+
+            <div class="row g-3">
+              <!-- APELLIDO PATERNO -->
+              <div class="col-md-6">
+                <label class="form-label">Apellido Paterno</label>
+                <input type="text" class="form-control" formControlName="apellidoPat" placeholder="Ej. Pérez"
+                       [class.is-invalid]="pacienteForm.get('apellidoPat')?.invalid && pacienteForm.get('apellidoPat')?.touched">
+                
+                @if (pacienteForm.get('apellidoPat')?.invalid && pacienteForm.get('apellidoPat')?.touched) {
+                  <div class="text-danger small">Campo obligatorio (solo letras).</div>
+                }
+                @if (pacienteForm.get('apellidoPat')?.hasError('minlength') && pacienteForm.get('apellidoPat')?.touched) {
+                  <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
+                }
+
+                @if (pacienteForm.get('apellidoPat')?.hasError('maxlength') && pacienteForm.get('apellidoPat')?.touched) {
+                  <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
+                }
+
+                @if (pacienteForm.get('apellidoPat')?.hasError('pattern') && pacienteForm.get('apellidoPat')?.touched) {
+                  <div class="text-danger small">Solo se permiten letras.</div>
+                }
+                
+              </div>
+
+              <!-- APELLIDO MATERNO -->
+              <div class="col-md-6">
+                <label class="form-label">Apellido Materno</label>
+                <input type="text" class="form-control" formControlName="apellidoMat" placeholder="Ej. López"
+                       [class.is-invalid]="pacienteForm.get('apellidoMat')?.invalid && pacienteForm.get('apellidoMat')?.touched">
+                
+                @if (pacienteForm.get('apellidoMat')?.invalid && pacienteForm.get('apellidoMat')?.touched) {
+                  <div class="text-danger small">Campo obligatorio (solo letras).</div>
+                }
+
+                @if (pacienteForm.get('apellidoMat')?.hasError('minlength') && pacienteForm.get('apellidoMat')?.touched) {
+                  <div class="text-danger small">Debe tener al menos 3 carácteres.</div>
+                }
+
+                @if (pacienteForm.get('apellidoMat')?.hasError('maxlength') && pacienteForm.get('apellidoMat')?.touched) {
+                  <div class="text-danger small">Tiene un máximo de 100 carácteres!!</div>
+                }
+
+                @if (pacienteForm.get('apellidoMat')?.hasError('pattern') && pacienteForm.get('apellidoMat')?.touched) {
+                  <div class="text-danger small">Solo se permiten letras.</div>
+                }
+              </div>
+            </div>
+
+            <!-- TELÉFONO -->
+            <div class="mb-3 mt-3">
+              <label class="form-label">Teléfono</label>
+              <input type="text" class="form-control" formControlName="telefono" placeholder="Ej. 4491234567" maxlength="10"
+                     [class.is-invalid]="pacienteForm.get('telefono')?.invalid && pacienteForm.get('telefono')?.touched">
+              
+              @if (pacienteForm.get('telefono')?.hasError('required') && pacienteForm.get('telefono')?.touched) {
+                <div class="text-danger small">El teléfono es obligatorio.</div>
+              }
+              @if (pacienteForm.get('telefono')?.hasError('pattern') && pacienteForm.get('telefono')?.touched) {
+                <div class="text-danger small">Solo números.</div>
+              }
+              @if (pacienteForm.get('telefono')?.hasError('minlength') && pacienteForm.get('telefono')?.touched) {
+                <div class="text-danger small">Debe tener 10 dígitos.</div>
               }
             </div>
-          </div>
-        </div>
 
-        <hr class="my-4">
-        <button class="w-100 btn btn-primary btn-lg" type="submit" [disabled]="searchForm.invalid">
-          Guardar Tratamiento
-        </button>
-      </form>
+            <!-- EMAIL -->
+            <div class="mb-4">
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" formControlName="email" placeholder="Ej. cliente@gmail.com"
+                     [class.is-invalid]="pacienteForm.get('email')?.invalid && pacienteForm.get('email')?.touched">
+              
+              @if (pacienteForm.get('email')?.hasError('required') && pacienteForm.get('email')?.touched) {
+                <div class="text-danger small">El correo es obligatorio.</div>
+              }
+              @if (pacienteForm.get('email')?.hasError('email') && pacienteForm.get('email')?.touched) {
+                <div class="text-danger small">Formato de correo inválido.</div>
+              }
+
+              @if (pacienteForm.get('email')?.hasError('minlength') && pacienteForm.get('email')?.touched) {
+                <div class="text-danger small">Son minimo 3 caracteres</div>
+              }
+
+              @if (pacienteForm.get('email')?.hasError('maxlength') && pacienteForm.get('email')?.touched) {
+                <div class="text-danger small">Son maximo 255 caracteres</div>
+              }
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-lg" [disabled]="pacienteForm.invalid">
+                <i class="bi bi-save"></i> Registrar Paciente
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
     </div>
+  </div>
+
+
+@if (idPacienteRecienCreado) {
+    <div class="alert alert-success">
+       <i class="bi bi-check-circle"></i> Paciente creado. Por favor completa su dirección:
+    </div>
+
+    <!-- Usamos el selector del componente hijo -->
+    <app-direccionpacientes-r 
+        [idPaciente]="idPacienteRecienCreado" 
+        (finalizar)="procesoTerminado()">
+    </app-direccionpacientes-r>
+}
+
+<div class="card-header bg-primary text-white text-center py-3 position-relative">
+  <button class="btn btn-sm btn-light position-absolute start-0 ms-3 top-50 translate-middle-y" 
+          (click)="cancelar()">
+      <i class="bi bi-arrow-left"></i> Volver
+  </button>
+
+  <h4 class="mb-0"><i class="bi bi-person-plus-fill"></i> Registrar Nuevo Paciente</h4>
+</div>
+
+

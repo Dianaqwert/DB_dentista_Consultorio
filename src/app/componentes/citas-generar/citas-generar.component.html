@@ -1,0 +1,105 @@
+<div class="container-fluid p-4 bg-white shadow rounded">
+  <h2 class="mb-4 text-2xl font-bold text-gray-800">Nueva Cita</h2>
+
+  <form [formGroup]="formCita" (ngSubmit)="guardar()">
+    
+    <!-- Fila 1: Paciente y Dentista -->
+    <div class="row mb-3">
+      <!-- Selección de Paciente -->
+      <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">Paciente:</label>
+        <select class="form-select" formControlName="id_paciente">
+          <option value="">-- Seleccione un Paciente --</option>
+          
+          @for (p of listaPacientes; track p.id_paciente) {
+            <option [value]="p.id_paciente">
+              {{ p.nombrespaciente }} {{ p.apellidopat }}
+            </option>
+          }
+        </select>
+
+        @if (formCita.get('id_paciente')?.invalid && formCita.get('id_paciente')?.touched) {
+          <div class="text-danger small">
+            El paciente es requerido.
+          </div>
+        }
+      </div>
+
+      <!-- Selección de Dentista -->
+      <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">Dentista:</label>
+        <select class="form-select" formControlName="id_dentista" (change)="verificarDisponibilidad()">
+          <option value="">-- Seleccione un Dentista --</option>
+          
+          @for (d of listaDentistas; track d.id_usuario) {
+            <option [value]="d.id_usuario">
+               {{ d.nombre }} {{ d.apellidopat || '' }} ({{ d.especialidad || 'General' }})
+            </option>
+          }
+        </select>
+
+        @if (formCita.get('id_dentista')?.invalid && formCita.get('id_dentista')?.touched) {
+          <div class="text-danger small">
+            El dentista es requerido.
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Fila 2: Fecha y Hora -->
+    <div class="row mb-3">
+      <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">Fecha:</label>
+        <input type="date" class="form-control" formControlName="fecha" (change)="verificarDisponibilidad()">
+        
+        @if (formCita.get('fecha')?.invalid && formCita.get('fecha')?.touched) {
+          <div class="text-danger small">
+            La fecha es requerida.
+          </div>
+        }
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">Hora:</label>
+        <input type="time" class="form-control" formControlName="hora" (change)="verificarDisponibilidad()">
+        
+        <!-- Mensaje de error de validación básica -->
+        @if (formCita.get('hora')?.invalid && formCita.get('hora')?.touched && !formCita.get('hora')?.hasError('ocupado')) {
+          <div class="text-danger small">
+            La hora es requerida.
+          </div>
+        }
+        
+        <!-- Mensaje de Disponibilidad (Viene del Backend) -->
+        @if (mensajeError) {
+          <div class="alert alert-warning mt-2 p-2">
+            {{ mensajeError }}
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Fila 3: Descripción -->
+    <div class="mb-4">
+      <label class="form-label fw-bold">Motivo / Descripción:</label>
+      <textarea class="form-control" rows="3" formControlName="descripcion" placeholder="Ej: Dolor de muela, Limpieza general..."></textarea>
+      
+      @if (formCita.get('descripcion')?.invalid && formCita.get('descripcion')?.touched) {
+        <div class="text-danger small">
+          La descripción es obligatoria.
+        </div>
+      }
+    </div>
+
+    <!-- Botones -->
+    <div class="d-flex justify-content-end gap-2">
+      <!-- Botón Cancelar -->
+      <button type="button" class="btn btn-secondary" (click)="formCita.reset()">Limpiar</button>
+      
+      <button type="submit" class="btn btn-primary" [disabled]="formCita.invalid">
+        Agendar Cita
+      </button>
+    </div>
+
+  </form>
+</div>

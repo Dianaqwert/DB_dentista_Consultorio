@@ -1,0 +1,115 @@
+<div class="card shadow-sm">
+  <div class="card-header bg-white d-flex gap-2">
+    <input type="date" class="form-control" [(ngModel)]="filtroFecha" (change)="cargarCitas()">
+    <select class="form-select" [(ngModel)]="filtroEstado" (change)="cargarCitas()">
+      <option value="Todos">Todos los estados</option>
+      <option value="Agendada">Agendada</option>
+      <option value="Confirmada">Confirmada</option>
+      <option value="Atendida">Atendida</option>
+      <option value="Reprogramada">Reprogramada</option>
+      <option value="Cancelada">Cancelada</option>
+      <option value="No asistio">No asistió</option>
+    </select>
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Hora</th>
+          <th>Paciente</th>
+          <th>Estado Actual</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of listaCitas; track c.id_cita) {
+          <tr>
+            <td>{{ c.hora }}</td>
+            <td>
+                <span class="fw-bold">{{ c.nombre_paciente }}</span><br>
+                <small class="text-muted">{{ c.telefono }}</small>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getClaseEstado(c.estado_cita)">
+                {{ c.estado_cita }}
+              </span>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                        Cambiar
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Confirmada')">Confirmar</a></li>
+                        <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Pendiente')">Pendiente</a></li>
+                        <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Agendada')">Agendada</a></li>
+
+                        <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Atendida')">Atender (Pasar a consulta)</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <!-- Opción Reprogramada -->
+                        <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Reprogramada')">📅 Reprogramar</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" (click)="cambiarEstado(c, 'Cancelada')">Cancelar</a></li>
+                        <li><a class="dropdown-item" (click)="cambiarEstado(c, 'No asistio')">No asistió</a></li>
+                    </ul>
+                </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL DE REPROGRAMACIÓN (Overlay Custom para evitar conflictos de JS) -->
+@if (mostrarModalReprogramacion) {
+<div class="modal d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reprogramar Cita</h5>
+        <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+      </div>
+      
+      <div class="modal-body">
+        <form [formGroup]="formReprogramar">
+          
+          <!-- FECHA -->
+          <div class="mb-3">
+            <label class="form-label">Nueva Fecha:</label>
+            <input type="date" class="form-control" formControlName="fecha">
+          </div>
+
+          <!-- HORA -->
+          <div class="mb-3">
+            <label class="form-label">Nueva Hora:</label>
+            <input type="time" class="form-control" formControlName="hora">
+          </div>
+
+          <!-- DENTISTA -->
+          <div class="mb-3">
+            <label class="form-label">Dentista:</label>
+            <select class="form-select" formControlName="id_dentista">
+              <option value="">Seleccione...</option>
+              @for (d of listaDentistas; track d.id_usuario) {
+                <option [value]="d.id_usuario">
+                    {{ d.nombre }} {{ d.apellidopat }} ({{ d.tipoEmpleado }})
+                </option>
+              }
+            </select>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarReprogramacion()" [disabled]="formReprogramar.invalid">
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}
