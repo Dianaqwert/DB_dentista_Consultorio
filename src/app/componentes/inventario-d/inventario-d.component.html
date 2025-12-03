@@ -4,29 +4,320 @@
 </div>
 
 <div class="container py-4">
-    
-    <!-- ENCABEZADO Y PANELES DE ALERTAS (IGUAL QUE ANTES) -->
+
     <div class="row mb-4 align-items-center">
         <div class="col">
             <h2 class="fw-bold text-dark"><i class="bi bi-boxes"></i> Inventario de materiales</h2>
         </div>
     </div>
 
-    <!-- FILA DE REPORTES CON FILTROS (HAVING Y ALERTAS) -->
+    <h4 class="mb-3 border-bottom pb-2 mt-5">Gestión de Tipos de Material (Categorías)</h4>
+
+    <div class="row mb-5">
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-plus-circle"></i> Nuevo Tipo de Material
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="crearTipoMaterial()">
+                        <div class="mb-3">
+                            <label for="nombreTipo" class="form-label">Nombre de la Categoría:</label>
+                            <input type="text" id="nombreTipo" class="form-control"
+                                placeholder="Ej: Resinas, Cementos, Instrumental"
+                                [(ngModel)]="nombreNuevoTipo"
+                                name="nombreNuevoTipo" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" [disabled]="!nombreNuevoTipo.trim()">
+                            <i class="bi bi-save"></i> Guardar Categoría
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    <i class="bi bi-list me-2"></i> Tipos de Materiales ({{ listaFiltrada.length }})
+
+                    <div class="input-group input-group-sm ms-3" style="width: 280px;">
+                        <input type="text" class="form-control"
+                               placeholder="Buscar por ID o Nombre"
+                               [(ngModel)]="terminoBusqueda"
+                               (keyup.enter)="ejecutarBusqueda()"
+                               (input)="ejecutarBusqueda()"
+                               name="terminoBusqueda">
+
+                        <button class="btn btn-outline-secondary" type="button" (click)="ejecutarBusqueda()">
+                            <i class="bi bi-search me-1"></i> Buscar
+                        </button>
+
+                        @if (busquedaActiva) {
+                            <button class="btn btn-outline-danger" type="button" (click)="cargarTiposMateriales()">
+                                <i class="bi bi-x-lg"></i> Volver
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">ID</th>
+                                    <th>Nombre</th>
+                                    <th style="width: 15%;" class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (tipo of listaFiltrada; track tipo.id_tipo_material) {
+                                <tr>
+                                    <td>{{ tipo.id_tipo_material }}</td>
+                                    <td>{{ tipo.nombre_tipo }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-danger btn-sm"
+                                                 (click)="eliminarTipoMaterial(tipo.id_tipo_material!, tipo.nombre_tipo)">
+                                            <i class="bi bi-trash me-1"></i> Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                                }
+                                @empty {
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted p-4">
+                                        No se encontraron categorías.
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (materialEditando) {
+        <h4 class="mb-3 border-bottom pb-2 mt-5 text-warning" id="formularioEdicionMaterial">
+            <i class="bi bi-pencil-square"></i> Editando Material: {{ materialEditando.nombre }} (ID: {{ materialEditando.id_material }})
+        </h4>
+        <div class="row mb-5">
+            <div class="col-lg-6 offset-lg-3">
+                <div class="card shadow border-warning">
+                    <div class="card-body">
+                        <form (ngSubmit)="guardarEdicion()">
+
+                            <div class="mb-3">
+                                <label for="editNombre" class="form-label">Nombre:</label>
+                                <input type="text" id="editNombre" class="form-control"
+                                        [(ngModel)]="materialEditando.nombre"
+                                        name="editNombre" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editCategoria" class="form-label">Categoría:</label>
+                                <select id="editCategoria" class="form-select"
+                                        [(ngModel)]="materialEditando.id_tipo_material"
+                                        name="editIdTipo" required>
+                                    @for (cat of listaTiposMateriales; track cat.id_tipo_material) {
+                                        <option [ngValue]="cat.id_tipo_material">{{ cat.nombre_tipo }}</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editCosto" class="form-label">Costo Unitario:</label>
+                                <input type="number" id="editCosto" class="form-control"
+                                        [(ngModel)]="materialEditando.costounitario"
+                                        name="editCosto" required min="0">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="editStock" class="form-label">Stock:</label>
+                                    <input type="number" id="editStock" class="form-control"
+                                            [(ngModel)]="materialEditando.stock"
+                                            name="editStock" required min="0">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="editCantidad" class="form-label">Cant. Unidades:</label>
+                                    <input type="number" id="editCantidad" class="form-control"
+                                            [(ngModel)]="materialEditando.cantidad"
+                                            name="editCantidad" required min="1">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-arrow-clockwise"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <h4 class="mb-3 border-bottom pb-2 mt-5">Gestión de Materiales de Stock</h4>
+
+    <div class="row mb-5">
+
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <i class="bi bi-box-seam"></i> Registrar Nuevo Material
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="crearMaterial()">
+
+                        <div class="mb-3">
+                            <label for="materialNombre" class="form-label">Nombre:</label>
+                            <input type="text" id="materialNombre" class="form-control"
+                                placeholder="Ej: Resina Tonalidad A2"
+                                [(ngModel)]="materialNuevo.nombre"
+                                name="materialNombre" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="materialCategoria" class="form-label">Categoría:</label>
+                            <select id="materialCategoria" class="form-select"
+                                    [(ngModel)]="materialNuevo.id_tipo_material"
+                                    name="materialIdTipo" required>
+                                <option [ngValue]="0" disabled>-- Seleccione una Categoría --</option>
+                                @for (cat of listaTiposMateriales; track cat.id_tipo_material) {
+                                    <option [ngValue]="cat.id_tipo_material">{{ cat.nombre_tipo }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="materialCosto" class="form-label">Costo Unitario (Entero):</label>
+                            <input type="number" id="materialCosto" class="form-control"
+                                    [(ngModel)]="materialNuevo.costounitario"
+                                    name="materialCosto" required min="0">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="materialStock" class="form-label">Stock Inicial:</label>
+                                <input type="number" id="materialStock" class="form-control"
+                                        [(ngModel)]="materialNuevo.stock"
+                                        name="materialStock" required min="0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="materialCantidad" class="form-label">Cant. Unidades:</label>
+                                <input type="number" id="materialCantidad" class="form-control"
+                                        [(ngModel)]="materialNuevo.cantidad"
+                                        name="materialCantidad" required min="1">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mt-2">
+                            <i class="bi bi-save"></i> Guardar Material
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm h-100">
+
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    <i class="bi bi-list me-2"></i> Inventario de Materiales ({{ listaMaterialesFiltrada.length }})
+
+                    <div class="input-group input-group-sm ms-3" style="width: 280px;">
+                        <input type="text" class="form-control"
+                               placeholder="Buscar ID, Nombre o Categoría"
+                               [(ngModel)]="terminoBusquedaMaterial"
+                               (keyup.enter)="ejecutarBusquedaMaterial()"
+                               (input)="ejecutarBusquedaMaterial()"
+                               name="terminoBusquedaMaterial">
+                        <button class="btn btn-outline-secondary" type="button" (click)="ejecutarBusquedaMaterial()">
+                            <i class="bi bi-search me-1"></i> Buscar
+                        </button>
+                        @if (busquedaMaterialActiva) {
+                            <button class="btn btn-outline-danger" type="button" (click)="cargarMateriales()">
+                                <i class="bi bi-x-lg"></i> Volver
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                        <table class="table table-striped table-hover mb-0 small">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Material</th>
+                                    <th>Costo U.</th>
+                                    <th class="text-center">Stock</th>
+                                    <th class="text-center">Categoría</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (mat of listaMaterialesFiltrada; track mat.id_material) {
+                                <tr>
+                                    <td>{{ mat.id_material }}</td>
+                                    <td>{{ mat.nombre }}</td>
+                                    <td>${{ mat.costounitario }}</td>
+                                    <td class="text-center fw-bold">{{ mat.stock }}</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-info text-dark">
+                                            {{ getNombreCategoria(mat.id_tipo_material) }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-warning btn-sm me-1"
+                                                (click)="iniciarEdicion(mat)">
+                                            <i class="bi bi-pencil"></i> Modificar
+                                        </button>
+                                        <button class="btn btn-danger btn-sm"
+                                                 (click)="eliminarMaterial(mat.id_material, mat.nombre)">
+                                            <i class="bi bi-trash me-1"></i> Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                                }
+                                @empty {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted p-4">
+                                        @if (busquedaMaterialActiva) {
+                                            No se encontraron materiales que coincidan con la búsqueda.
+                                        } @else {
+                                            No hay materiales registrados.
+                                        }
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-4 mb-5">
-        
-        <!-- PANEL 1: ALERTAS DE STOCK BAJO -->
+
         <div class="col-lg-6">
             <div class="card h-100 shadow-sm border-danger">
                 <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Alertas de stock</h5>
-                    
-                    <!-- INPUT PARA MANDAR "X" NUMERO A LA FUNCIÓN -->
+
                     <div class="input-group input-group-sm" style="width: 150px;">
                         <span class="input-group-text">Límite:</span>
-                        <input type="number" class="form-control" 
-                               [(ngModel)]="inputLimiteStock" 
-                               (change)="filtrarBajoStock()">
+                        <input type="number" class="form-control"
+                                [(ngModel)]="inputLimiteStock"
+                                (change)="filtrarBajoStock()">
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -42,23 +333,23 @@
 
                             <tbody>
                                 @for (item of listaBajoStock; track $index) {
-                                    <tr>
-                                        <td>{{ item.nombre_material }}</td>
-                                        
-                                        <td class="fw-bold">{{ item.stock_actual }}</td>
-                                        
-                                        <td>
-                                            <span class="badge" 
-                                                [class.bg-dark]="item.estado_alerta === 'AGOTADO'"
-                                                [class.bg-danger]="item.estado_alerta === 'CRÍTICO'"
-                                                [class.bg-warning]="item.estado_alerta === 'BAJO'">
-                                                {{ item.estado_alerta }}
-                                            </span>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>{{ item.nombre_material }}</td>
+
+                                    <td class="fw-bold">{{ item.stock_actual }}</td>
+
+                                    <td>
+                                        <span class="badge"
+                                             [class.bg-dark]="item.estado_alerta === 'AGOTADO'"
+                                             [class.bg-danger]="item.estado_alerta === 'CRÍTICO'"
+                                             [class.bg-warning]="item.estado_alerta === 'BAJO'">
+                                             {{ item.estado_alerta }}
+                                        </span>
+                                    </td>
+                                </tr>
                                 }
                                 @empty {
-                                    <tr><td colspan="3" class="text-center p-3">Todo en orden.</td></tr>
+                                <tr><td colspan="3" class="text-center p-3">Todo en orden.</td></tr>
                                 }
                             </tbody>
                         </table>
@@ -67,18 +358,16 @@
             </div>
         </div>
 
-        <!-- PANEL 2: CATEGORÍAS DE ALTO VALOR (HAVING) -->
         <div class="col-lg-6">
             <div class="card h-100 shadow-sm border-success">
                 <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-cash-stack"></i> Categorías valiosas</h5>
-                    
-                    <!-- INPUT PARA MANDAR "X" NUMERO A LA FUNCIÓN -->
+
                     <div class="input-group input-group-sm" style="width: 200px;">
                         <span class="input-group-text">$ Min:</span>
-                        <input type="number" class="form-control" 
-                               [(ngModel)]="inputMontoMinimo" 
-                               (change)="filtrarAltoValor()">
+                        <input type="number" class="form-control"
+                                [(ngModel)]="inputMontoMinimo"
+                                (change)="filtrarAltoValor()">
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -93,14 +382,14 @@
                             </thead>
                             <tbody>
                                 @for (cat of listaAltoValor; track $index) {
-                                    <tr>
-                                        <td>{{ cat.categoria }}</td>
-                                        <td>{{ cat.total_materiales }}</td>
-                                        <td class="text-end fw-bold text-success">${{ cat.inversion_total }}</td>
-                                    </tr>
+                                <tr>
+                                    <td>{{ cat.categoria }}</td>
+                                    <td>{{ cat.total_materiales }}</td>
+                                    <td class="text-end fw-bold text-success">${{ cat.inversion_total }}</td>
+                                </tr>
                                 }
                                 @empty {
-                                    <tr><td colspan="3" class="text-center p-3">Ninguna categoría supera ese monto.</td></tr>
+                                <tr><td colspan="3" class="text-center p-3">Ninguna categoría supera ese monto.</td></tr>
                                 }
                             </tbody>
                         </table>
@@ -109,24 +398,22 @@
             </div>
         </div>
     </div>
-    <!-- SECCIÓN 3: INVENTARIO DETALLADO (ACORDEÓN) -->
+
     <h4 class="mb-3 border-bottom pb-2 mt-5">Inventario detallado (Vista general)</h4>
-    
+
     <div class="accordion" id="accordionInventario">
-        
-        <!-- BUCLE PRINCIPAL: Recorre las CATEGORÍAS -->
+
         @for (cat of inventarioGeneral; track cat.id_tipo) {
-            
+
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" 
-                            data-bs-toggle="collapse" 
+                    <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#collapse' + cat.id_tipo">
-                        
-                        <!-- DATOS DEL ENCABEZADO (KPIs de la Categoría) -->
+
                         <div class="d-flex w-100 justify-content-between align-items-center me-3">
                             <span class="fw-bold text-primary">{{ cat.nombre }}</span>
-                            
+
                             <div class="text-end small d-none d-md-block">
                                 <span class="badge bg-light text-dark border me-2">
                                     Stock Total: {{ cat.kpis.stock_total }}
@@ -142,12 +429,11 @@
 
                     </button>
                 </h2>
-                
-                <div [id]="'collapse' + cat.id_tipo" class="accordion-collapse collapse" 
+
+                <div [id]="'collapse' + cat.id_tipo" class="accordion-collapse collapse"
                      data-bs-parent="#accordionInventario">
                     <div class="accordion-body p-0">
-                        
-                        <!-- BUCLE SECUNDARIO: Recorre los MATERIALES dentro de la categoría -->
+
                         <div class="table-responsive">
                             <table class="table table-striped table-hover mb-0">
                                 <thead class="table-light small">
@@ -162,33 +448,28 @@
                                 <tbody>
                                     @for (mat of cat.materiales; track mat.id) {
                                         <tr>
-                                            <!-- Nombre del material -->
                                             <td>{{ mat.nombre }}</td>
-                                            
-                                            <!-- Comparativa (Sobre/Bajo promedio) -->
+
                                             <td>
-                                                <span class="badge" 
-                                                        [class.bg-success]="mat.comparativa === 'Bajo el Promedio'" 
-                                                        [class.bg-warning]="mat.comparativa === 'Sobre el Promedio'"
-                                                        [class.text-dark]="mat.comparativa === 'Sobre el Promedio'">
-                                                    {{ mat.comparativa }}
+                                                <span class="badge"
+                                                      [class.bg-success]="mat.comparativa === 'Bajo el Promedio'"
+                                                      [class.bg-warning]="mat.comparativa === 'Sobre el Promedio'"
+                                                      [class.text-dark]="mat.comparativa === 'Sobre el Promedio'">
+                                                      {{ mat.comparativa }}
                                                 </span>
                                             </td>
-                                            
-                                            <!-- Stock Individual -->
+
                                             <td class="text-center">
-                                                <span class="fw-bold" 
+                                                <span class="fw-bold"
                                                       [class.text-danger]="mat.stock <= 5">
-                                                    {{ mat.stock }}
+                                                      {{ mat.stock }}
                                                 </span>
                                             </td>
-                                            
-                                            <!-- Costo Unitario -->
+
                                             <td class="text-end text-muted small">
                                                 ${{ mat.costo }}
                                             </td>
-                                            
-                                            <!-- Valor Total del Material -->
+
                                             <td class="text-end fw-bold">
                                                 ${{ mat.valor }}
                                             </td>
@@ -207,6 +488,5 @@
                 No se encontró información del inventario.
             </div>
         }
-
     </div>
 </div>
