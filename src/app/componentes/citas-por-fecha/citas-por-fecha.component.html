@@ -3,11 +3,14 @@
   <h5 class="text-primary mb-3">Buscar citas por fecha</h5>
 
   <!-- Filtro por fecha -->
-  <div class="row mb-3">
-    <div class="col-md-4">
-      <label class="form-label">Fecha:</label>
-      <input type="date" class="form-control" [(ngModel)]="fechaSeleccionada" (change)="buscarCitas()">
-    </div>
+  <div class="col-md-4">
+    <label class="form-label">Fecha:</label>
+    <!-- Cambia el [min] para usar la variable que creamos -->
+    <input type="date" 
+          class="form-control" 
+          [min]="fechaMinima" 
+          [(ngModel)]="fechaSeleccionada" 
+          (change)="buscarCitas()">
   </div>
 
   <!-- Tabla de resultados -->

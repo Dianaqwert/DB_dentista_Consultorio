@@ -17,6 +17,9 @@ export class CitasGestionarRComponent {
   // Variables de datos
   listaCitas: Cita[] = [];
   listaDentistas: any[] = []; // Para el select del modal
+  fechaSeleccionada: string = '';
+  fechaMinima2: string = '';
+
 
   // Variables de filtros
   filtroFecha: string = '';
@@ -45,6 +48,7 @@ export class CitasGestionarRComponent {
     const hoy = new Date();
     // Formato YYYY-MM-DD para que el input type="date" lo lea bien
     this.filtroFecha = hoy.toISOString().split('T')[0];
+    this.fechaMinima2 = hoy.toISOString().split('T')[0];
 
     // 2. Cargamos la lista inicial
     this.cargarCitas();

@@ -16,8 +16,15 @@ export class CitasPorFechaComponent {
 
   fechaSeleccionada: string = '';
   citas: Cita[] = [];
+  citaEnEdicion: Cita | null = null;
+  fechaMinima: string = '';
 
   constructor(private citasService: CitasService) {}
+
+  ngOnInit(){
+    const hoy = new Date();
+    this.fechaMinima = hoy.toISOString().split('T')[0];
+  }
 
   buscarCitas() {
     if (!this.fechaSeleccionada) return;
