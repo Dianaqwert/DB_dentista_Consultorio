@@ -9,9 +9,9 @@
       <option value="Todos">Todos los estados</option>
       <option value="Agendada">Agendada</option>
       <option value="Confirmada">Confirmada</option>
-      <option value="Atendida">Atendida</option>
       <option value="Reprogramada">Reprogramada</option>
       <option value="Cancelada">Cancelada</option>
+      <option value="Cancelada">Pendiente</option>
       <option value="No asistio">No asistió</option>
     </select>
   </div>
@@ -48,8 +48,6 @@
                         <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Confirmada')">Confirmar</a></li>
                         <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Pendiente')">Pendiente</a></li>
                         <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Agendada')">Agendada</a></li>
-
-                        <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Atendida')">Atender (Pasar a consulta)</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <!-- Opción Reprogramada -->
                         <li><a class="dropdown-item" (click)="cambiarEstado(c, 'Reprogramada')">📅 Reprogramar</a></li>

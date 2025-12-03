@@ -1,0 +1,130 @@
+<div class="row h-100">
+  
+  <!-- COLUMNA IZQUIERDA: BUSCADOR Y LISTA -->
+  <div class="col-md-7 border-end">
+    
+    <div class="p-3 bg-light border-bottom">
+      <h5 class="text-primary"><i class="bi bi-search"></i> Cuentas por Cobrar</h5>
+      <p class="text-muted small mb-2">Busca pacientes atendidos con saldo pendiente.</p>
+      
+      <div class="input-group">
+        <input type="text" class="form-control" 
+               placeholder="Buscar por nombre o fecha (YYYY-MM-DD)..." 
+               [(ngModel)]="terminoBusqueda" 
+               (keyup.enter)="buscarDeudas()">
+        <button class="btn btn-primary" (click)="buscarDeudas()">Buscar</button>
+      </div>
+    </div>
+
+    <div class="list-group list-group-flush scroll-area">
+      @for (cita of listaPendientes; track cita.id_cita) {
+        <button type="button" 
+                class="list-group-item list-group-item-action" 
+                [class.active]="citaSeleccionada?.id_cita === cita.id_cita"
+                (click)="seleccionarCita(cita)">
+          <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1 fw-bold">{{ cita.nombre_paciente }}</h6>
+            <small>{{ cita.fecha_hora | date:'dd/MM/yyyy' }}</small>
+          </div>
+          <p class="mb-1 small">
+            Deuda Total: ${{ cita.monto_total }} | 
+            <span class="text-danger fw-bold">Pendiente: ${{ cita.saldo_pendiente }}</span>
+          </p>
+          <small class="badge bg-warning text-dark">{{ cita.estado_deuda }}</small>
+        </button>
+      }
+
+      @if (listaPendientes.length === 0) {
+        <div class="text-center p-4 text-muted">
+          No se encontraron deudas pendientes con ese criterio.
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- COLUMNA DERECHA: DETALLE Y PAGO -->
+  <div class="col-md-5 bg-white">
+    
+    @if (citaSeleccionada) {
+      <div class="p-4 h-100 d-flex flex-column">
+        
+        <div class="mb-4">
+          <h4 class="text-dark border-bottom pb-2">Detalle de Cobro</h4>
+          <div class="alert alert-info py-2">
+            <small>Atendió el Recepcionista:</small><br>
+            <strong>{{ nombreRecepcionista }}</strong>
+          </div>
+          
+          <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Paciente
+              <span class="fw-bold">{{ citaSeleccionada.nombre_paciente }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Fecha Cita
+              <span>{{ citaSeleccionada.fecha_hora | date:'fullDate' }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+              Monto Total Tratamiento
+              <strong>${{ citaSeleccionada.monto_total }}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center text-success">
+              Ya Pagado
+              <span>- ${{ citaSeleccionada.monto_pagado }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-warning bg-opacity-10">
+              <span class="fw-bold text-danger">Saldo Restante</span>
+              <span class="fs-5 fw-bold text-danger">${{ citaSeleccionada.saldo_pendiente }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- FORMULARIO DE PAGO -->
+        <form [formGroup]="formCobro" (ngSubmit)="procesarPago()" class="mt-auto border rounded p-3 bg-light shadow-sm">
+          <h6 class="text-secondary mb-3">Registrar Nuevo Pago</h6>
+
+          <div class="mb-3">
+            <label class="form-label">Monto a Pagar ($):</label>
+            <input type="number" class="form-control form-control-lg" formControlName="monto_a_pagar">
+            
+            @if (formCobro.get('monto_a_pagar')?.hasError('max')) {
+              <div class="text-danger small">
+                No puedes cobrar más del saldo pendiente (${{ citaSeleccionada.saldo_pendiente }}).
+              </div>
+            }
+            @if (formCobro.get('monto_a_pagar')?.hasError('min')) {
+              <div class="text-danger small">
+                El monto debe ser mayor a 0.
+              </div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Método de Pago:</label>
+            <select class="form-select" formControlName="id_metodo_pago">
+              <option value="">-- Seleccione --</option>
+              @for (metodo of listaMetodos; track metodo.id_metodo_pago) {
+                <option [value]="metodo.id_metodo_pago">{{ metodo.nombre_metodo }}</option>
+              }
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100 py-2 fw-bold" 
+                  [disabled]="formCobro.invalid">
+            <i class="bi bi-cash-coin"></i> COBRAR AHORA
+          </button>
+        </form>
+
+      </div>
+    } @else {
+      <!-- ESTADO VACÍO (SIN SELECCIÓN) -->
+      <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+        <i class="bi bi-arrow-left-circle display-4 mb-3"></i>
+        <h5>Selecciona un paciente de la lista</h5>
+        <p>Aquí verás los detalles para realizar el cobro.</p>
+      </div>
+    }
+  </div>
+
+</div>
+

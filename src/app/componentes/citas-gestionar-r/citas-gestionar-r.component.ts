@@ -75,7 +75,7 @@ export class CitasGestionarRComponent {
 
     this.citasService.getCitas(this.filtroFecha, estadoEnviar).subscribe({
       next: (data) => {
-        this.listaCitas = data;
+      this.listaCitas = data.filter(cita => cita.estado_cita !== 'Atendida');      
       },
       error: (e) => {
         console.error('Error cargando citas:', e);
