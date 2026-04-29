@@ -113,3 +113,27 @@ h2{
 .contendor{
     margin: 20px;
 }
+
+@media (max-width: 992px) {
+  .txt {
+    font-size: 2rem;
+  }
+  .txt-2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .cuad {
+    text-align: center; /* En celular se ve mejor centrado */
+    padding: 15px;
+  }
+  
+  .txt {
+    font-size: 1.5rem; /* Más pequeño para que quepa */
+  }
+  
+  .txt-2 {
+    font-size: 1rem;
+  }
+}

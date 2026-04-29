@@ -1,7 +1,7 @@
-.row{
-    padding: 10px;
-    margin: 5px;
 
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 
@@ -36,6 +36,13 @@ div{
     font-weight: 500px;
 
 }
+
+@media (max-width: 992px) {
+  .txt {
+    font-size: 36px;
+  }
+}
+
 
 .cuad{
     padding: 20px;
@@ -117,3 +124,15 @@ h2{
 p{
     text-align: center;
 }
+
+
+.scroll-lista {
+  max-height: 300px;
+  overflow-y: auto;
+}
+@media (min-width: 992px) {
+  .scroll-lista {
+    max-height: 450px;
+  }
+}
+

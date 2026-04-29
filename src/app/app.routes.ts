@@ -11,6 +11,7 @@ import { TratamientosGestionDComponent } from './componentes/tratamientos-gestio
 import { PacientesMainComponentComponent } from './componentes/pacientes-main-component/pacientes-main-component.component';
 import { CitaMainRComponent } from './componentes/cita-main-r/cita-main-r.component';
 import { ReporteGananciasRComponent } from './componentes/reporte-ganancias-r/reporte-ganancias-r.component';
+import { InventarioAyudanteComponent } from './componentes/inventario-ayudante/inventario-ayudante.component';
 
 export const routes: Routes = [
     {path:'',redirectTo:'/login',pathMatch:'full'},
@@ -25,5 +26,6 @@ export const routes: Routes = [
     {path:'tratamientos-gestion',component:TratamientosGestionDComponent},
     {path:'alta-pacientes',component:PacientesMainComponentComponent},
     {path:'citas-pacientes-agendar',component:CitaMainRComponent},
-    {path:'cobros-ingresos',component:ReporteGananciasRComponent}
+    {path:'cobros-ingresos',component:ReporteGananciasRComponent},
+    {path:'inventario-ayudante',component:InventarioAyudanteComponent}
     ];

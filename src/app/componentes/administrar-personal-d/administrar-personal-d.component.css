@@ -40,6 +40,7 @@ div{
 .cuad{
     padding: 20px;
     margin: 20ps;
+    text-align: center;
 }
 
 button{
@@ -113,3 +114,9 @@ h2{
 .contendor{
     margin: 20px;
 }
+
+.bg-C1{
+    background-color: #2b9895;
+    color: white;
+}
+

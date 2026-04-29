@@ -1,58 +1,68 @@
-<div class="container-fluid p-4">
+<div class="container py-4">
+  <div class="mb-3 cuad">
+    <h1 class="txt">Reporte de Ganancias</h1>
+    <p>Consulta el resumen financiero de la clínica, incluyendo ingresos detallados por método de pago, 
+      estimación de impuestos y el listado de pacientes con saldos pendientes en el rango de fechas seleccionado.</p>
+  </div>
+</div>
+
+<div class="container-fluid px-4">
   
-  <!-- FILTROS -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-body d-flex gap-3 align-items-end bg-light rounded">
-      <div>
-        <label class="form-label fw-bold">Fecha Inicio:</label>
-        <input type="date" class="form-control" [(ngModel)]="fechaInicio">
+  <div class="card shadow-sm mb-4 border-0">
+    <div class="card-body bg-light rounded">
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-md-4">
+          <label class="form-label fw-bold small">Fecha Inicio:</label>
+          <input type="date" class="form-control" [(ngModel)]="fechaInicio">
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="form-label fw-bold small">Fecha Fin:</label>
+          <input type="date" class="form-control" [(ngModel)]="fechaFin">
+        </div>
+        <div class="col-12 col-md-4">
+          <button class="btn btn-primary w-100 px-4" (click)="generarReporte()">
+            <i class="bi bi-bar-chart-fill me-2"></i> Generar Reporte
+          </button>
+        </div>
       </div>
-      <div>
-        <label class="form-label fw-bold">Fecha Fin:</label>
-        <input type="date" class="form-control" [(ngModel)]="fechaFin">
-      </div>
-      <button class="btn btn-primary px-4" (click)="generarReporte()">
-        <i class="bi bi-bar-chart-fill"></i> Generar Reporte
-      </button>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row g-4">
     
-    <!-- COLUMNA IZQUIERDA: RESUMEN FINANCIERO -->
-    <div class="col-md-8">
-      <div class="card shadow border-0">
-        <div class="card-header bg-success text-white d-flex justify-content-between">
-          <h5 class="mb-0">Ingresos Desglosados</h5>
-          <span>Del {{fechaInicio}} al {{fechaFin}}</span>
+    <div class="col-12 col-xl-8">
+      <div class="card shadow border-0 overflow-hidden">
+        <div class="card-header bg-success text-white py-3">
+          <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <h5 class="mb-0"><i class="bi bi-cash-stack me-2"></i>Ingresos Desglosados</h5>
+            <span class="badge bg-white text-success">Período: {{fechaInicio | date:'dd/MM/yyyy'}} - {{fechaFin | date:'dd/MM/yyyy'}}</span>
+          </div>
         </div>
         <div class="card-body">
           
-          <!-- TARJETAS DE TOTALES -->
-          <div class="row mb-4 text-center">
-            <div class="col-md-4">
-              <div class="p-3 bg-light rounded border">
-                <small class="text-muted">Total Ingresos</small>
-                <h3 class="text-success fw-bold">${{ totalGeneral | number:'1.0-0' }}</h3>
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-4">
+              <div class="p-3 bg-success bg-opacity-10 rounded border border-success text-center">
+                <small class="text-success fw-bold text-uppercase">Total Ingresos</small>
+                <h3 class="fw-bold mb-0">${{ totalGeneral | number:'1.0-0' }}</h3>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="p-3 bg-light rounded border">
-                <small class="text-muted">IVA Estimado (16%)</small>
-                <h3 class="text-secondary">${{ totalIVA | number:'1.0-0' }}</h3>
+            <div class="col-12 col-sm-4">
+              <div class="p-3 bg-secondary bg-opacity-10 rounded border border-secondary text-center">
+                <small class="text-muted fw-bold text-uppercase">IVA (16%)</small>
+                <h3 class="text-secondary mb-0">${{ totalIVA | number:'1.0-0' }}</h3>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="p-3 bg-danger bg-opacity-10 rounded border border-danger">
-                <small class="text-danger fw-bold">Dinero Pendiente (Deuda)</small>
-                <h3 class="text-danger">${{ totalDeudaPeriodo | number:'1.0-0' }}</h3>
+            <div class="col-12 col-sm-4">
+              <div class="p-3 bg-danger bg-opacity-10 rounded border border-danger text-center">
+                <small class="text-danger fw-bold text-uppercase">Pendiente (Deuda)</small>
+                <h3 class="text-danger mb-0">${{ totalDeudaPeriodo | number:'1.0-0' }}</h3>
               </div>
             </div>
           </div>
 
-          <!-- TABLA CON TFOOT -->
           <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-hover align-middle">
               <thead class="table-dark">
                 <tr>
                   <th>Método de Pago</th>
@@ -60,62 +70,64 @@
                   <th class="text-end">Monto Recaudado</th>
                 </tr>
               </thead>
-              
-              <!-- CUERPO DE DATOS (Sin el Total General) -->
               <tbody>
                 @for (fila of datosIngresos; track $index) {
-                  <tr [ngClass]="{'table-secondary fw-bold': esFilaSubtotal(fila)}">
-                    <td>{{ fila.metodo_pago }}</td>
+                  <tr [ngClass]="{'table-info fw-bold': esFilaSubtotal(fila)}">
                     <td>
-                        {{ fila.tratamiento === 'SUBTOTAL PAGO' ? 'SUBTOTAL ' + fila.metodo_pago : fila.tratamiento }}
+                      <span *ngIf="!esFilaSubtotal(fila)">{{ fila.metodo_pago }}</span>
+                      <span *ngIf="esFilaSubtotal(fila)" class="text-primary text-uppercase">Subtotal</span>
                     </td>
-                    <td class="text-end">
+                    <td>
+                        {{ fila.tratamiento === 'SUBTOTAL PAGO' ? fila.metodo_pago : fila.tratamiento }}
+                    </td>
+                    <td class="text-end fw-bold">
                         ${{ fila.ingresos_totales | number }}
                     </td>
                   </tr>
                 }
+                @if (datosIngresos.length === 0) {
+                  <tr>
+                    <td colspan="3" class="text-center py-5 text-muted">
+                      <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                      No se encontraron ingresos para las fechas seleccionadas.
+                    </td>
+                  </tr>
+                }
               </tbody>
-
-              <!-- PIE DE TABLA (Total General Fijo al final) -->
               <tfoot class="table-success border-top border-3 border-success">
                 <tr class="fw-bold fs-5">
-                  <td colspan="2" class="text-end text-uppercase">Total General Ingresos:</td>
+                  <td colspan="2" class="text-end">TOTAL GENERAL:</td>
                   <td class="text-end">${{ totalGeneral | number }}</td>
                 </tr>
               </tfoot>
-
             </table>
           </div>
-
         </div>
       </div>
     </div>
 
-    <!-- COLUMNA DERECHA: LISTA DE MOROSOS -->
-    <div class="col-md-4">
-      <div class="card shadow border-0 h-100">
-        <div class="card-header bg-danger text-white">
-          <h5 class="mb-0"><i class="bi bi-exclamation-circle"></i> Deudores del Periodo</h5>
+    <div class="col-12 col-xl-4">
+      <div class="card shadow border-0">
+        <div class="card-header bg-danger text-white py-3">
+          <h5 class="mb-0"><i class="bi bi-person-exclamation me-2"></i>Deudores del Periodo</h5>
         </div>
         <div class="card-body p-0">
           <ul class="list-group list-group-flush">
             @for (deudor of datosDeudores; track deudor.id_paciente) {
-              <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                  <div class="fw-bold">{{ deudor.nombre_paciente }}</div>
-                  <small class="text-muted">
-                    <i class="bi bi-telephone"></i> {{ deudor.telefono }}
-                  </small>
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <div>
+                  <div class="fw-bold text-dark">{{ deudor.nombre_paciente }}</div>
+                  <small class="text-muted"><i class="bi bi-telephone me-1"></i>{{ deudor.telefono }}</small>
                 </div>
-                <span class="badge bg-danger rounded-pill">
-                  -${{ deudor.total_deuda }}
+                <span class="badge bg-danger fs-6 px-3">
+                  -${{ deudor.total_deuda | number }}
                 </span>
               </li>
             }
             @if (datosDeudores.length === 0) {
-              <div class="p-4 text-center text-muted">
-                <i class="bi bi-check-circle fs-1 text-success"></i>
-                <p>¡Excelente! No hay deudas registradas en estas fechas.</p>
+              <div class="p-5 text-center text-muted">
+                <i class="bi bi-emoji-smile fs-1 text-success mb-2 d-block"></i>
+                <p class="mb-0">¡Todo al día! Sin deudas en este rango.</p>
               </div>
             }
           </ul>

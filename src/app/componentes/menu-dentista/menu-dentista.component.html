@@ -1,5 +1,9 @@
-<div class="divPrincipal">
-  <h2>Bienvenido, {{ usuario?.nombres }}</h2>  
+
+<div class="divPrincipal row">
+  <div class="divPrincipal d-flex align-items-center justify-content-center">
+    <img src="iconDoc.png" class="img-fluid me-2" style="max-width: 50px;">
+    <h2>Bienvenida Doctora, {{ usuario?.nombres }}</h2>
+  </div>
 </div>
 
   <div class="album py-5 bg-body-tertiary">
@@ -25,7 +29,6 @@
                     Ver
                   </button>
                 </div>
-                <small class="text-body-secondary">9 mins</small>
               </div>
             </div>
           </div>
@@ -67,8 +70,9 @@
               <div class="card-body">
                 <h2>Tratamientos</h2>
                 <p class="card-text">
-                  Nuevos tratamientos .
+                  Gestión de tratamientos en altas , bajas y promedios.
                 </p>
+
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="irTratamientos()">Ver</button>
@@ -94,7 +98,6 @@
                   <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="irAMateriales()">Ver</button>
                   </div>
-                  <small class="text-body-secondary">9 mins</small>
                 </div>
               </div>
             </div>

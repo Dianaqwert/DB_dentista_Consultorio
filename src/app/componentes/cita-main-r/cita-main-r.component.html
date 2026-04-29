@@ -1,8 +1,9 @@
 
 <div class="container py-4">
+
   <div class="mb-3 cuad">
     <h1 class="txt">Citas y cobros</h1>
-    <p>Agendar y cobrar</p>
+    <p>Realizar citas por paciente y cobros por tratamiento</p>
   </div>
 
   <!-- FILA 1 -->
@@ -24,7 +25,20 @@
   <div class="row mt-4">
     <!-- A2: Cambiar estado de cita -->
     <div class="col-md-6">
-      <h4 class="mb-3 text-primary">Cambiar estado de cita</h4>
+
+      <div class="d-flex align-items-center mb-3">
+        <h4 class="text-primary mb-0 me-2">Cambiar estado de cita</h4>
+        
+        <button type="button" class="btn btn-outline-primary btn-sm rounded-circle shadow-sm btn-modal-1" 
+                title="Ver ayuda" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modalInfoAg"
+                style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
+          <i class="bi bi-question-lg"></i>
+        </button>
+
+      </div>
+
       <app-citas-gestionar-r></app-citas-gestionar-r>
 
     </div>
@@ -33,6 +47,69 @@
     <div class="col-md-6">
       <h4 class="mb-3 text-primary">Generar cita</h4>
       <app-cita-nueva-paciente-r></app-cita-nueva-paciente-r>
+    </div>
+  </div>
+</div>
+
+<!--MODAL DE LOS ESTADOS DE LA CITA-->
+<div class="modal fade" id="modalInfoAg" tabindex="-1" aria-labelledby="modalInfoAgLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header" style="background-color: rgb(57, 138, 245); color: white;">
+        <h5 class="modal-title" id="modalInfoAgLabel">
+          <i class="bi bi-info-circle-fill me-2"></i> Guía de Estados de Cita
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted">Cambiar el estado permite que el doctor y el resto del equipo sepan en qué etapa se encuentra el paciente.</p>
+        
+        <ul class="list-group list-group-flush">
+
+          <li class="list-group-item d-flex align-items-start">
+            <span class="badge bg-warning text-dark me-3 mt-1">Pendiente</span>
+            <div>
+              <strong>Cita acordada:</strong>Se le asigno un día y hora al paciente (aun no se ha confirmado)
+            </div>
+          </li>
+
+          <li class="list-group-item d-flex align-items-start border-light">
+            <span class="badge bg-info text-dark me-3 mt-1">Confirmada</span>
+            <div>
+              <strong>Asistencia asegurada:</strong> Se contactó al paciente y confirmó que vendrá.
+            </div>
+          </li>
+
+          <li class="list-group-item d-flex align-items-start">
+            <span class="badge bg-primary me-3 mt-1">Agendada</span>
+            <div>
+              <strong>Cita prevista:</strong> Pasa a ser "Agendada" ya que esta pasara a ser "Atendida" por la dentista.
+            </div>
+          </li>
+          
+          
+          <li class="list-group-item d-flex align-items-start">
+            <span class="badge bg-success me-3 mt-1">Atendida</span>
+            <div>
+              <strong>Consulta terminada:</strong> El doctor finalizó el procedimiento (este estado suele ser automático tras la nota clínica de la dentista).
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-start">
+            <span class="badge bg-danger me-3 mt-1">Cancelada / No asistió</span>
+            <div>
+              <strong>Espacio liberado:</strong> El paciente avisó que no vendría o simplemente nunca llegó.
+            </div>
+          </li>
+        </ul>
+
+        <div class="alert alert-info mt-3 small mb-0">
+          <i class="bi bi-lightbulb-fill me-2"></i>
+          <strong>Tip:</strong> Siempre cambiar el estado de una cita para que el dentista pueda atender la cita.
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary btn-estadosModal w-100" data-bs-dismiss="modal">Entendido</button>
+      </div>
     </div>
   </div>
 </div>

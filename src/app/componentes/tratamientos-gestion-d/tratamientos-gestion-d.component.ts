@@ -1,10 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { TratamientoNuevo } from '../../interfaces/nuevoTratamiento';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TratamientosService } from '../../services/tratamientos.service';
-import { Form, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators ,ValidationErrors,AbstractControl} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators ,ValidationErrors,AbstractControl} from '@angular/forms';
 import { PacientesTratamientosInactivosDComponent } from "../pacientes-tratamientos-inactivos-d/pacientes-tratamientos-inactivos-d.component";
 import { EstadisticasTratamientosDComponent } from "../estadisticas-tratamientos-d/estadisticas-tratamientos-d.component";
 
@@ -119,27 +117,31 @@ export class TratamientosGestionDComponent implements OnInit{
 
   // Función para GUARDAR (POST) usando el Servicio
   guardarTratamiento() {
-    // Validaciones básicas
-    if (!this.nuevoTratamiento.nombre || this.nuevoTratamiento.costo <= 0) {
-      alert('Completa los campos correctamente');
+    
+    // 1. Verificar si el formulario es inválido (si lo es, los errores rojos ya se mostraron)
+    if (this.searchForm.invalid) {
+      this.searchForm.markAllAsTouched();
+      alert("Por favor corrige los errores en el formulario.");
       return;
     }
+    
+    // 2. Obtener los datos del FORMULARIO
+    const nuevoTratamiento: TratamientoNuevo = this.searchForm.value;
 
-    // Usamos el servicio
-    this.tratamientoService.crearTratamiento(this.nuevoTratamiento).subscribe({
+    // 3. Usamos el servicio con los datos del FORMULARIO
+    this.tratamientoService.crearTratamiento(nuevoTratamiento).subscribe({
       next: (res) => {
         console.log('Respuesta del server:', res);
         alert('Tratamiento agregado con éxito');
         
-        // 1. Limpiamos el formulario
-        this.nuevoTratamiento = { nombre: '', descripcion: '', costo: 0 };
-        
-        // 2. Recargamos la lista para ver el nuevo registro inmediatamente
+        // 4. Limpiamos el formulario y recargamos
+        this.searchForm.reset();
         this.obtenerTratamientos();
       },
       error: (err) => {
         console.error('Error al guardar:', err);
-        alert('Hubo un error al guardar el tratamiento');
+        // El error 400 del backend (ej: nombre duplicado) se maneja aquí.
+        alert('Hubo un error al guardar el tratamiento: ' + (err.error.error || err.error.message || 'Desconocido'));
       }
     });
   }

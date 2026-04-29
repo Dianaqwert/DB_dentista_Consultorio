@@ -116,9 +116,7 @@ ngOnInit() {
     this.buscarPacientes('', '', '');
   }
 
-  volverAlMenu() {
-    this.volverMenu.emit();
-  }
+  
 
   seleccionarPacienteFila(paciente: any) {
     this.pacienteSeleccionadoId = paciente.id_paciente;

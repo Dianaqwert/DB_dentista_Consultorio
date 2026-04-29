@@ -1,0 +1,255 @@
+
+<div class="container py-4">
+  <div class="mb-3 cuad">
+    <h1 class="txt">Inventario</h1>
+    <p>Seguimiento y control de materiales consiste en registrar y supervisar las existencias, controlar entradas y salidas, verificar niveles de stock. Su objetivo es mantener disponibilidad, evitar pérdidas y optimizar el uso de recursos.</p>
+  </div>
+</div>
+
+<div class="container-fluid py-2">
+  <div class="row g-4">
+    
+    <div class="col-md-4">
+      <!--CATEGORIA-->
+      <div class="mb-4 card shadow border-2">
+        <div class="card-header">
+          <h6 class="mb-0">Nueva Categoría</h6>
+        </div>
+
+        <div class="card-body">
+          <div class="input-group">
+            <input type="text" class="form-control form-control-sm" placeholder="Nombre de categoría..." 
+                   #nuevaCat (keyup.enter)="crearCategoria(nuevaCat.value); nuevaCat.value=''">
+            <button class="btn btn-sm" style="border-color: rgb(91, 90, 90);" (click)="crearCategoria(nuevaCat.value); nuevaCat.value=''">
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+          <small class="text-muted">Ej: Desechables, Anestesia, Ortodoncia.</small>
+        </div>
+
+      </div>
+
+      <!--MATERIAL-->
+      <div class="mb-4 card shadow border-2">
+        
+        <div class="card-header">
+          <h6 class="mb-0">Registrar Nuevo Insumo</h6>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="formAlta" (ngSubmit)="guardarMaterial()">
+            
+            <div class="mb-3">
+              <label class="form-label">Nombre del Material (*)</label>
+              <input type="text" class="form-control" formControlName="nombre" maxlength="100"
+                     [class.is-invalid]="formAlta.get('nombre')?.invalid && formAlta.get('nombre')?.touched">
+              <div class="invalid-feedback">
+                @if (formAlta.get('nombre')?.hasError('required')) { <div>El nombre es obligatorio.</div> }
+                @if (formAlta.get('nombre')?.hasError('repetitive')) { <div>⚠️ Evita repeticiones.</div> }
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Tipo de Material (*)</label>
+              <select class="form-select" formControlName="id_tipo_material"
+                      [class.is-invalid]="formAlta.get('id_tipo_material')?.invalid && formAlta.get('id_tipo_material')?.touched">
+                <option [ngValue]="null">-- Seleccione Categoría --</option>
+                @for (tipo of tiposMaterial; track tipo.id_tipo_material) {
+                  <option [value]="tipo.id_tipo_material">{{ tipo.nombre_tipo }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="row g-2">
+              <div class="col-6 mb-3">
+                <label class="form-label">Costo Unit. (*)</label>
+                <input type="number" class="form-control" formControlName="costounitario" min="1">
+              </div>
+
+              <div class="col-6 mb-3">
+                <label class="form-label">Stock Inicial (*)</label>
+                <input type="number" class="form-control" formControlName="stock" min="0">
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Cant. Consumida por Unidad (*)</label>
+              <input type="number" class="form-control" formControlName="cantidad" min="1">
+            </div>
+
+            <button type="submit" class="btn-sm btn-primary w-100 mt-2" style="border-radius: 5px;" [disabled]="formAlta.invalid">
+              <i class="bi bi-cloud-arrow-up"></i> Guardar Material
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+      <!--WARNNING y explicacion-->
+      <div class="alert alert-primary custom-orange mt-3 shadow-sm">
+        <h5><i class="bi bi-info-circle-fill"></i> Guía de llenado de Inventario</h5>
+        <hr>
+        
+        <p><strong>Costo Unitario ($):</strong> Es el precio de una sola pieza individual. 
+          <br><small class="text-muted">Ayuda al sistema a calcular el valor real de lo que hay en bodega.</small>
+        </p>
+
+        <p><strong>Stock Inicial:</strong> Es el número total de unidades sueltas que hay actualmente.
+          <br><small class="text-muted">No registres "1 caja", registra el total de piezas que contiene esa caja.</small>
+        </p>
+
+        <p><strong>Cantidad consumida por unidad:</strong> Es cuántas piezas se gastan en un procedimiento normal.
+          <br><small class="text-muted">El sistema restará esta cantidad automáticamente cada vez que el dentista use el material.</small>
+        </p>
+
+        <div class="bg-white p-3 rounded border border-primary mt-3">
+          <h6 class="text-primary"><i class="bi bi-lightbulb"></i> Ejemplo: Caja de Guantes</h6>
+          <ul class="mb-0 small">
+            <li><strong>Escenario:</strong> Compras 1 caja de 100 guantes por $200.</li>
+            <li><strong>Costo Unitario:</strong> $2 ($200 dividido entre 100 piezas).</li>
+            <li><strong>Stock Inicial:</strong> 100 (piezas totales).</li>
+            <li><strong>Cant. Consumida:</strong> 2 (porque el doctor usa un par por paciente).</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!--LISTA DE MATERIAL-->
+    <div class="col-md-8">
+      <div class="card shadow border-2 h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Inventario Actual</h6>
+        </div>
+        <div class="card-body">
+          
+          <div class="mb-3">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar por nombre, ID o categoría..."
+                     [(ngModel)]="terminoBusqueda" (keyup.enter)="buscarMaterial()">
+
+              <button class="btn" style="border-color: rgb(91, 90, 90);" (click)="buscarMaterial()">
+                <i class="bi bi-search"></i>
+              </button>
+
+              <button class="btn" style="border-color: rgb(91, 90, 90);" (click)="terminoBusqueda=''; cargarMateriales()">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Material</th>
+                  <th>Categoría</th>
+                  <th class="text-center">Stock</th>
+                  <th class="text-center">Unidad/Uso</th>
+                  <th style="width: 100px;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (mat of listaMateriales; track mat.id_material) {
+                  <tr>
+                    <td>{{ mat.id_material }}</td>
+                    <td class="fw-bold">{{ mat.nombre }}</td>
+                    <td>{{ obtenerNombreTipo(mat.id_tipo_material) }}</td>
+                    <td class="text-center">
+                      <span [ngClass]="{'text-danger fw-bold': mat.stock < 10, 'text-warning': mat.stock >= 10 && mat.stock < 50}">
+                        {{ mat.stock }}
+                      </span>
+                    </td>
+                    <td class="text-center">{{ mat.cantidad }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary me-1" (click)="editarMaterial(mat)">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger" (click)="eliminarMaterial(mat.id_material)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<!-- MODAL DE EDICIÓN de cada material-->
+<div class="modal fade" id="modalEdicion" tabindex="-1" aria-labelledby="modalEdicionLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header color-m">
+        <h5 class="modal-title" id="modalEdicionLabel">Editar Material ID: {{ materialEnEdicion?.id_material }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="formEdicion" (ngSubmit)="guardarEdicion()">
+
+          <div class="mb-3">
+            <label class="form-label">Nombre del Material</label>
+            <input type="text" class="form-control" formControlName="nombre" maxlength="100"
+                   [class.is-invalid]="formEdicion.get('nombre')?.invalid && formEdicion.get('nombre')?.touched">
+            <div class="invalid-feedback">
+                @if (formEdicion.get('nombre')?.hasError('required')) { <div>El nombre es obligatorio.</div> }
+                @if (formEdicion.get('nombre')?.hasError('repetitive')) { <div>⚠️ Evita repeticiones.</div> }
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Tipo de Material</label>
+            <select class="form-select" formControlName="id_tipo_material"
+                    [class.is-invalid]="formEdicion.get('id_tipo_material')?.invalid && formEdicion.get('id_tipo_material')?.touched">
+              @for (tipo of tiposMaterial; track tipo.id_tipo_material) {
+                <option [value]="tipo.id_tipo_material">{{ tipo.nombre_tipo }}</option>
+              }
+            </select>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Costo Unitario ($)</label>
+              <input type="number" class="form-control" formControlName="costounitario" min="1"
+                     [class.is-invalid]="formEdicion.get('costounitario')?.invalid && formEdicion.get('costounitario')?.touched">
+              <div class="invalid-feedback">Costo debe ser > 0.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Stock Actual</label>
+              <input type="number" class="form-control" formControlName="stock" min="0"
+                     [class.is-invalid]="formEdicion.get('stock')?.invalid && formEdicion.get('stock')?.touched">
+              <div class="invalid-feedback">Stock (mínimo 0).</div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Cant. Consumida por Unidad</label>
+            <input type="number" class="form-control" formControlName="cantidad" min="1"
+                   [class.is-invalid]="formEdicion.get('cantidad')?.invalid && formEdicion.get('cantidad')?.touched">
+            <div class="invalid-feedback">Cantidad por uso (mínimo 1).</div>
+          </div>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button type="button" class="btn me-2" style="border-color: rgb(91, 90, 90);"(click)="cerrarModal()">Cerrar</button>
+            <button type="submit" class="btn" style="border-color: rgb(91, 90, 90);"[disabled]="formEdicion.invalid">
+              Guardar Cambios
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,8 +5,8 @@
         <th>Nombre tratamiento</th> 
         <th>Fecha</th>
         <th>Unidades de tratamiento</th>
-        <th>Costo</th>
         <th>Subtotal</th>
+        <th>Costo</th>
       </tr>
     </thead>
     <tbody>
@@ -17,7 +17,8 @@
       <td>{{ registro.fecha_tratamiento | date: 'mediumDate' }}</td>
       
       <td>{{ registro.unidades_tratamiento }}</td>
-      <td>{{ registro.costo | currency }}</td> <td>{{ registro.subtotal | currency }}</td>
+      <td>{{ registro.subtotal | currency }}</td>
+      <td>{{ registro.costo | currency }}</td> 
     </tr>
   }
   </tbody>

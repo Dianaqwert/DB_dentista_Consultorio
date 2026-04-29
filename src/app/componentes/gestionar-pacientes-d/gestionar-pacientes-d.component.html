@@ -4,7 +4,8 @@
 </div>
 
 <app-agenda-citas
-  [dentista]="usuarioLogueado"
+  *ngIf="usuarioLogueado"
+  [usuario]="usuarioLogueado"
   (citaSeleccionada)="abrirModalAtencion($event)">
 </app-agenda-citas>
 

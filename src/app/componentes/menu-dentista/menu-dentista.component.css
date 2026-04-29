@@ -1,6 +1,6 @@
 .divPrincipal{
     text-align: center;
-    margin: 2%;
+    margin: .8%;
 }
 
 .card-img-top {
@@ -26,3 +26,4 @@ h2{
     font-weight: 700;
     font-size: 50px;
 }
+

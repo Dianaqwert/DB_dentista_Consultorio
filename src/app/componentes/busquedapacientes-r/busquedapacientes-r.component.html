@@ -5,7 +5,7 @@
       <div class="row align-items-center">
         
         <div class="col-md-3">
-          <h4 class="mb-0 text-primary">Pacientes</h4>
+          <h4 class="mb-0">Buscar paciente</h4>
         </div>
 
         <div class="col-md-6">
@@ -56,7 +56,7 @@
                   <td>{{ p.telefono }}</td>
                   <td>{{ p.email }}</td>
                   <td class="text-end">
-                    <button class="btn btn-outline-primary btn-sm" (click)="iniciarEdicion(p)">
+                    <button class="btn btn-sm" (click)="iniciarEdicion(p)">
                       <i class="bi bi-pencil-square"></i> Editar
                     </button>
                   </td>
@@ -79,8 +79,8 @@
 
   <!-- FORMULARIO DE EDICIÓN (Aparece solo al dar clic en Editar) -->
   @if (pacienteEnEdicion) {
-    <div class="card border-primary shadow">
-      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+    <div class="card shadow">
+      <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Editando a: {{ pacienteEnEdicion.nombrespaciente }}</h5>
         <button class="btn btn-sm btn-light" (click)="cancelarEdicion()">X</button>
       </div>
@@ -191,7 +191,7 @@
 
           <div class="mt-4 text-end">
             <button type="button" class="btn btn-secondary me-2" (click)="cancelarEdicion()">Cancelar</button>
-            <button type="submit" class="btn btn-primary" [disabled]="formEdicion.invalid">Guardar Cambios</button>
+            <button type="submit" class="btn btn-secondary me-2" [disabled]="formEdicion.invalid">Guardar Cambios</button>
           </div>
 
         </form>

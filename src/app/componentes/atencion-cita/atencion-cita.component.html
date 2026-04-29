@@ -1,3 +1,5 @@
+
+
 <div class="modal fade" id="modalAtencion" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
@@ -32,17 +34,31 @@
           <ul class="nav nav-tabs nav-fill mb-3" id="tabsAtencion" role="tablist">
             <li class="nav-item" role="presentation">
               <button class="nav-link active fw-bold" id="tab-tratamientos-tab" data-bs-toggle="tab" data-bs-target="#tab-tratamientos" type="button">
-                <i class="bi bi-tools"></i> 1. Procedimientos y Materiales
+                <i class="bi bi-tools"></i> 
+                <span class="d-none d-md-inline">1. Procedimientos y Materiales</span>
+                <span class="d-inline d-md-none">Procedimientos</span>
               </button>
             </li>
             <li class="nav-item" role="presentation">
               <button class="nav-link fw-bold" id="tab-historial-tab" data-bs-toggle="tab" data-bs-target="#tab-historial" type="button">
-                <i class="bi bi-journal-medical"></i> 2. Nota Clínica
+                <i class="bi bi-journal-medical"></i> 
+                <span class="d-none d-md-inline">2. Nota Clínica</span>
+                <span class="d-inline d-md-none">Nota</span>
               </button>
             </li>
             <li class="nav-item" role="presentation">
               <button class="nav-link fw-bold" id="tab-extras-tab" data-bs-toggle="tab" data-bs-target="#tab-extras" type="button">
-                <i class="bi bi-arrow-right-circle"></i> 3. Derivaciones y Estudios
+                <i class="bi bi-arrow-right-circle"></i> 
+                <span class="d-none d-md-inline">3. Derivaciones y Estudios</span>
+                <span class="d-inline d-md-none">Derivaciones</span>
+              </button>
+            </li>
+
+            <li class="nav-item" role="presentation">
+              <button class="nav-link fw-bold" id="tab-funcionamiento-tab" data-bs-toggle="tab" data-bs-target="#tab-funcionamiento" type="button">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span class="d-none d-md-inline">Funcionamiento del modulo</span>
+                <span class="d-inline d-md-none">Funcionamiento</span>
               </button>
             </li>
           </ul>
@@ -60,13 +76,13 @@
                   </button>
                 </div>
 
-                <div class="table-responsive">
-                  <table class="table table-bordered table-hover align-middle mb-0">
+                <div class="table-responsive tabla-vertical" style="position: relative;">
+                  <table class="table table-bordered table-hover align-middle mb-0 tabla-scroll">
                     <thead class="table-light">
                       <tr>
                         <th style="width: 45%">Tratamiento (*)</th>
                         <th style="width: 20%">Material Principal</th>
-                        <th style="width: 10%">Cant.</th>
+                        <th style="width: 10%">cantidad de tratamiento</th>
                         <th style="width: 20%">Costo Total</th>
                         <th style="width: 5%"></th>
                       </tr>
@@ -92,7 +108,6 @@
                                 <option [ngValue]="null">Ninguno</option>
                                 @for (m of catalogoMateriales; track m.id_tipo_material) {
                                     <option [value]="m.id_tipo_material">
-                                        <!-- ✅ CORREGIDO: Usamos m.nombre_material -->
                                         {{ m.nombre_material }} (Stock: {{ m.stock || 0 }})
                                     </option>
                                 }
@@ -126,13 +141,12 @@
                   </button>
                 </div>
                 
-                <div class="table-responsive">
+                <div class="table-responsive" style="position: relative;">
                     <table class="table table-bordered table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 60%">Material (Stock) (*)</th>
                                 <th style="width: 15%">Cant. Consumida</th>
-                                <th style="width: 20%">Costo (Inventario)</th>
                                 <th style="width: 5%"></th>
                             </tr>
                         </thead>
@@ -144,8 +158,7 @@
                                             <option [ngValue]="null">Seleccione Material...</option>
                                             @for (m of catalogoMateriales; track m.id_tipo_material) {
                                                 <option [value]="m.id_tipo_material">
-                                                    <!-- ✅ CORREGIDO: Usamos m.nombre_material -->
-                                                    {{ m.nombre_material }} (Stock: {{ m.stock || 0 }}, Costo Unitario: {{ m.costoUnitario | currency }})
+                                                    {{ m.nombre_material }} (Stock: {{ m.stock || 0 }})
                                                 </option>
                                             }
                                         </select>
@@ -156,9 +169,7 @@
                                     <td>
                                         <input type="number" class="form-control form-control-sm" formControlName="cantidad" min="1" (change)="actualizarCosto($index)">
                                     </td>
-                                    <td class="text-end fw-bold text-secondary">
-                                        {{ obtenerCostoEstimado($index, 'materiales') | currency }}
-                                    </td>
+                                    
                                     <td class="text-center">
                                         <button type="button" class="btn btn-outline-danger btn-sm border-0" (click)="eliminarMaterialExtra($index)">
                                             <i class="bi bi-trash"></i>
@@ -167,13 +178,7 @@
                                 </tr>
                              }
                         </tbody>
-                        <tfoot class="table-group-divider fw-bold bg-light">
-                            <tr>
-                                <td colspan="2" class="text-end">Subtotal Material Extra:</td>
-                                <td class="text-end text-secondary">{{ totalMaterialExtra | currency }}</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
+                        
                     </table>
                 </div>
 
@@ -182,7 +187,7 @@
                   <table class="table table-sm table-group-divider fw-bold">
                     <tfoot class="table-success">
                         <tr>
-                            <td colspan="2" class="text-end">TOTAL DEUDA ESTIMADA (Tratamientos + Insumos):</td>
+                            <td colspan="2" class="text-end">TOTAL DEUDA ESTIMADA (Tratamientos):</td>
                             <td class="text-end text-success">{{ totalDeudaEstimada | currency }}</td>
                             <td></td>
                         </tr>
@@ -198,7 +203,7 @@
 
               </div>
             </div>
-
+            <!--S1-->
             <div class="tab-pane fade" id="tab-historial" role="tabpanel">
               <div class="card p-3 shadow-sm border-0">
                 <div class="row g-3">
@@ -222,7 +227,7 @@
                 </div>
               </div>
             </div>
-
+            <!--S2-->
             <div class="tab-pane fade" id="tab-extras" role="tabpanel">
               <div class="row g-3">
                 
@@ -230,45 +235,44 @@
                   <div class="card h-100">
                     <div class="card-header d-flex justify-content-between py-2">
                       <strong>Derivaciones</strong>
-                      <button type="button" class="btn btn-outline-primary btn-sm py-0" (click)="agregarDerivacion()">+</button>
+                      <button type="button" class="btn btn-primary btn-sm" (click)="agregarDerivacion()">
+                          <i class="bi bi-plus-circle"></i> Agregar Nueva
+                      </button>
                     </div>
-                    <div class="card-body bg-light p-2" formArrayName="derivaciones">
+                    <div class="card-body bg-light p-2 scroll-cards" formArrayName="derivaciones">
                       @for (der of derivacionesArray.controls; track $index) {
                         <div [formGroupName]="$index" class="card mb-2">
                             <div class="card-body p-2 position-relative">
-                                <button type="button" class="btn-close position-absolute top-0 end-0 m-1 small" (click)="eliminarDerivacion($index)"></button>
-                                <div class="row g-2">
-                                  <div class="col-6">
-                                      <input type="text" 
-                                            class="form-control form-control-sm" 
-                                            formControlName="nombreDentista" 
-                                            placeholder="Dr. Destino">
-                                      
-                                      @if (der.get('nombreDentista')?.hasError('pattern')) {
-                                          <div class="text-danger small" style="font-size: 0.75rem;">
-                                              No se permiten números.
-                                          </div>
-                                      }
+                              <button type="button" class="btn-close position-absolute top-0 end-0 m-1 small" (click)="eliminarDerivacion($index)"></button>
+                              
+                              <div class="row g-2">
+                                  <div class="col-md-4">
+                                      <label class="small text-muted mb-0">Nombre(s)</label>
+                                      <input type="text" class="form-control form-control-sm" formControlName="nombreDentista" placeholder="Ej: Juan">
+                                  </div>
+                                  <div class="col-md-4">
+                                      <label class="small text-muted mb-0">Ap. Paterno</label>
+                                      <input type="text" class="form-control form-control-sm" formControlName="apellidoPatDentista" placeholder="Pérez">
+                                  </div>
+                                  <div class="col-md-4">
+                                      <label class="small text-muted mb-0">Ap. Materno</label>
+                                      <input type="text" class="form-control form-control-sm" formControlName="apellidoMatDentista" placeholder="García">
                                   </div>
 
-                                  <div class="col-6">
-                                      <input type="text" 
-                                            class="form-control form-control-sm" 
-                                            formControlName="especialidadDentista" 
-                                            placeholder="Especialidad">
-
-                                      @if (der.get('especialidadDentista')?.hasError('pattern')) {
-                                          <div class="text-danger small" style="font-size: 0.75rem;">
-                                              No se permiten números.
-                                          </div>
-                                      }
+                                  <div class="col-md-5">
+                                      <label class="small text-muted mb-0">Especialidad</label>
+                                      <input type="text" class="form-control form-control-sm" formControlName="especialidadDentista" placeholder="Endodoncia">
                                   </div>
-
-                                  <div class="col-12">
-                                      <input type="text" class="form-control form-control-sm" formControlName="motivo" placeholder="Motivo">
+                                  <div class="col-md-7">
+                                      <label class="small text-muted mb-0">Motivo de envío</label>
+                                      <input type="text" class="form-control form-control-sm" formControlName="motivo" placeholder="Descripción breve...">
                                   </div>
-                                </div>
-                            </div>
+                              </div>
+
+                              @if (der.invalid && der.touched) {
+                                  <div class="text-danger" style="font-size: 0.7rem;">Todos los campos marcados son obligatorios.</div>
+                              }
+                          </div>
                         </div>
                       }
                       @if (derivacionesArray.length === 0) {
@@ -282,13 +286,15 @@
                   <div class="card h-100">
                     <div class="card-header d-flex justify-content-between py-2">
                       <strong>Estudios</strong>
-                      <button type="button" class="btn btn-outline-info btn-sm py-0" (click)="agregarEstudio()">+</button>
+                      <button type="button" class="btn btn-info text-white btn-sm" (click)="agregarEstudio()">
+                          <i class="bi bi-plus-circle"></i> Agregar Estudio
+                      </button>
                     </div>
-                    <div class="card-body bg-light p-2" formArrayName="estudios">
+                    <div class="card-body bg-light p-2 scroll-cards" formArrayName="estudios">
                       @for (est of estudiosArray.controls; track $index) {
                         <div [formGroupName]="$index" class="card mb-2">
                             <div class="card-body p-2 position-relative">
-                                <button type="button" class="btn-close position-absolute top-0 end-0 m-1 small" onClick="eliminarEstudio($index)"></button>
+                                <button type="button" class="btn-close position-absolute top-0 end-0 m-1 small" (click)="eliminarEstudio($index)"></button>
                                 <div class="col-12 mb-1">
                                     <input type="text" class="form-control form-control-sm fw-bold" formControlName="nombre" placeholder="Nombre Estudio">
                                 </div>
@@ -308,10 +314,77 @@
               </div>
             </div>
 
-          </div> </form>
+            <!--FUNCIONAMIENTO-->
+            <div class="tab-pane fade" id="tab-funcionamiento" role="tabpanel">
+              <div class="card p-4 shadow-sm border-0">
+                
+                <h5 class="text-error mb-3">
+                  <i class="bi bi-info-circle-fill"></i> ¿Cómo funciona este módulo?
+                </h5>
+
+                <div class="list-group list-group-flush">
+
+                  <div class="list-group-item px-0">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h6 class="mb-1 text-primary fw-bold"><i class="bi bi-tools"></i> 1. Procedimientos y Materiales</h6>
+                    </div>
+
+                    <ol class="small text-muted ps-3 mb-2">
+                      <li class="mb-1">
+                        Aquí debes agregar cada tratamiento realizado.
+                      </li>
+                      <li class="mb-1">
+                        Se debe ingresar el material principal usado.
+                      </li>
+                      <li class="mb-1">
+                        En la <strong class="text-dark">CANTIDAD</strong>: no es la cantidad de material, sino las <u>veces</u> que se aplicará el tratamiento.
+                      </li>
+                      <li class="mb-1">
+                        Si usaste materiales extras (guantes, gasas, etc.), agrégalos en la sección de "Insumos Sueltos".
+                      </li>
+                    </ol>
+
+                    <div class="alert alert-warning py-2 small mb-0 mt-2">
+                      <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                      <strong>Importante:</strong> Esto actualizará automáticamente el stock de insumos en el consultorio.
+                    </div>
+                  </div>
+
+                  <div class="list-group-item px-0">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h6 class="mb-1 text-primary fw-bold"><i class="bi bi-journal-medical"></i> 2. Nota Clínica</h6>
+                    </div>
+                    <p class="mb-1 text-muted small">
+                      Redacta la evolución del paciente.<br>
+                      Es obligatorio registrar alergias o antecedentes si es la primera vez, y llenar el campo de "Avance del Tratamiento" para poder guardar. Para proximas citas no es requerido actualizar unicamente si el paciente presenta alguna nueva alergía.
+                    </p>
+                  </div>
+
+                  <div class="list-group-item px-0">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h6 class="mb-1 text-primary fw-bold"><i class="bi bi-arrow-right-circle"></i> 3. Derivaciones y Estudios</h6>
+                    </div>
+                    <p class="mb-1 text-muted small">
+                      Si el paciente necesita ir con un especialista<strong>(derivación)</strong> requiere radiografías/análisis externos, regístralo aquí para que quede en su expediente.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mt-3 text-end">
+                  <small class="text-secondary fst-italic">
+                    Al finalizar, presiona el botón verde <span class="badge bg-success"><i class="bi bi-save"></i> Finalizar Consulta</span>
+                  </small>
+                </div>
+
+              </div>
+            </div>
+            
+
+          </div>
+        </form>
       </div>
 
-      <div class="modal-footer bg-light">
+      <!--div class="modal-footer bg-light">
         <div class="me-auto small text-muted">
             <i class="bi bi-info-circle"></i> Verifica los datos antes de finalizar.
         </div>
@@ -320,7 +393,26 @@
                 [disabled]="atencionForm.invalid">
             <i class="bi bi-save"></i> Finalizar Consulta
         </button>
+      </div-->
+
+      <div class="modal-footer bg-light">
+        <div class="w-100 w-md-auto me-auto small text-muted mb-2 mb-md-0 text-center text-md-start">
+          <i class="bi bi-info-circle"></i> 
+          <span class="d-none d-sm-inline">Verifica los datos antes de finalizar.</span>
+        </div>
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">
+          <i class="bi bi-x-lg d-md-none"></i>
+          <span class="d-none d-md-inline">Cancelar</span>
+          <span class="d-inline d-md-none">Cerrar</span>
+        </button>
+        <button type="button" class="btn btn-success px-4" (click)="guardarAtencion()" 
+                [disabled]="atencionForm.invalid">
+            <i class="bi bi-save"></i> 
+            <span class="d-none d-sm-inline">Finalizar Consulta</span>
+            <span class="d-inline d-sm-none">Guardar</span>
+        </button>
       </div>
+
 
     </div>
   </div>

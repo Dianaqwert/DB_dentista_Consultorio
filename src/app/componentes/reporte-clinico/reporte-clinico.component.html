@@ -1,8 +1,19 @@
 
 <div class="row">
 
-  <div class="col-md-20">
-    <h2 class="p-3 mb-3">Reportes de pacientes</h2>
+  <div class="col-12">
+    
+    <div class="d-flex align-items-center p-3 mb-3">
+      <h2 class="mb-0 me-2">Reportes de pacientes</h2>
+        
+      <button type="button" class="btn btn-outline-primary btn-sm rounded-circle shadow-sm" 
+                title="Ver ayuda" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modalInfo">
+                <i class="bi bi-question-lg"></i>
+      </button>
+    </div>
+
   </div>
 
   <div class="card p-3 shadow-sm mb-3">
@@ -31,7 +42,7 @@
         </div>
 
         <div class="col-md-4">
-          <label for="inputPat" class="form-label">Apellido Paterno:</label>
+          <label for="inputPat" class="form-label">Apellido paterno:</label>
           <input
             type="text"
             id="inputPat"
@@ -49,7 +60,7 @@
         </div>
 
         <div class="col-md-4">
-          <label for="inputMat" class="form-label">Apellido Materno:</label>
+          <label for="inputMat" class="form-label">Apellido materno:</label>
           <input
             type="text"
             id="inputMat"
@@ -83,13 +94,7 @@
           </button>
         </div>
 
-        <!--boton de regreso-->
-        <div class="col-md-4">
-          <button (click)="volverAlMenu()" class="btn btn-secondary w-100 volver">
-            Volver a opciones
-          </button>
-
-        </div>
+        
 
 
       </div>
@@ -102,19 +107,19 @@
   <div class="col-md-20">
     <div class="bg-light p-3 border rounded">
 
-      <h4 class="mb-3">Reporte Clínico Consolidado</h4>
+      <h4 class="mb-3">Reporte clínico consolidado</h4>
 
       <div class="table-responsive">
         <table class=" table-striped table-hover table-sm table-bordered">
 
           <thead>
             <tr>
-              <th>Nombre Completo</th>
-              <th>Fecha y Hora</th>
-              <th>Motivo Cita</th>
+              <th>Nombre completo</th>
+              <th>Fecha y hora</th>
+              <th>Motivo cita</th>
               <th>Dentistas</th>
-              <th>Tratamiento y Cantidad</th>
-              <th>Avance Historial</th>
+              <th>Tratamiento y cantidad</th>
+              <th>Avance e historial</th>
               <th>Derivaciones</th>
               <th>Estudios</th>
             </tr>
@@ -180,4 +185,38 @@
     </div>
   </div>
 
+</div>
+
+<!--MODAL de info y ayuda-->
+<div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="modalInfoLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    
+    <div class="modal-content border-0 shadow">
+      
+      <div class="modal-header border-Mod text-white">
+        <h5 class="modal-title" id="modalInfoLabel">
+          <i class="bi bi-info-circle-fill me-2"></i> Guía Rápida: Reporte de pacientes
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+      
+        <h6 class="fw-bold border-bottom pb-2">
+            ¿Qué se raliza en esta sección?
+        </h6>
+        <p class="small text-muted mb-2">
+          En esta sección se busca por medio del nombre del paciente su reporte clínico , este es desglosado en una tabla.
+          <br>
+          Si el paciente ya fue atendido y se actualizaron sus datos en el historial,derivaciones o tratamientos en cada cita, se puede observar de forma mas especifica en el apartado de <strong>Reportes de seguimiento</strong>.
+        </p>
+
+      </div>
+
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Entendido</button>
+      </div>
+    </div>
+  </div>
 </div>

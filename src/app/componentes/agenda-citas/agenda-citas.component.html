@@ -1,16 +1,26 @@
 <!--PARA TODAS LAS CITAS-->
-<div class="row">
 
-  <div class="col-md-20">
-    <h2>Agenda de citas</h2>
-  </div>
+<div class="col-12 tab">
+    
+    <div class="d-flex align-items-center p-3 mb-3">
+      <h2 class="mb-0 me-2">Agenda de citas</h2>
+        
+      <button type="button" class="btn btn-outline-primary btn-sm rounded-circle shadow-sm" 
+                title="Ver ayuda" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modalInfoAg">
+                <i class="bi bi-question-lg"></i>
+      </button>
+    </div>
 
 </div>
 
+
+<!--FILTRO Y BUSCADOR-->
 <div class="card border-secondary shadow-sm contendor">
   <div class="card-header bg text-white">
     <h5 class="mb-0">
-      <i class="bi bi-calendar3"></i>Filtro de citas</h5>
+      Filtro de citas</h5>
   </div>
   
   <div class="card-body claseBody">
@@ -100,6 +110,93 @@
   </div>
 </div>
 
+<!--MODAL de info y ayuda-->
+<div class="modal fade" id="modalInfoAg" tabindex="-1" aria-labelledby="modalInfoLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    
+    <div class="modal-content border-0 shadow">
+      
+      <div class="modal-header border-Mod text-white">
+        <h5 class="modal-title" id="modalInfoLabel">
+          <i class="bi bi-info-circle-fill me-2"></i> Guía Rápida: Agenda de Citas
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        
+        <div class="mb-4">
+          <h6 class="fw-bold border-bottom pb-2">
+            <i class="bi bi-funnel"></i> 1. ¿Cómo buscar citas?
+          </h6>
+          <p class="small text-muted mb-2">
+            Utiliza la barra superior para filtrar el listado. Puedes combinar ambos filtros:
+          </p>
+          <ul class="small">
+            <li><strong>Fecha:</strong> Selecciona un día específico del calendario.</li>
+            <li><strong>Estado:</strong> Muestra solo citas pendientes, atendidas, canceladas, etc.</li>
+            <li><strong>Botón Filtrar:</strong> Es necesario presionarlo para refrescar la tabla.</li>
+          </ul>
+        </div>
+
+        <div class="mb-4">
+          <h6 class="fw-bold border-bottom pb-2">
+            <i class="bi bi-palette"></i> 2. Estados de la Cita (Colores)
+          </h6>
+          <p class="small text-muted">Cada color en la columna "Estado" indica una situación diferente:</p>
+          
+          <div class="row g-2 small">
+            <div class="col-md-4">
+              <span class="badge bg-primary rounded-pill w-100">Agendada</span>
+              <div class="text-muted fst-italic mt-1" style="font-size: 0.8rem;">Cita programada, paciente esperado.</div>
+            </div>
+            <div class="col-md-4">
+              <span class="badge bg-info text-dark rounded-pill w-100">Confirmada</span>
+              <div class="text-muted fst-italic mt-1" style="font-size: 0.8rem;">El paciente confirmó asistencia.</div>
+            </div>
+            <div class="col-md-4">
+              <span class="badge bg-success rounded-pill w-100">Atendida</span>
+              <div class="text-muted fst-italic mt-1" style="font-size: 0.8rem;">Consulta finalizada con éxito.</div>
+            </div>
+            <div class="col-md-6 mt-3">
+              <span class="badge bg-warning text-dark rounded-pill w-100">Pendiente / Reprogramada</span>
+              <div class="text-muted fst-italic mt-1" style="font-size: 0.8rem;">Requiere atención administrativa.</div>
+            </div>
+            <div class="col-md-6 mt-3">
+              <span class="badge bg-danger rounded-pill w-100">Cancelada / No Asistió</span>
+              <div class="text-muted fst-italic mt-1" style="font-size: 0.8rem;">Cita perdida.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h6 class="fw-bold border-bottom pb-2">
+            <i class="bi bi-cursor"></i> 3. Acciones Disponibles
+          </h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2">
+              <span class="badge bg-primary rounded-pill w-100" style="font-size: 15px;">Agendada</span>
+              Abre el expediente clínico para registrar tratamientos y notas. Solo disponible si la cita está "Agendada"  es decir que el paciente ya confirmo la cita.
+            </li>
+            <li>
+              <button class="btn btn-sm btn-secondary pe-none me-2">Ver/Editar</button> 
+              Permite consultar lo que se le hizo al paciente en una cita ya finalizada es decir que la cita ya fue atendida.
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Entendido</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--CITA-->
 <app-atencion-cita
   [citaSeleccionada]="citaParaAtender"
   (atencionGuardada)="recargarDatos()">

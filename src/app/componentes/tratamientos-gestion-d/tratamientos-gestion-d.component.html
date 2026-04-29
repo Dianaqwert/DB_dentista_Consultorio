@@ -1,13 +1,14 @@
 <div class="container py-4">
+  
   <div class="mb-3 cuad">
-    <h1 class="txt">Gestión de pacientes</h1>
-    <p>Actualización, altas y bajas de tratamientos dentales</p>
+    <h1 class="txt">Tratamientos</h1>
+    <p>Incorporación de nuevos tratamientos, gestión de aquellos no disponibles con pacientes activos y evaluación del costo promedio de los tratamientos</p>
   </div>
 
-  <div class="row g-5">
+  <div class="row g-4">
     
     <!-- COLUMNA IZQUIERDA: LISTAS -->
-    <div class="col-md-3 col-lg-3 order-md-last">
+    <div class="col-12 col-lg-3">
       
       <!-- 1. LISTA DE ACTIVOS -->
       <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -16,7 +17,7 @@
       </h4>
       
       <ul class="list-group mb-3 scroll-lista">
-        <!-- Usando @for para activos -->
+
         @for (t of listaTratamientos; track t.id_tipo_tratamiento) {
           <li class="list-group-item d-flex justify-content-between lh-sm">
             <div>
@@ -69,12 +70,12 @@
     </div>
 
     <!--COLUMNA DEL MEDIO CON AUMENTO DE TRATAMIENTOS-->
-    <div class="col-md-3 col-lg-6 order-md-last">
+    <div class="col-12 col-lg-6">
       <app-estadisticas-tratamientos-d></app-estadisticas-tratamientos-d>
     </div>
 
     <!-- COLUMNA DERECHA: FORMULARIO REACTIVO -->
-    <div class="col-md-3 col-lg-3">
+    <div class="col-12 col-lg-3">
       <h4 class="mb-3">Agregar tratamiento</h4>
       <form [formGroup]="searchForm" (ngSubmit)="guardarTratamiento()">
 
@@ -146,3 +147,4 @@
   <app-pacientes-tratamientos-inactivos-d>
   </app-pacientes-tratamientos-inactivos-d>
 </div>
+

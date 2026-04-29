@@ -1,0 +1,360 @@
+/* ============================================
+   MODAL PRINCIPAL - ALTURA Y SCROLL GENERAL
+   ============================================ */
+.modal-dialog {
+  max-height: 90vh;
+}
+
+.modal-content {
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  /* Scroll personalizado más delgado */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f1f5f9;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ============================================
+   TABLAS DE TRATAMIENTOS Y MATERIALES
+   ============================================ */
+
+/* Contenedor de tabla con scroll horizontal */
+.table-responsive {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f1f5f9;
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Tabla con scroll vertical (para tratamientos) */
+.tabla-vertical {
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: visible;
+  scrollbar-width: thin;
+}
+
+.tabla-vertical::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tabla-vertical::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.tabla-vertical::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+/* Forzar ancho mínimo para scroll horizontal */
+.tabla-scroll {
+  min-width: 900px;
+}
+
+/* Fijar el header de las tablas */
+.tabla-vertical thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ============================================
+   CARDS DE DERIVACIONES Y ESTUDIOS (SCROLL)
+   ============================================ */
+.scroll-cards {
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f1f5f9;
+}
+
+.scroll-cards::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-cards::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.scroll-cards::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.scroll-cards::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ============================================
+   RESPONSIVE - TABLETS (768px - 991px)
+   ============================================ */
+@media (max-width: 991px) {
+  .modal-dialog {
+    max-width: 95%;
+    margin: 1rem auto;
+  }
+
+  .tabla-vertical {
+    max-height: 250px;
+  }
+
+  .scroll-cards {
+    max-height: 250px;
+  }
+
+  /* Reducir padding en cards */
+  .card-body {
+    padding: 0.75rem !important;
+  }
+
+  /* Ajustar tamaño de fuentes */
+  .card-header {
+    font-size: 0.9rem;
+  }
+
+  /* Botones más compactos */
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - MÓVILES (< 768px)
+   ============================================ */
+@media (max-width: 767px) {
+  .modal-dialog {
+    max-width: 98%;
+    margin: 0.5rem auto;
+    max-height: 95vh;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    padding: 0.75rem;
+  }
+
+  .modal-header h5 {
+    font-size: 1rem;
+  }
+
+  .modal-header small {
+    font-size: 0.7rem;
+  }
+
+  .modal-body {
+    padding: 0.75rem;
+  }
+
+  .modal-footer {
+    padding: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Tabs más compactos */
+  .nav-tabs .nav-link {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .nav-tabs .nav-link i {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Tablas más compactas */
+  .tabla-vertical {
+    max-height: 200px;
+  }
+
+  .tabla-scroll {
+    min-width: 650px; /* Reducir un poco el mínimo en móvil */
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem 0.25rem;
+  }
+
+  .form-select-sm,
+  .form-control-sm {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* Cards de derivaciones/estudios */
+  .scroll-cards {
+    max-height: 200px;
+  }
+
+  .card {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .card-body {
+    padding: 0.5rem !important;
+  }
+
+  /* Botones del footer apilados */
+  .modal-footer .btn {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  /* Ocultar texto del hint de scroll en móvil */
+  .table-responsive::after {
+    font-size: 0.65rem;
+  }
+}
+
+/* ============================================
+   MEJORAS VISUALES ADICIONALES
+   ============================================ */
+
+/* Hint de scroll horizontal */
+.table-responsive::after {
+  content: "⇆ Desliza horizontalmente para ver más";
+  display: block;
+  font-size: 0.75rem;
+  text-align: center;
+  color: #6c757d;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+  background: linear-gradient(90deg, transparent, #f8f9fa 20%, #f8f9fa 80%, transparent);
+}
+
+/* Indicador visual cuando hay scroll disponible */
+.tabla-vertical.has-scroll,
+.scroll-cards.has-scroll {
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+}
+
+/* Espaciado entre secciones */
+.tab-pane > .card {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejorar legibilidad de las tablas */
+.table thead th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.2s;
+}
+
+/* Asegurar que los inputs no se desborden */
+.form-control,
+.form-select {
+  max-width: 100%;
+}
+
+/* Fix para evitar que el modal se salga en pantallas muy pequeñas */
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.25rem;
+    max-width: calc(100% - 0.5rem);
+  }
+  
+  .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .nav-tabs .nav-link {
+    white-space: nowrap;
+  }
+}
+
+
+.btn-outline-danger {
+  color: #dc3545;
+  border: 2px solid #dc3545 !important;  /* Borde más grueso */
+  background-color: transparent;
+  padding: 0.5rem 0.75rem !important;    /* Más padding = más fácil de tocar */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.btn-outline-danger i {
+  font-size: 1.2rem;  /* Ícono más grande */
+}
+
+.btn-outline-danger:hover {
+  color: #fff;
+  background-color: #dc3545;
+  transform: scale(1.15);  /* Crece al hover */
+}

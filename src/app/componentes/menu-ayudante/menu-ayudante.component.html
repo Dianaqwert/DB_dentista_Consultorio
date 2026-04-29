@@ -1,0 +1,42 @@
+
+<div class="divPrincipal">
+  <div class="divPrincipal d-flex align-items-center justify-content-center">
+    <img src="iconDoc.png" class="img-fluid me-2" style="max-width: 50px;">
+    <h2>Bienvenida, {{ usuario?.nombres }}</h2>
+  </div>
+</div>
+
+<div class="album py-5 bg-light">
+  <div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      
+      <div class="col">
+        <div class="card h-100 shadow-sm custom-card">
+          <div class="card-img-container">
+            <img src="material_ayu.png" 
+                 class="card-img-top img-hover-zoom" 
+                 alt="Gestión de Inventario">
+          </div>
+
+          <div class="card-body d-flex flex-column">
+            <div class="mb-2">
+              <h4 class="card-title fw-bold">Inventario</h4>
+            </div>
+            <p class="card-text text-secondary">
+              Seguimiento detallado de insumos, stock crítico y registro de materiales del consultorio.
+            </p>
+            
+            <div class="mt-auto d-flex justify-content-between align-items-center">
+              <button type="button" 
+                      class="btn btn-primary w-100 py-2" style="border-color:rgb(66, 68, 68);"
+                      (click)="irAinventario()">
+                <i class="bi bi-box-seam me-2"></i> Gestionar Stock
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+  </div>
+</div>

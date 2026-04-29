@@ -37,7 +37,8 @@ export class AgendaCitasComponent {
   estadoFiltro: string = '';
 
   estadosPosibles = ['Agendada','Confirmada','Pendiente','Cancelada','Atendida','Todos'];
-
+  
+  
   // Emite un evento al padre cuando se hace clic en "Volver"
   @Output() volverMenu = new EventEmitter<void>();
 
@@ -65,15 +66,17 @@ export class AgendaCitasComponent {
 
 
   ngOnInit(): void {
-    //obtener usuario logeado
-    this.usuarioLogueado=this.empleadoService.getUsuario();
-    console.log("Usuario Logueado:", this.usuarioLogueado); // Debug
-    //nombre del dentista
+    this.usuarioLogueado = this.usuario || this.empleadoService.getUsuario();
+
+    // Debug para confirmar que YA NO ES NULL
+    console.log("Usuario Logueado FINAL:", this.usuarioLogueado); 
+
+    // Asignar nombre del dentista para la vista
     if (this.usuarioLogueado && this.usuarioLogueado.tipoempleado === 'Dentista') {
-      this.nombreDentista = this.usuarioLogueado.nombres 
+       this.nombreDentista = this.usuarioLogueado.nombres;
     }
 
-    // Carga todos los pacientes al iniciar, pasando valores vacíos
+    // Cargar pacientes
     this.buscarPacientes('', '', '');
 
   }
@@ -123,7 +126,15 @@ export class AgendaCitasComponent {
     let idDentistaParaFiltro: number | undefined = undefined;
 
     if (this.usuarioLogueado && this.usuarioLogueado.tipoempleado === 'Dentista') {
-        idDentistaParaFiltro = this.usuarioLogueado.id_usuario;
+      
+      // Convertimos a string para asegurar la comparación correcta
+      const esSuperAdmin = String(this.usuarioLogueado.superadmin) === 'true';
+
+      // SOLO si NO es SuperAdmin, filtramos por su ID.
+      // Si ES SuperAdmin, no entra aquí y la variable se queda en 'undefined' (Ver todos).
+      if (!esSuperAdmin) {
+          idDentistaParaFiltro = this.usuarioLogueado.id_usuario;
+      }
     }
 
     console.log("Filtrando agenda para dentista ID:", idDentistaParaFiltro); // Debug
@@ -133,6 +144,7 @@ export class AgendaCitasComponent {
       .subscribe({
         next: (data) => {
           this.citasFiltradas = data;
+          console.log("Citas encontradas:", data.length);
         },
         error: (err) => console.error('Error cargando agenda', err)
       });

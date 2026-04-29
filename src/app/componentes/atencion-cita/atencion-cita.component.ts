@@ -14,6 +14,7 @@ const SOLO_LETRAS = '^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$';
   templateUrl: './atencion-cita.component.html',
   styleUrl: './atencion-cita.component.css'
 })
+
 export class AtencionCitaComponent implements OnInit{
 @Input() citaSeleccionada: any; // Recibimos la cita desde la tabla de agenda
   @Output() atencionGuardada = new EventEmitter<boolean>(); // Avisar al padre para recargar la tabla
@@ -25,6 +26,9 @@ export class AtencionCitaComponent implements OnInit{
   // Variable para mostrar el total en tiempo real
   totalDeudaEstimada: number = 0;
   totalMaterialExtra: number = 0; // Para el costo de los insumos sueltos
+  //derivaciones y estudios
+  estudioTemporal: string = '';
+  listaEstudios: any[] = [];
 
 
   constructor(
@@ -78,6 +82,7 @@ export class AtencionCitaComponent implements OnInit{
       this.estudiosArray.clear();
       this.totalDeudaEstimada = 0;
   }
+
 
   cargarDatosEdicion(idCita: number) {
       this.pacientesService.getDetalleCita(idCita).subscribe({
@@ -219,6 +224,8 @@ export class AtencionCitaComponent implements OnInit{
   agregarDerivacion() {
     this.derivacionesArray.push(this.fb.group({
       nombreDentista: ['', [Validators.required,Validators.pattern(SOLO_LETRAS)]],
+      apellidoPatDentista: ['', [Validators.required, Validators.pattern(SOLO_LETRAS)]],
+      apellidoMatDentista: ['', [Validators.required, Validators.pattern(SOLO_LETRAS)]],
       especialidadDentista: ['', [Validators.required,Validators.pattern(SOLO_LETRAS)]],
       motivo: ['', Validators.required]
     }));
@@ -240,45 +247,70 @@ export class AtencionCitaComponent implements OnInit{
   }
 
   // --- GUARDADO FINAL ---
-   guardarAtencion() {
+  guardarAtencion() {
     if (this.atencionForm.invalid) {
       this.atencionForm.markAllAsTouched();
+      alert('Faltan campos obligatorios en el formulario.');
       return;
     }
 
-    // El objeto a enviar necesita serializar los dos arrays (tratamientos y consumoMateriales)
+    // 1. MAPEO DE ESTUDIOS
+    // Agregamos 'resultados' vacío para que el backend no falle si espera algo
+    const estudiosMapeados = this.atencionForm.value.estudios.map((e: any) => ({
+        nombre: e.nombre,
+        descripcion: e.descripcion || 'Sin descripción',
+        resultados: 'Pendiente', // <--- IMPORTANTE: Valor por defecto
+        fecha_hora: new Date().toISOString().split('T')[0] // <--- IMPORTANTE: Fecha actual
+    }));
+
+    // 2. MAPEO DE DERIVACIONES
+    const derivacionesMapeadas = this.atencionForm.value.derivaciones.map((d: any) => ({
+        nombreDentista: d.nombreDentista,
+        apellidoPatDentista: d.apellidoPatDentista,
+        apellidoMatDentista: d.apellidoMatDentista,
+        especialidadDentista: d.especialidadDentista,
+        motivo: d.motivo,
+        fecha: new Date().toISOString().split('T')[0] // <--- IMPORTANTE
+    }));
+
+    // 3. CONSTRUCCIÓN DEL OBJETO FINAL
     const datosAtencion = {
       id_cita: this.citaSeleccionada.id_cita,
       id_paciente: this.citaSeleccionada.id_paciente,
-      ...this.atencionForm.value,
+      
+      // Datos simples
+      alergias: this.atencionForm.value.alergias || 'Ninguna',
+      enfermedades: this.atencionForm.value.enfermedades || 'Ninguna',
+      avanceTratamiento: this.atencionForm.value.avanceTratamiento,
       total_deuda: this.totalDeudaEstimada,
       
-      // Enviamos el array de tratamientos y el array de materiales extra al backend
-      // El backend debe saber que los items en 'consumoMateriales' no tienen tratamiento
+      tratamientos: this.atencionForm.value.tratamientos,
+      insumos_extra: this.atencionForm.value.consumoMateriales,
+      // Arrays Mapeados
+      estudios: estudiosMapeados,       // Enviamos el array limpio
+      derivaciones: derivacionesMapeadas, // Enviamos el array limpio
+
+      // Items de Cobro
       items_cobro: [
         ...this.atencionForm.value.tratamientos,
         ...this.atencionForm.value.consumoMateriales.map((m: any) => ({
             ...m,
-            // Marcar items sin tratamiento para el backend si es necesario, 
-            // o simplemente el backend distingue por la ausencia de id_tipo_tratamiento
             id_tipo_tratamiento: null 
         }))
       ]
     };
 
-    console.log("Enviando Atención Completa:", datosAtencion);
+    console.log("Enviando al Backend:", datosAtencion);
 
-    // Llama al servicio que debe manejar la creación de multiples Detalle_Costo
-    // y el historial
     this.pacientesService.registrarAtencionCompleta(datosAtencion).subscribe({
       next: (resp) => {
-        alert('Consulta finalizada con éxito. Historial y consumo registrados.');
+        alert('¡Atención guardada correctamente!');
         this.cerrarModal();
         this.atencionGuardada.emit(true);
       },
       error: (err) => {
         console.error(err);
-        alert('Error al guardar la atención: ' + (err.error.message || err.message));
+        alert('Error al guardar: ' + (err.error?.message || 'Revisa la consola'));
       }
     });
   }
@@ -321,4 +353,5 @@ export class AtencionCitaComponent implements OnInit{
           error: (err) => console.warn('El paciente no tiene historial previo o hubo error', err)
       });
   }
+
 }

@@ -1,5 +1,8 @@
 <div class="divPrincipal">
-  <h2>Bienvenido, {{ usuario?.nombres }}</h2>  
+  <div class="divPrincipal d-flex align-items-center justify-content-center">
+    <img src="iconDoc.png" class="img-fluid me-2" style="max-width: 50px;">
+    <h2>Bienvenida, {{ usuario?.nombres }}</h2>
+  </div>
 </div>
 
   <div class="album py-5 bg-body-tertiary">
@@ -26,7 +29,6 @@
                     Ver
                   </button>
                 </div>
-                <small class="text-body-secondary">9 mins</small>
               </div>
             </div>
           </div>
@@ -34,7 +36,7 @@
 
         <div class="col">
           <div class="card shadow-sm">
-            <img src="calendar.png" 
+            <img src="citas.png" 
             class="card-img-top bd-placeholder-img " 
             alt="Pacientes" 
             width="100%" 
@@ -58,15 +60,15 @@
 
           <div class="col">
           <div class="card shadow-sm">
-            <img src="calendar.png" 
+            <img src="ganancias.png" 
             class="card-img-top bd-placeholder-img " 
             alt="Pacientes" 
             width="100%" 
             height="225">
             <div class="card-body">
-              <h2>Manejo y asignaciones de citas</h2>
+              <h2>Reporte de ganancias</h2>
               <p class="card-text">
-                Cambiar estado de citas y generar citas.
+                Reporte de ganancias por fecha
               </p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">

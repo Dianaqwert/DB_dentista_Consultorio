@@ -1,44 +1,47 @@
-.row {
-    padding: 10px;
-    margin: 5px;
+.row{
+    padding: 10px;
+    margin: 5px;
+
 }
 
-.colorSep {
-    color: #bfcdcc;
+div{
+    font-family: "Raleway", sans-serif;
+    font-weight: 400;
+
 }
 
-.separador-reporte {
-    /* Fuerza el bloque a ocupar toda la celda */
-    display: block;
-    padding-top: 5px;
-    padding-bottom: 5px;
+.txt{
+    font-size: 50px;
+    text-align: center;
+    margin: 5px;
+    color: #2b9895;     
+    font-weight: 500px;
+
 }
 
-/* Aplica una línea divisoria (borde superior) a todos los elementos, excepto al primero */
-.separador-reporte + .separador-reporte {
-    border-top: 1px dashed #141313; /* Línea gris punteada */
-    margin-top: 5px;
+.txt-2{
+    font-size: 30px;
+    text-align: center;
 }
 
-div {
-    font-family: "Raleway", sans-serif;
-    font-weight: 400;
+.bg{
+    background-color: #76a6a5;
 }
 
-.txt {
-    font-size: 50px;
-    text-align: center;
-    margin: 5px;
-    color: #2b9895;    
-    font-weight: 500; /* Corregido: se eliminó 'px' */
+.claseBody{
+    padding: 10px;
 }
 
-.cuad {
-    padding: 20px;
-    margin: 20px; /* Corregido: '20ps' a '20px' */
+.contendor{
+    margin: 20px;
 }
 
-
-p {
-    text-align: center;
+.cuad{
+    text-align: center;
 }
+
+.bg-C2{
+    background-color: #ea9320;
+
+}
+
